@@ -55,10 +55,10 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="clipNo">アニメーションクリップの番号。Init関数に渡したanimClipListの並びとなる。</param>
 		/// <param name="interpolateTime">補完時間(単位：秒)</param>
-		void Play(int clipNo, float interpolateTime = 0.0f)
+		void Play(int clipNo, float interpolateTime = 0.0f, bool animReset = false)
 		{
 			if (clipNo < m_animationClips.size()) {
-				PlayCommon(m_animationClips[clipNo], interpolateTime);
+				PlayCommon(m_animationClips[clipNo], interpolateTime,animReset);
 			}
 		}
 		/// <summary>
@@ -138,10 +138,12 @@ namespace nsK2EngineLow {
 		Vector3 CalcFootstepDeltaValueInWorldSpace(Quaternion rotation, Vector3 scale) const;
 
 	private:
-		void PlayCommon(AnimationClip* nextClip, float interpolateTime)
+		void PlayCommon(AnimationClip* nextClip, float interpolateTime, bool animReset = false)
 		{
 			int index = GetLastAnimationControllerIndex();
-			if (m_animationPlayController[index].GetAnimClip() == nextClip) {
+
+			//同じアニメーションから同じアニメーションに遷移するときは、animResetがtrueのときだけ最初から再生する。
+			if (animReset == false && m_animationPlayController[index].GetAnimClip() == nextClip) {
 				return;
 			}
 			if (interpolateTime == 0.0f) {

@@ -4,16 +4,23 @@
 
 bool Game::Start()
 {
-	// モデルを初期化するための情報を設定。
-	ModelInitData initData;
-	//tkmファイルのファイルパスを指定する。
-	initData.m_tkmFilePath = "Assets/modelData/unityChan.tkm";
-	//シェーダーファイルのファイルパスを指定する。
-	initData.m_fxFilePath = "Assets/shader/model.fx";
+	m_animationClipArray[enAnimClip_Idle].Load("Assets/animData/idle.tka");
+	m_animationClipArray[enAnimClip_Idle].SetLoopFlag(true);
 
-	//作成した初期化データをもとにモデルを初期化する、
-	m_model.Init(initData);
-	
+	m_animationClipArray[enAnimClip_Run].Load("Assets/animData/run.tka");
+	m_animationClipArray[enAnimClip_Run].SetLoopFlag(true);
+
+	m_model.Init("Assets/modelData/unityChan.tkm", m_animationClipArray.data(), 2, enModelUpAxisY);
+
+	//// モデルを初期化するための情報を設定。
+	//ModelInitData initData;
+	////tkmファイルのファイルパスを指定する。
+	//initData.m_tkmFilePath = "Assets/modelData/unityChan.tkm";
+	////シェーダーファイルのファイルパスを指定する。
+	//initData.m_fxFilePath = "Assets/shader/model.fx";
+
+	////作成した初期化データをもとにモデルを初期化する、
+	//m_model.Init(initData);
 	return true;
 }
 void Game::Update()
@@ -40,8 +47,13 @@ void Game::Update()
 		m_scale.x -= 0.02f;
 	}
 
-	// ワールド行列を更新。
-	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+
+
+
+	m_model.SetRotation(m_rotation);
+	m_model.Update();
+	//// ワールド行列を更新。
+	//m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 }
 void Game::Render(RenderContext& rc)
 {
