@@ -8,6 +8,9 @@ void nsK2EngineLow::ModelRender::Init(const char* filePath, AnimationClip* anima
 	// アニメーションを初期化。
 	InitAnimation(animationClips, numAnimationCrips, enModelUpAxis);
 
+	// ディレクションライトの初期化。
+	SetDirectionLight( Vector3(1.0f, -1.0f, -1.0f), Vector3(0.5f, 0.5f, 0.5f));
+
 	InitModel(filePath, enModelUpAxis);
 
 	// 初期化完了。
@@ -28,6 +31,8 @@ void nsK2EngineLow::ModelRender::InitModel(const char* filePath, EnModelUpAxis e
 	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 	initData.m_vsEntryPointFunc = "VSMain";
 
+	initData.m_expandConstantBuffer = &GetSceneLight().GetSceneLight();
+	initData.m_expandConstantBufferSize = sizeof(GetSceneLight().GetSceneLight());
 
 	if (m_animationClips != nullptr) {
 		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。

@@ -1,4 +1,7 @@
 #pragma once
+#include "Light.h"
+
+
 namespace nsK2EngineLow {
 	class ModelRender
 	{
@@ -154,6 +157,27 @@ namespace nsK2EngineLow {
 			m_animationSpeed = animationSpeed;
 		}
 
+		////////////////////////////////////////////////
+		//シーンライト系の関数
+		////////////////////////////////////////////////
+
+		SceneLight& GetSceneLight()
+		{
+			return m_sceneLight;
+		}
+
+		/// <summary>
+		/// ディレクションライトの設定
+		/// </summary>
+		/// <param name="direction">方向</param>
+		/// <param name="color">カラー</param>
+		void SetDirectionLight(Vector3 direction, Vector3 color)
+		{
+			m_sceneLight.SetDirectionLight(direction, color);
+		}
+
+
+
 		private :
 
 			/// <summary>
@@ -195,6 +219,8 @@ namespace nsK2EngineLow {
 
 		bool						m_setWorldMatrix = false;			        // ワールド行列が外部から設定されている
 		bool						m_isInit = false;					        //初期化したか
+
+		SceneLight  			    m_sceneLight;                               //シーンライト
 
 	};
 }
