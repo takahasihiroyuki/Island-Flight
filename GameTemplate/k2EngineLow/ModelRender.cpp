@@ -31,6 +31,7 @@ void nsK2EngineLow::ModelRender::InitModel(const char* filePath, EnModelUpAxis e
 	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 	initData.m_vsEntryPointFunc = "VSMain";
 
+	//シェーダー側にライトの情報を渡すための変数を設定する。
 	initData.m_expandConstantBuffer = &GetSceneLight().GetSceneLight();
 	initData.m_expandConstantBufferSize = sizeof(GetSceneLight().GetSceneLight());
 

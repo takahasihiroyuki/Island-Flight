@@ -40,6 +40,15 @@ namespace nsK2EngineLow {
 		void Draw(RenderContext& rc);
 
 		/// <summary>
+		/// モデルを描画する(RenderingEngineで描画するときに呼び出す)
+		/// </summary>
+		/// <param name="rc"></param>
+		void OnRenderModel(RenderContext& rc)
+		{
+			m_model.Draw(rc);
+		}
+
+		/// <summary>
 		/// 行列を設定。
 		/// </summary>
 		/// <param name="mairix">行列。</param>
