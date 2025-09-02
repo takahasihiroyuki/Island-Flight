@@ -49,7 +49,7 @@ void Game::Update()
 
 
 
-
+	m_model.SetPosition(m_position);
 	m_model.SetRotation(m_rotation);
 	m_model.Update();
 	//// ワールド行列を更新。

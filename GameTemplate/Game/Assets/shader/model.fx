@@ -16,6 +16,9 @@ struct SVSIn{
 	float2 uv 		: TEXCOORD0;	//UV座標。
 	SSkinVSIn skinVert;				//スキン用のデータ。
     float3 normal   : NORMAL;         //法線
+    float3 tangent  : TANGENT;
+    float3 biNormal : BINORMAL;
+
 };
 //ピクセルシェーダーへの入力。
 struct SPSIn{
@@ -23,6 +26,9 @@ struct SPSIn{
 	float2 uv 			: TEXCOORD0;	//uv座標。
     float3 worldPos     : TEXCOORD1; //ワールド座標
     float3 normal       : NORMAL; //法線
+    float3 tangent      : TANGENT; // 接ベクトル
+    float3 biNormal     : BINORMAL; // 従ベクトル
+
 
 };
 
@@ -57,7 +63,10 @@ cbuffer LightCB : register(b1)
 ////////////////////////////////////////////////
 Texture2D<float4> g_albedo : register(t0);				//アルベドマップ
 StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
-sampler g_sampler : register(s0);	//サンプラステート。
+sampler g_sampler : register(s0);	                    //サンプラステート。
+Texture2D<float4> g_normalMap : register(t1);           //法線マップにアクセスするための変数。
+Texture2D<float4> g_specularMap : register(t2);         //スペキュラマップにアクセスするための変数。
+
 
 ////////////////////////////////////////////////
 // 関数定義。
@@ -100,8 +109,11 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	psIn.pos = mul(m, vsIn.pos);
 	psIn.pos = mul(mView, psIn.pos);
 	psIn.pos = mul(mProj, psIn.pos);
-    psIn.worldPos = psIn.pos;
+    psIn.worldPos = psIn.pos.xyz;
     psIn.normal = mul(m, vsIn.normal);
+    psIn.tangent = normalize(mul(m, vsIn.tangent));
+    psIn.biNormal = normalize(mul(m, vsIn.biNormal));
+
 
 	psIn.uv = vsIn.uv;
 
@@ -132,8 +144,19 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
     //アルベドテクスチャのサンプリング
     float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
     
+    //法線マップのサンプリング
+    float3 localNormal = g_normalMap.Sample(g_sampler, psIn.uv).xyz;
+    //0～1の範囲を-1～1の範囲にする。
+    localNormal = (localNormal - 0.5f) * 2.0f;
+    //接ベクトル空間からワールド空間に変換する
+    float3 normal = psIn.normal;
+     normal = psIn.tangent * localNormal.x + psIn.biNormal * localNormal.y + normal * localNormal.z;
+
+
+
+    
     //ライトの計算
-    float3 directionLight = CalcLigFromDrectionLight(psIn, psIn.normal);
+    float3 directionLight = CalcLigFromDrectionLight(psIn, normal);
     float3 lig = directionLight;
     
     //最終的な色
@@ -165,9 +188,9 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
 //phong鏡面反射を計算
 //////////////////////////////////////////////////////////////////////////////////
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv)
-{
+{   
 	//反射ベクトルを求める
-    float3 refVec = reflect(directionLight.direction, normal);
+    float3 refVec = reflect(lightDirection, normal);
 	//光が当たったサーフェイス(表面)から視点に伸びるベクトルを求める
     float3 toEye = eyepos - worldPos;
     toEye = normalize(toEye);
@@ -181,8 +204,11 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 	//鏡面反射の強さを絞る
     t = pow(t, 10.0f);
 
+    //スペキュラマップからスペキュラ反射の強さをサンプリング
+    float specPower = g_specularMap.Sample(g_sampler, uv).r;
+    
 	//鏡面反射光
-    float specularLig = lightColor * t*0.05;
+    float3 specularLig = lightColor * t * specPower;
 
     return specularLig;
 }
