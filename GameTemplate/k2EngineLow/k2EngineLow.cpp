@@ -5,6 +5,8 @@
 namespace nsK2EngineLow {
 	K2EngineLow* g_engine = nullptr;
 	GameTime* g_gameTime = nullptr;
+	RenderingEngine* g_renderingEngine = nullptr;
+
 
 	K2EngineLow::~K2EngineLow()
 	{
@@ -37,6 +39,8 @@ namespace nsK2EngineLow {
 		GameObjectManager::CreateInstance();
 		PhysicsWorld::CreateInstance();
 		g_soundEngine = new SoundEngine();
+		g_renderingEngine = new RenderingEngine;
+
 		if (m_graphicsEngine) {
 			//エフェクトエンジンの初期化。
 			EffectEngine::CreateInstance();
@@ -97,7 +101,8 @@ namespace nsK2EngineLow {
 		auto& renderContext = g_graphicsEngine->GetRenderContext();
 		// ゲームオブジェクトマネージャーの描画処理を実行。
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-		
+		// レンダリングエンジンの描画処理を実行。
+		g_renderingEngine->Execute(renderContext);
 	}
 
 	/// <summary>

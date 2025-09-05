@@ -10,17 +10,10 @@ bool Game::Start()
 	m_animationClipArray[enAnimClip_Run].Load("Assets/animData/run.tka");
 	m_animationClipArray[enAnimClip_Run].SetLoopFlag(true);
 
-	m_model.Init("Assets/modelData/unityChan.tkm", m_animationClipArray.data(), 2, enModelUpAxisY);
+	m_model.Init("Assets/modelData/unityChan.tkm", nullptr, 0, enModelUpAxisZ);
+	// レンダリングエンジンの描画処理を実行。
+	g_renderingEngine->SetDirectionLight(Vector3{ 0.0f,0.0f,-1.0f }, Vector3{ 1.0f,1.0f,1.0f });
 
-	//// モデルを初期化するための情報を設定。
-	//ModelInitData initData;
-	////tkmファイルのファイルパスを指定する。
-	//initData.m_tkmFilePath = "Assets/modelData/unityChan.tkm";
-	////シェーダーファイルのファイルパスを指定する。
-	//initData.m_fxFilePath = "Assets/shader/model.fx";
-
-	////作成した初期化データをもとにモデルを初期化する、
-	//m_model.Init(initData);
 	return true;
 }
 void Game::Update()

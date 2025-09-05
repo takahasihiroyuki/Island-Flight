@@ -16,7 +16,8 @@ namespace nsK2EngineLow {
 		void Init(const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationCrips = 0,
-			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+			bool isShadowReciever = true
 		);
 
 		/// <summary>
@@ -38,6 +39,15 @@ namespace nsK2EngineLow {
 		void Update();
 
 		void Draw(RenderContext& rc);
+
+		/// <summary>
+		/// ディファード用のモデルの描画
+		/// </summary>
+		/// <param name="rc"></param>
+		void OnDraw(RenderContext& rc)
+		{
+			m_renderToGBufferModel.Draw(rc);
+		}
 
 		/// <summary>
 		/// モデルを描画する(RenderingEngineで描画するときに呼び出す)
@@ -207,6 +217,14 @@ namespace nsK2EngineLow {
 				EnModelUpAxis enModelUpAxis
 			);
 
+			/// <summary>
+			/// GBuffer描画モデルの初期化
+			/// </summary>
+			/// <param name="tkmFilePath"></param>
+			/// <param name="enModelUpAxis"></param>
+			/// <param name="isShadowReciever"></param>
+			void InitModelOnRenderGBuffer(const char* tkmFilePath, EnModelUpAxis enModelUpAxis, bool isShadowReciever);
+
 
 
 
@@ -230,6 +248,8 @@ namespace nsK2EngineLow {
 		bool						m_isInit = false;					        //初期化したか
 
 		SceneLight  			    m_sceneLight;                               //シーンライト
+
+		Model                       m_renderToGBufferModel;	                   // RenderToGBufferで描画されるモデル
 
 	};
 }

@@ -9,20 +9,37 @@ namespace nsK2EngineLow {
 	class RenderingEngine
 	{
 	public:
-
-		/// <summary>
-		/// ライトの初期化。
-		/// </summary>
+		RenderingEngine();
+		~RenderingEngine();
 		void Init();
 
+		void InitGBuffer();
+		void InitMainRenderTarget();
+		void InitCopyToframeBufferSprite();
+		void InitDefferedLightingSprite();
 		/// <summary>
-		/// モデルレンダーをリストに追加する
+		/// GBufferにレンダリングする。
 		/// </summary>
-		/// <param name="modelRender"></param>
-		void AddModelList(ModelRender* modelRender)
-		{
-			m_modelList.emplace_back(modelRender);
-		}
+		/// <param name="rc"></param>
+		void RenderToGBuffer(RenderContext& rc);
+
+		/// <summary>
+		/// ディファードレンダリングを行う。
+		/// </summary>
+		/// <param name="rc"></param>
+		void DeferredLighting(RenderContext& rc);
+
+		/// <summary>
+		/// メインレンダーターゲットをフレームバッファにコピーする。
+		/// </summary>
+		/// <param name="rc"></param>
+		void CopyMainRenderTargetToFrameBuffer(RenderContext& rc);
+
+		/// <summary>
+		/// 描画したオブジェクトをクリアする。
+		/// </summary>
+		void ObjectClear();
+
 
 		/// <summary>
 		/// 描画処理を実行。
@@ -49,7 +66,7 @@ namespace nsK2EngineLow {
 		/// <param name="lightNo">ライト番号</param>
 		/// <param name="direction">ライトの方向</param>
 		/// <param name="color">ライトの色</param>
-		void SetDerectionLight(Vector3 direction, Vector3 color)
+		void SetDirectionLight(Vector3 direction, Vector3 color)
 		{
 			m_sceneLight.SetDirectionLight( direction, color);
 		}
@@ -101,21 +118,38 @@ namespace nsK2EngineLow {
 			m_sceneLight.SetEyePos(eyePos);
 		}
 
+		/// <summary>
+		/// リストにモデルレンダーを追加する。
+		/// </summary>
+		/// <param name="modelRender"></param>
+		void AddModelList(ModelRender* modelRender)
+		{
+			m_modelList.push_back(modelRender);
+		}
+
 	private:
 
-		/////////////////////////////////////////////////////////////
-		//描画の関数
-		/////////////////////////////////////////////////////////////
 
-		/// <summary>
-		/// モデルを描画する
-		/// </summary>
-		/// <param name="rc">レンダーコンテキスト</param>
-		void ModelRendering(RenderContext& rc);
+	private:
+		// GBufferに入れるレンダリングターゲットの役割。
+		enum EnGBuffer
+		{
+			enGBufferAlbedo,           // アルベド
+			enGBufferNormal,           // 法線
+			enGBufferSpecular,         // スペキュラ
+			enGBufferNum,              // G-Bufferの数
+		};
+
+		Sprite m_copyToframeBufferSprite;				//メインレンダリングターゲットをフレームバッファにコピーするためのスプライト
+		Sprite m_diferredLightingSprite;				//ディファードライティング用のスプライト
+
+		std::array<RenderTarget, enGBufferNum> m_gBuffer;			//GBuffer用のレンダリングターゲット。
+		RenderTarget m_mainRenderTarget;				//メインレンダリングターゲット
 
 
 		std::vector<ModelRender*>		m_modelList;	//モデルリスト
 		SceneLight						m_sceneLight;	//シーンライト
+
 	};
 
 }
