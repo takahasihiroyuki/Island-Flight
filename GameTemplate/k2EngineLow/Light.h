@@ -21,6 +21,8 @@ namespace nsK2EngineLow {
 		DirectionalLight	directionalLight;		//ディレクションライト
 		Vector3				cameraEyePos;			//カメラの座標
 		float				pad;					//パティング
+		Vector3             ambientColor;           //アンビエントカラー
+
 	};
 
 	class SceneLight
@@ -82,6 +84,20 @@ namespace nsK2EngineLow {
 		{
 			return m_light.directionalLight.color;
 		}
+
+		//////////////////////////////////////////////////////////////////////
+		///アンビエントライトの関数
+		////////////////////////////////////////////////////////////////////// 
+
+		/// <summary>
+		/// アンビエントライトを設定する
+		/// </summary>
+		/// <param name="ambientColor"></param>
+		void SetAmbientLight(Vector3 ambientColor)
+		{
+			m_light.ambientColor= ambientColor;
+		}
+
 
 		////////////////////////////////////////////////////////
 		///カメラの位置の関数

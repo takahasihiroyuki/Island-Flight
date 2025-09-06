@@ -167,7 +167,6 @@ namespace nsK2EngineLow
 	void RenderingEngine::Execute(RenderContext& rc)
 	{
 
-
 		//GBuffer‚Ö‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO
 		RenderToGBuffer(rc);
 

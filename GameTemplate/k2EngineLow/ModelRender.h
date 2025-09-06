@@ -83,7 +83,7 @@ namespace nsK2EngineLow {
 		/// <param name="position">Vector3ÇÃç¿ïW</param>
 		void SetPosition(const Vector3& position)
 		{
-			m_position = position;
+				m_position = position;
 		}
 		/// <summary>
 		/// ç¿ïWÇÃê›íË

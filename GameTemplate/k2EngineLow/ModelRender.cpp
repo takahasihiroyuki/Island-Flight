@@ -54,6 +54,10 @@ namespace nsK2EngineLow {
 
 	void ModelRender::Update()
 	{
+		//モデル側に移動回転拡大を渡す
+		m_renderToGBufferModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+
+
 		//スケルトンを更新。
 		if (m_skeleton.IsInited())
 		{

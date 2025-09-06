@@ -32,8 +32,8 @@ struct DirectionLight
 cbuffer LightCB : register(b1)
 {
     DirectionLight directionLight; //ディレクションライト
-    float3 eyepos; //視点の位置
-    float4x4 mLVP; //ライトビュープロジェクション行列
+    float3 eyepos;                 //視点の位置
+    float3 ambientColor;           //アンビエントカラー
 }
 
 
@@ -72,7 +72,8 @@ float4 PSMain(PSIn In) : SV_Target0
     normal = (normal * 2.0f) - 1.0f;
     
     float3 dirLight = CalcLigFromDrectionLight(In, normal);
-    float3 lig = dirLight;
+    
+    float3 lig = dirLight + ambientColor;
 	
     //最終的な色
     float4 finalColor= albedo;

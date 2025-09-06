@@ -105,6 +105,11 @@ namespace nsK2EngineLow {
 			return m_sceneLight.GetDirLigColor();
 		}
 
+		void SetAmbientLight(Vector3 ambientColor)
+		{
+			m_sceneLight.SetAmbientLight(ambientColor);
+		}
+
 		/////////////////////////////////////////////////////////////
 		//ƒJƒƒ‰‚ÌŠÖ”
 		/////////////////////////////////////////////////////////////

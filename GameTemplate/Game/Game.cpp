@@ -10,9 +10,10 @@ bool Game::Start()
 	m_animationClipArray[enAnimClip_Run].Load("Assets/animData/run.tka");
 	m_animationClipArray[enAnimClip_Run].SetLoopFlag(true);
 
-	m_model.Init("Assets/modelData/unityChan.tkm", nullptr, 0, enModelUpAxisZ);
+	m_model.Init("Assets/modelData/sample.tkm", nullptr, 0, enModelUpAxisZ);
 	// レンダリングエンジンの描画処理を実行。
 	g_renderingEngine->SetDirectionLight(Vector3{ 0.0f,0.0f,-1.0f }, Vector3{ 1.0f,1.0f,1.0f });
+	g_renderingEngine->SetAmbientLight(Vector3{ 0.5f,0.5f,0.5f });
 
 	return true;
 }
@@ -39,8 +40,6 @@ void Game::Update()
 	if (g_pad[0]->IsPress(enButtonLeft)) {
 		m_scale.x -= 0.02f;
 	}
-
-
 
 	m_model.SetPosition(m_position);
 	m_model.SetRotation(m_rotation);
