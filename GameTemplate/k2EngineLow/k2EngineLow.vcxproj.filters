@@ -228,6 +228,12 @@
     <ClCompile Include="ModelRender.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
+    <ClCompile Include="PostEffect.cpp">
+      <Filter>PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Bloom.cpp">
+      <Filter>PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -505,6 +511,12 @@
     <ClInclude Include="ModelRender.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="RenderingEngine.h" />
+    <ClInclude Include="PostEffect.h">
+      <Filter>PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Bloom.h">
+      <Filter>PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -563,6 +575,9 @@
     </Filter>
     <Filter Include="AI\PathFinding">
       <UniqueIdentifier>{72d94fe6-e599-4523-8e54-81df808c96fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostEffect">
+      <UniqueIdentifier>{bfc79ddf-81ff-4443-8004-cbb0aa0557bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

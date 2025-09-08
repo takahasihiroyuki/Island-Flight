@@ -27,13 +27,6 @@ namespace nsK2EngineLow {
 		void InitSkyCubeModel(ModelInitData& initData);
 
 		/// <summary>
-		/// モデルを初期化する。
-		/// </summary>
-		/// <param name="filePath">ファイルパス</param>
-		/// <param name="enModelUpAxis">モデルの上の向き</param>
-		void InitModel(const char* filePath, EnModelUpAxis enModelUpAxis);
-
-		/// <summary>
 		/// 更新処理
 		/// </summary>
 		void Update();
@@ -174,25 +167,6 @@ namespace nsK2EngineLow {
 		void SetAnimationSpeed(const float animationSpeed)
 		{
 			m_animationSpeed = animationSpeed;
-		}
-
-		////////////////////////////////////////////////
-		//シーンライト系の関数
-		////////////////////////////////////////////////
-
-		SceneLight& GetSceneLight()
-		{
-			return m_sceneLight;
-		}
-
-		/// <summary>
-		/// ディレクションライトの設定
-		/// </summary>
-		/// <param name="direction">方向</param>
-		/// <param name="color">カラー</param>
-		void SetDirectionLight(Vector3 direction, Vector3 color)
-		{
-			m_sceneLight.SetDirectionLight(direction, color);
 		}
 
 

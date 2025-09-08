@@ -2,6 +2,15 @@
 #include "Game.h"
 
 
+Game::Game()
+{
+	m_model.Init("Assets/modelData/sample.tkm", nullptr, 0, enModelUpAxisZ);
+}
+
+Game::~Game()
+{
+}
+
 bool Game::Start()
 {
 	m_animationClipArray[enAnimClip_Idle].Load("Assets/animData/idle.tka");
@@ -10,10 +19,6 @@ bool Game::Start()
 	m_animationClipArray[enAnimClip_Run].Load("Assets/animData/run.tka");
 	m_animationClipArray[enAnimClip_Run].SetLoopFlag(true);
 
-	m_model.Init("Assets/modelData/sample.tkm", nullptr, 0, enModelUpAxisZ);
-	// レンダリングエンジンの描画処理を実行。
-	g_renderingEngine->SetDirectionLight(Vector3{ 0.0f,0.0f,-1.0f }, Vector3{ 1.0f,1.0f,1.0f });
-	g_renderingEngine->SetAmbientLight(Vector3{ 0.5f,0.5f,0.5f });
 
 	return true;
 }

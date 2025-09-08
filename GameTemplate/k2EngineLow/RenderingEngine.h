@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Light.h"
+#include "PostEffect.h"
+
 
 namespace nsK2EngineLow {
 	class ModelRender;
@@ -14,6 +16,7 @@ namespace nsK2EngineLow {
 		void Init();
 
 		void InitGBuffer();
+		void InitLight();
 		void InitMainRenderTarget();
 		void InitCopyToframeBufferSprite();
 		void InitDefferedLightingSprite();
@@ -133,6 +136,12 @@ namespace nsK2EngineLow {
 		}
 
 	private:
+		/// <summary>
+		/// ポストエフェクト
+		/// </summary>
+		/// <param name="rc"></param>
+		/// <param name="mainRenderTarget"></param>
+		void PostEffecting(RenderContext& rc);
 
 
 	private:
@@ -154,7 +163,7 @@ namespace nsK2EngineLow {
 
 		std::vector<ModelRender*>		m_modelList;	//モデルリスト
 		SceneLight						m_sceneLight;	//シーンライト
-
+		PostEffect						m_postEffect;	//ポストエフェクト
 	};
 
 }

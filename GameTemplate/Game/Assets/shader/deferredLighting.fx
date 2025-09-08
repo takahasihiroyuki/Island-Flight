@@ -97,6 +97,8 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
     {
         t = 0.0f;
     }
+    
+   
 	//ƒ‰ƒCƒg‚Ì‰e‹¿“x‚ð•Ô‚·
     return lightColor * t;
 }

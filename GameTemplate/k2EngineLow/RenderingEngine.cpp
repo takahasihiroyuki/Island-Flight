@@ -3,9 +3,15 @@
 
 namespace nsK2EngineLow
 {
+	namespace
+	{
+		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_COLOR = Vector3(1.0f, 1.0f,1.0f);
+		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_DIRECTION = Vector3(1.0f,0.0f, -1.0f);
+		const Vector3 SCENELIGHT_AMBIENTLIGHT_COLOR = Vector3(0.5f, 0.5f, 0.5f);
+	}
+
 	RenderingEngine::RenderingEngine()
 	{
-		Init();
 	}
 
 	RenderingEngine::~RenderingEngine()
@@ -15,10 +21,22 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::Init()
 	{
+
 		InitMainRenderTarget();
-		InitCopyToframeBufferSprite();
+
 		InitGBuffer();
+
+		InitLight();
+
+		//ポストエフェクトの初期化。
+		m_postEffect.Init(
+			m_mainRenderTarget
+		);
+
 		InitDefferedLightingSprite();
+
+		InitCopyToframeBufferSprite();
+
 	}
 
 	void RenderingEngine::InitMainRenderTarget()
@@ -77,6 +95,21 @@ namespace nsK2EngineLow
 			1,
 			DXGI_FORMAT_R8G8B8A8_UNORM,
 			DXGI_FORMAT_UNKNOWN
+		);
+
+	}
+
+	void RenderingEngine::InitLight()
+	{
+		//ディレクションライトの設定。
+		m_sceneLight.SetDirectionLight(
+			SCENELIGHT_DHIRECTIONLIGHT_DIRECTION,
+			SCENELIGHT_DHIRECTIONLIGHT_COLOR
+		);
+
+		//アンビエントライトの設定。
+		m_sceneLight.SetAmbientLight(
+			SCENELIGHT_AMBIENTLIGHT_COLOR
 		);
 
 	}
@@ -173,6 +206,10 @@ namespace nsK2EngineLow
 		//ディファードライティング
 		DeferredLighting(rc);
 
+		//輝度抽出とガウシアンブラー実行
+		//ボケ画像をメインレンダリングターゲットに加算合成
+		PostEffecting(rc);
+
 		//メインレンダリングターゲットの絵をフレームバッファにコピー
 		CopyMainRenderTargetToFrameBuffer(rc);
 
@@ -180,6 +217,11 @@ namespace nsK2EngineLow
 		//描画したオブジェクトをクリアする
 		ObjectClear();
 
+	}
+
+	void RenderingEngine::PostEffecting(RenderContext& rc)
+	{
+		m_postEffect.Render(rc, m_mainRenderTarget);
 	}
 
 }

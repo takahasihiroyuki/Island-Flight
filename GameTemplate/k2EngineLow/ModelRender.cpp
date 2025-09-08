@@ -9,10 +9,6 @@ namespace nsK2EngineLow {
 		// アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationCrips, enModelUpAxis);
 
-
-		// ディレクションライトの初期化。
-		SetDirectionLight(Vector3(1.0f, -1.0f, -1.0f), Vector3(0.5f, 0.5f, 0.5f));
-
 		// GBuffer描画用のモデルを初期化
 		InitModelOnRenderGBuffer(filePath, enModelUpAxis, isShadowReciever);
 
@@ -22,34 +18,6 @@ namespace nsK2EngineLow {
 
 	void ModelRender::InitSkyCubeModel(ModelInitData& initData)
 	{
-	}
-
-	void ModelRender::InitModel(const char* filePath, EnModelUpAxis enModelUpAxis)
-	{
-		ModelInitData initData;
-		//tkmファイルのファイルパスを指定する。
-		initData.m_tkmFilePath = filePath;
-		//シェーダーファイルのファイルパスを指定する。
-		initData.m_fxFilePath = "Assets/shader/model.fx";
-		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
-		initData.m_vsEntryPointFunc = "VSMain";
-
-		//シェーダー側にライトの情報を渡すための変数を設定する。
-		initData.m_expandConstantBuffer = &GetSceneLight().GetSceneLight();
-		initData.m_expandConstantBufferSize = sizeof(GetSceneLight().GetSceneLight());
-
-		if (m_animationClips != nullptr) {
-			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
-			initData.m_vsSkinEntryPointFunc = "VSSkinMain";
-			//スケルトンを指定する。
-			initData.m_skeleton = &m_skeleton;
-		}
-
-		//モデルの上方向を指定する。
-		initData.m_modelUpAxis = enModelUpAxis;
-
-		//作成した初期化データをもとにモデルを初期化する、
-		m_model.Init(initData);
 	}
 
 	void ModelRender::Update()
