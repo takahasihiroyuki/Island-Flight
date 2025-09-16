@@ -16,6 +16,7 @@ private:
 	};
 
 	ModelRender m_model;					// ƒ‚ƒfƒ‹
+	ModelRender m_bg;				// ”wŒiƒ‚ƒfƒ‹
 	Vector3 m_position;				// À•W
 	Quaternion m_rotation;			// ‰ñ“]
 	Vector3 m_scale = g_vec3One;	// Šg‘å—¦

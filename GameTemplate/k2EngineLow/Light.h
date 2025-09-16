@@ -22,17 +22,24 @@ namespace nsK2EngineLow {
 		Vector3				cameraEyePos;			//カメラの座標
 		float				pad;					//パティング
 		Vector3             ambientColor;           //アンビエントカラー
-
+		float				pad1;					//パティング
+		Matrix mLVP;//ライトビュー投影行列。
 	};
 
 	class SceneLight
 	{
 	public:
 		void Init();
+		void LightCameraUpdate();
 
 		Light& GetSceneLight()
 		{
 			return m_light;
+		}
+
+		Camera& GetLightCamera()
+		{
+			return m_lightCamera;
 		}
 
 		//////////////////////////////////////////////////////////////////////
@@ -55,6 +62,7 @@ namespace nsK2EngineLow {
 		/// <param name="direction">方向</param>
 		void SetDirLightDirection(Vector3 direction)
 		{
+			direction.Normalize();
 			m_light.directionalLight.lightDirection = direction;
 		}
 
@@ -98,6 +106,20 @@ namespace nsK2EngineLow {
 			m_light.ambientColor= ambientColor;
 		}
 
+		//////////////////////////////////////////////////////////////////////
+		///ライトビュープロジェクション行列の関数
+		////////////////////////////////////////////////////////////////////// 
+
+		/// <summary>
+		/// ライトビュープロジェクション行列を設定する
+		/// </summary>
+		/// <param name="ambientColor"></param>
+		void SetLightLVP(Matrix lvp)
+		{
+			m_light.mLVP = lvp;
+		}
+		
+
 
 		////////////////////////////////////////////////////////
 		///カメラの位置の関数
@@ -112,8 +134,25 @@ namespace nsK2EngineLow {
 			m_light.cameraEyePos = eyePos;
 		}
 
+		////////////////////////////////////////////////////////
+		///ライトカメラの関数
+		////////////////////////////////////////////////////////
+
+		/// <summary>
+		/// ライトカメラの設定。
+		/// </summary>
+		/// <param name="pos"></param>
+		/// <param name="target"></param>
+		void SetLightCamera(Vector3 pos, Vector3 target)
+		{
+			m_lightCamera.SetPosition(pos);
+			target.Normalize();
+			m_lightCamera.SetTarget(target);
+		}
+
 	private:
 		Light m_light;
+		Camera 					       m_lightCamera;   //ライトカメラ
 	};
 }
 

@@ -2,6 +2,7 @@
 
 #include "Light.h"
 #include "PostEffect.h"
+#include "Shadow.h"
 
 
 namespace nsK2EngineLow {
@@ -16,7 +17,6 @@ namespace nsK2EngineLow {
 		void Init();
 
 		void InitGBuffer();
-		void InitLight();
 		void InitMainRenderTarget();
 		void InitCopyToframeBufferSprite();
 		void InitDefferedLightingSprite();
@@ -135,7 +135,16 @@ namespace nsK2EngineLow {
 			m_modelList.push_back(modelRender);
 		}
 
+		/// <summary>
+		/// ライトカメラの取得
+		/// </summary>
+		/// <returns></returns>
+		Camera& GetLightCamera()
+		{
+			return m_sceneLight.GetLightCamera();
+		}
 	private:
+
 		/// <summary>
 		/// ポストエフェクト
 		/// </summary>
@@ -151,7 +160,10 @@ namespace nsK2EngineLow {
 			enGBufferAlbedo,           // アルベド
 			enGBufferNormal,           // 法線
 			enGBufferSpecular,         // スペキュラ
+			enGBufferWorldPos,         // ワールド座標
+			enGBufferShadow,           // シャドウ
 			enGBufferNum,              // G-Bufferの数
+
 		};
 
 		Sprite m_copyToframeBufferSprite;				//メインレンダリングターゲットをフレームバッファにコピーするためのスプライト
@@ -164,6 +176,8 @@ namespace nsK2EngineLow {
 		std::vector<ModelRender*>		m_modelList;	//モデルリスト
 		SceneLight						m_sceneLight;	//シーンライト
 		PostEffect						m_postEffect;	//ポストエフェクト
+		RenderTarget         m_shadowMapRenderTarget;   //シャドウマップ用レンダリングターゲット
+		Shadow						   m_shadow;        //シャドウ
 	};
 
 }

@@ -13,6 +13,7 @@ namespace nsK2EngineLow {
 		/// <param name="animationClips">アニメーションクリップ</param>
 		/// <param name="numAnimationClips">アニメーションクリップの数</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
+		/// <param name="isShadowReciever">影を受ける側か</param>
 		void Init(const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationCrips = 0,
@@ -43,13 +44,20 @@ namespace nsK2EngineLow {
 		}
 
 		/// <summary>
-		/// モデルを描画する(RenderingEngineで描画するときに呼び出す)
+		/// モデルを描画する(RenderingEngineで描画するときに呼び出す)。
 		/// </summary>
 		/// <param name="rc"></param>
 		void OnRenderModel(RenderContext& rc)
 		{
 			m_model.Draw(rc);
 		}
+
+		/// <summary>
+		/// シャドウマップの描画をする（シャドウクラスで呼び出す）。
+		/// </summary>
+		/// <param name="rc"></param>
+		/// <param name="came"></param>
+		void OnRenderShadowMap(RenderContext& rc, Camera& came);
 
 		/// <summary>
 		/// 行列を設定。
@@ -76,7 +84,7 @@ namespace nsK2EngineLow {
 		/// <param name="position">Vector3の座標</param>
 		void SetPosition(const Vector3& position)
 		{
-				m_position = position;
+			m_position = position;
 		}
 		/// <summary>
 		/// 座標の設定
@@ -169,40 +177,46 @@ namespace nsK2EngineLow {
 			m_animationSpeed = animationSpeed;
 		}
 
+	private:
+
+		/// <summary>
+		/// スケルトンの初期化。
+		/// </summary>
+		/// <param name="filePath">ファイルパス。</param>
+		void InitSkeleton(const char* filePath);
+
+		/// <summary>
+		/// アニメーションの初期化。
+		/// </summary>
+		/// <param name="animationClips">アニメーションクリップ。</param>
+		/// <param name="numAnimationClips">アニメーションクリップの数。</param>
+		/// <param name="enModelUpAxis">モデルの上向き。</param>
+		void InitAnimation(
+			AnimationClip* animationClips,
+			int numAnimationClips,
+			EnModelUpAxis enModelUpAxis
+		);
+
+		/// <summary>
+		/// GBuffer描画モデルの初期化
+		/// </summary>
+		/// <param name="tkmFilePath"></param>
+		/// <param name="enModelUpAxis"></param>
+		/// <param name="isShadowReciever"></param>
+		void InitModelOnRenderGBuffer(const char* tkmFilePath, EnModelUpAxis enModelUpAxis, bool isShadowReciever);
+
+		/// <summary>
+		/// 陰のモデルを初期化する。
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <param name="enModelUpAxis"></param>
+		void InitShadowModel(const char* filePath, EnModelUpAxis enModelUpAxis);
 
 
-		private :
-
-			/// <summary>
-			/// スケルトンの初期化。
-			/// </summary>
-			/// <param name="filePath">ファイルパス。</param>
-			void InitSkeleton(const char* filePath);
-
-			/// <summary>
-			/// アニメーションの初期化。
-			/// </summary>
-			/// <param name="animationClips">アニメーションクリップ。</param>
-			/// <param name="numAnimationClips">アニメーションクリップの数。</param>
-			/// <param name="enModelUpAxis">モデルの上向き。</param>
-			void InitAnimation(
-				AnimationClip* animationClips,
-				int numAnimationClips,
-				EnModelUpAxis enModelUpAxis
-			);
-
-			/// <summary>
-			/// GBuffer描画モデルの初期化
-			/// </summary>
-			/// <param name="tkmFilePath"></param>
-			/// <param name="enModelUpAxis"></param>
-			/// <param name="isShadowReciever"></param>
-			void InitModelOnRenderGBuffer(const char* tkmFilePath, EnModelUpAxis enModelUpAxis, bool isShadowReciever);
 
 
 
-
-	private :
+	private:
 		Skeleton					m_skeleton;									//スケルトン
 		AnimationClip* m_animationClips = nullptr;					            //アニメーションクリップ。
 		int							m_numAnimationClips = 0;					//アニメーションクリップの数。
@@ -223,7 +237,8 @@ namespace nsK2EngineLow {
 
 		SceneLight  			    m_sceneLight;                               //シーンライト
 
-		Model                       m_renderToGBufferModel;	                   // RenderToGBufferで描画されるモデル
+		Model                       m_renderToGBufferModel;	                    // RenderToGBufferで描画されるモデル
+		Model                       m_shadowModel;							    //影描画用モデル
 
 	};
 }

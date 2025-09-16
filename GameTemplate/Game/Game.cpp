@@ -4,7 +4,9 @@
 
 Game::Game()
 {
-	m_model.Init("Assets/modelData/sample.tkm", nullptr, 0, enModelUpAxisZ);
+	m_model.Init("Assets/modelData/sample.tkm", nullptr, 0, enModelUpAxisZ,false);
+	m_bg.Init("Assets/modelData/bg/bg.tkm", nullptr, 0, enModelUpAxisZ,true);
+
 }
 
 Game::~Game()
@@ -25,8 +27,8 @@ bool Game::Start()
 void Game::Update()
 {
 	// 左スティック(キーボード：WASD)で平行移動。
-	m_position.x += g_pad[0]->GetLStickXF();
-	m_position.y += g_pad[0]->GetLStickYF();
+	m_position.x += g_pad[0]->GetLStickXF()*10;
+	m_position.z += g_pad[0]->GetLStickYF()*10.0f;
 
 	// 右スティック(キーボード：上下左右)で回転。
 	m_rotation.AddRotationY(g_pad[0]->GetRStickXF() * 0.05f);
@@ -49,6 +51,7 @@ void Game::Update()
 	m_model.SetPosition(m_position);
 	m_model.SetRotation(m_rotation);
 	m_model.Update();
+
 	//// ワールド行列を更新。
 	//m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 }
@@ -56,4 +59,5 @@ void Game::Render(RenderContext& rc)
 {
 	// ドロー。
 	m_model.Draw(rc);
+	m_bg.Draw(rc);
 }

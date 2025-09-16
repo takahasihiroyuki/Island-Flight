@@ -37,9 +37,8 @@ sampler Sampler : register(s0);
 /////////////////////////////////////////////////////////
 // 輝度抽出用
 /////////////////////////////////////////////////////////
-/*!
- * @brief 輝度抽出用のピクセルシェーダー
- */
+
+//輝度抽出用のピクセルシェーダー。
 float4 PSSamplingLuminance(PSInput In) : SV_Target0
 {
     // メインレンダリングターゲットからカラーをサンプリング
@@ -57,15 +56,15 @@ float4 PSSamplingLuminance(PSInput In) : SV_Target0
 /////////////////////////////////////////////////////////
 // ボケ画像の平均出力用
 /////////////////////////////////////////////////////////
-/*!
- * @brief ボケ画像の平均出力用のピクセルシェーダー
- */
+
 
 // ボケ画像にアクセスするための変数を追加
 Texture2D<float4> g_bokeTexture_0 : register(t0);
 Texture2D<float4> g_bokeTexture_1 : register(t1);
 Texture2D<float4> g_bokeTexture_2 : register(t2);
 Texture2D<float4> g_bokeTexture_3 : register(t3);
+
+//ボケ画像の平均出力用のピクセルシェーダー
 
 float4 PSBloomFinal(PSInput In) : SV_Target0
 {

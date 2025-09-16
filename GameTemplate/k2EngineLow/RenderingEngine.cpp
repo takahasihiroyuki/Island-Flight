@@ -3,12 +3,6 @@
 
 namespace nsK2EngineLow
 {
-	namespace
-	{
-		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_COLOR = Vector3(1.0f, 1.0f,1.0f);
-		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_DIRECTION = Vector3(1.0f,0.0f, -1.0f);
-		const Vector3 SCENELIGHT_AMBIENTLIGHT_COLOR = Vector3(0.5f, 0.5f, 0.5f);
-	}
 
 	RenderingEngine::RenderingEngine()
 	{
@@ -21,12 +15,15 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::Init()
 	{
+		//シャドウマップの初期化。
+		m_shadow.Init();
 
 		InitMainRenderTarget();
 
 		InitGBuffer();
 
-		InitLight();
+		//ディレクションライトの設定。
+		m_sceneLight.Init();
 
 		//ポストエフェクトの初期化。
 		m_postEffect.Init(
@@ -36,6 +33,7 @@ namespace nsK2EngineLow
 		InitDefferedLightingSprite();
 
 		InitCopyToframeBufferSprite();
+
 
 	}
 
@@ -97,19 +95,14 @@ namespace nsK2EngineLow
 			DXGI_FORMAT_UNKNOWN
 		);
 
-	}
-
-	void RenderingEngine::InitLight()
-	{
-		//ディレクションライトの設定。
-		m_sceneLight.SetDirectionLight(
-			SCENELIGHT_DHIRECTIONLIGHT_DIRECTION,
-			SCENELIGHT_DHIRECTIONLIGHT_COLOR
-		);
-
-		//アンビエントライトの設定。
-		m_sceneLight.SetAmbientLight(
-			SCENELIGHT_AMBIENTLIGHT_COLOR
+		//ワールド座標用のターゲットを作成
+		m_gBuffer[enGBufferWorldPos].Create(
+			g_graphicsEngine->GetFrameBufferWidth(),
+			g_graphicsEngine->GetFrameBufferHeight(),
+			1,
+			1,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_UNKNOWN
 		);
 
 	}
@@ -125,6 +118,9 @@ namespace nsK2EngineLow
 		spriteInitData.m_textures[enGBufferAlbedo] = &m_gBuffer[enGBufferAlbedo].GetRenderTargetTexture();
 		spriteInitData.m_textures[enGBufferNormal] = &m_gBuffer[enGBufferNormal].GetRenderTargetTexture();
 		spriteInitData.m_textures[enGBufferSpecular] = &m_gBuffer[enGBufferSpecular].GetRenderTargetTexture();
+		spriteInitData.m_textures[enGBufferWorldPos] = &m_gBuffer[enGBufferWorldPos].GetRenderTargetTexture();
+		spriteInitData.m_textures[enGBufferShadow] = &m_shadow.GetShadowTarget().GetRenderTargetTexture();
+
 
 
 		spriteInitData.m_fxFilePath = "Assets/shader/deferredLighting.fx";
@@ -143,6 +139,7 @@ namespace nsK2EngineLow
 			&m_gBuffer[enGBufferAlbedo]   // 0番目のレンダリングターゲット
 			,& m_gBuffer[enGBufferNormal]   // 1番目のレンダリングターゲット
 			,& m_gBuffer[enGBufferSpecular] // 2番目のレンダリングターゲット
+			,& m_gBuffer[enGBufferWorldPos] // 3番目のレンダリングターゲット
 		};
 
 		// まず、レンダリングターゲットとして設定できるようになるまで待つ
@@ -162,6 +159,7 @@ namespace nsK2EngineLow
 
 		// レンダリングターゲットへの書き込み待ち
 		rc.WaitUntilFinishDrawingToRenderTargets(ARRAYSIZE(rts), rts);
+
 
 	}
 
@@ -198,10 +196,12 @@ namespace nsK2EngineLow
 	}
 
 	void RenderingEngine::Execute(RenderContext& rc)
-	{
-
+	{		
 		//GBufferへのレンダリング
 		RenderToGBuffer(rc);
+
+		m_shadow.Execute(rc, m_modelList);
+
 
 		//ディファードライティング
 		DeferredLighting(rc);

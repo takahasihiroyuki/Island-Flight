@@ -22,6 +22,7 @@ struct SVSIn
     float3 biNormal : BINORMAL;
     float2 uv       : TEXCOORD0;
     SSkinVSIn skinVert; //スキン用のデータ。
+
 };
 
 //ピクセルシェーダーへの入力
@@ -32,14 +33,16 @@ struct SPSIn
     float3 tangent  : TANGENT;
     float3 biNormal : BINORMAL;
     float2 uv       : TEXCOORD0;
+    float3 worldPos : TEXCOORD1;
 };
 
 // ピクセルシェーダーからの出力
 struct SPSOut
 {
-    float4 albedo : SV_Target0; // アルベド
-    float3 normal : SV_Target1; // 法線
-    float specPow : SV_Target2; // スペキュラ強度
+    float4 albedo   : SV_Target0; // アルベド
+    float4 normal   : SV_Target1; // 法線
+    float specPow   : SV_Target2; // スペキュラ強度
+    float3 worldPos : SV_Target3; // ワールド座標
 };
 
 
@@ -86,6 +89,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     }
 
     psIn.pos = mul(m, vsIn.pos); // モデルの頂点をワールド座標系に変換
+    psIn.worldPos = psIn.pos;
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
     psIn.normal = mul(m, vsIn.normal);
@@ -108,9 +112,8 @@ SPSIn VSSkinMain(SVSIn vsIn)
     return VSMainCore(vsIn, true);
 }
 
-
 //モデル用のピクセルシェーダーのエントリーポイント
-SPSOut PSMain(SPSIn psIn)
+SPSOut PSMain(SPSIn psIn,bool isShadowReciever)
 {
     //GBufferに出力
     SPSOut psOut;
@@ -118,11 +121,36 @@ SPSOut PSMain(SPSIn psIn)
     //アルベドカラーの抽出
     psOut.albedo = g_albedo.Sample(g_sampler, psIn.uv);
         
-    psOut.normal = CalcNormal(psIn);
+    psOut.normal.xyz = CalcNormal(psIn);
     
     psOut.specPow = g_specularMap.Sample(g_sampler, psIn.uv); //スペキュラ強度はとりあえず1.0fで固定。
     
+    //ワールド座標の抽出
+    psOut.worldPos = psIn.worldPos;
+    
+    // シャドウレシーバーかどうかを判定するフラグをw成分に格納する。
+    //法線マップのｗは使わないので、ここに格納する。
+    if (isShadowReciever == true)
+    {
+        psOut.normal.w = 1.0f;
+    }
+    else
+    {
+        psOut.normal.w = 0.0f;
+    }
+    
     return psOut;
+}
+
+
+SPSOut PSMainShadowReciever(SPSIn psIn) : SV_Target0
+{
+    return PSMain(psIn, true);
+}
+
+SPSOut PSNormalMain(SPSIn psIn) : SV_Target0
+{
+    return PSMain(psIn, false);
 }
 
 //////関数/////////////////////////////////////////////////////////////////////

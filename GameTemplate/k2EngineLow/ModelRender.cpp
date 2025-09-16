@@ -2,12 +2,18 @@
 #include "ModelRender.h"
 
 namespace nsK2EngineLow {
-	void ModelRender::Init(const char* filePath, AnimationClip* animationClips, int numAnimationCrips, EnModelUpAxis enModelUpAxis,bool isShadowReciever)
+	void ModelRender::Init(const char* filePath, AnimationClip* animationClips, int numAnimationCrips, EnModelUpAxis enModelUpAxis, bool isShadowReciever)
 	{
 		// スケルトンを初期化。
 		InitSkeleton(filePath);
 		// アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationCrips, enModelUpAxis);
+
+		//影を受ける側じゃないなら。
+		if (!isShadowReciever) {
+			// シャドウキャスター用のモデルを初期化。
+			InitShadowModel(filePath, enModelUpAxis);
+		}
 
 		// GBuffer描画用のモデルを初期化
 		InitModelOnRenderGBuffer(filePath, enModelUpAxis, isShadowReciever);
@@ -25,6 +31,8 @@ namespace nsK2EngineLow {
 		//モデル側に移動回転拡大を渡す
 		m_renderToGBufferModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 
+		//影のモデルに移動回転拡大を渡す
+		m_shadowModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 
 		//スケルトンを更新。
 		if (m_skeleton.IsInited())
@@ -45,6 +53,16 @@ namespace nsK2EngineLow {
 		g_renderingEngine->AddModelList(this);
 	}
 
+
+	void ModelRender::OnRenderShadowMap(RenderContext& rc, Camera& came)
+	{
+		if (m_shadowModel.IsInited())
+		{
+			m_shadowModel.Draw(rc, came, 1);
+
+		}
+
+	}
 
 	void ModelRender::SetWorldMatrix(const Matrix& matrix)
 	{
@@ -98,7 +116,13 @@ namespace nsK2EngineLow {
 		{
 			modelInitData.m_vsEntryPointFunc = "VSMain";
 		}
-
+		if (isShadowReciever) {
+			modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
+		}
+		else
+		{
+			modelInitData.m_psEntryPointFunc = "PSNormalMain";
+		}
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -107,6 +131,23 @@ namespace nsK2EngineLow {
 		m_renderToGBufferModel.Init(modelInitData);
 
 	}
+	void ModelRender::InitShadowModel(const char* filePath, EnModelUpAxis enModelUpAxis)
+	{
+		ModelInitData shadowInitData;
+		shadowInitData.m_tkmFilePath = filePath;
+		shadowInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
+		shadowInitData.m_vsEntryPointFunc = "VSMain";
+		shadowInitData.m_psEntryPointFunc = "PSShadowCaster";
+		if (m_animationClips != nullptr) {
+			shadowInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			shadowInitData.m_skeleton = &m_skeleton;
+		}
+		shadowInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
+
+		shadowInitData.m_modelUpAxis = enModelUpAxis;
+		m_shadowModel.Init(shadowInitData);
+	}
+
 }
 
 
