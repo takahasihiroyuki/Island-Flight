@@ -314,6 +314,7 @@
     <ClCompile Include="math\Matrix.cpp" />
     <ClCompile Include="math\Vector.cpp" />
     <ClCompile Include="ModelRender.cpp" />
+    <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="online\SyncOnlineTwoPlayerMatchEngine.cpp" />
     <ClCompile Include="physics\BoxCollider.cpp" />
     <ClCompile Include="physics\CapsuleCollider.cpp" />
@@ -325,6 +326,7 @@
     <ClCompile Include="physics\PhysicsStaticObject.cpp" />
     <ClCompile Include="physics\RigidBody.cpp" />
     <ClCompile Include="physics\SphereCollider.cpp" />
+    <ClCompile Include="PlaneReflectionPass.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="Shadow.cpp" />
@@ -349,6 +351,7 @@
     <ClInclude Include="gameObject\IGameobject.h" />
     <ClInclude Include="geometry\AABB.h" />
     <ClInclude Include="geometry\BSP.h" />
+    <ClInclude Include="GraphicsEnums.h" />
     <ClInclude Include="graphics\Animation.h" />
     <ClInclude Include="graphics\AnimationClip.h" />
     <ClInclude Include="graphics\AnimationPlayController.h" />
@@ -408,6 +411,7 @@
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
     <ClInclude Include="ModelRender.h" />
+    <ClInclude Include="Ocean.h" />
     <ClInclude Include="online\SyncOnlineTwoPlayerMatchEngine.h" />
     <ClInclude Include="physics\BoxCollider.h" />
     <ClInclude Include="physics\CapsuleCollider.h" />
@@ -421,6 +425,7 @@
     <ClInclude Include="physics\PhysicsStaticObject.h" />
     <ClInclude Include="physics\RigidBody.h" />
     <ClInclude Include="physics\SphereCollider.h" />
+    <ClInclude Include="PlaneReflectionPass.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="Shadow.h" />

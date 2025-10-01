@@ -318,6 +318,18 @@ namespace nsK2EngineLow {
 			xmv = DirectX::XMVector3Normalize(xmv);
 			DirectX::XMStoreFloat3(&vec, xmv);
 		}
+
+		/// <summary>
+		/// 与えられたベクトルを正規化したコピーを返す。
+		/// </summary>
+		/// <param name="v"></param>
+		/// <returns></returns>
+		Vector3 NormalizeCopy(const Vector3& v) {
+			Vector3 tmp = v;
+			tmp.Normalize();
+			return tmp;
+		}
+
 		/// <summary>
 		/// ベクトルをスカラーで除算。
 		/// </summary>

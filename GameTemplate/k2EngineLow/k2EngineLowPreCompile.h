@@ -116,3 +116,6 @@ static const int MAX_BONE = 512;	// ƒ{[ƒ“‚ÌÅ‘å”B
 #include "Bloom.h"
 #include "PostEffect.h"
 #include "Shadow.h"
+#include "Ocean.h"
+#include "PlaneReflectionPass.h"
+

@@ -1,11 +1,13 @@
 #pragma once
 #include "Light.h"
-
+#include "GraphicsEnums.h"
 
 namespace nsK2EngineLow {
 	class ModelRender
 	{
 	public:
+		ModelRender();
+		~ModelRender();
 		/// <summary>
 		/// 通常描画用の初期化
 		/// </summary>
@@ -14,12 +16,24 @@ namespace nsK2EngineLow {
 		/// <param name="numAnimationClips">アニメーションクリップの数</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
 		/// <param name="isShadowReciever">影を受ける側か</param>
+		/// <param name="enableReflection">反射で映り込むかどうか</param>
+		/// <param name="isFowardRender">フォワードレンダリングで描画するか</param>
+		/// <param name="disableLayer">反射で映り込まないレイヤー</param>
 		void Init(const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationCrips = 0,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
-			bool isShadowReciever = true
+			bool isShadowReciever = true,
+			bool isFowardRender = false,
+			ReflectLayer disableLayer = ReflectLayer::enNone
 		);
+
+		/// <summary>
+		/// 海描画用の初期化
+		/// </summary>
+		/// <param name="initData"></param>
+		/// <param name="tkmFilePath">ファイルパス</param>
+		void InitOcean(ModelInitData& initData);
 
 		/// <summary>
 		/// スカイキューブを作るときに使用。
@@ -34,13 +48,22 @@ namespace nsK2EngineLow {
 
 		void Draw(RenderContext& rc);
 
+		void PlaneDraw();
+
 		/// <summary>
 		/// ディファード用のモデルの描画
 		/// </summary>
 		/// <param name="rc"></param>
 		void OnDraw(RenderContext& rc)
 		{
-			m_renderToGBufferModel.Draw(rc);
+			if (m_isFowardRender) {
+				m_frowardRenderModel.Draw(rc);
+				return;
+			}
+			else {
+				m_renderToGBufferModel.Draw(rc);
+
+			}
 		}
 
 		/// <summary>
@@ -58,6 +81,8 @@ namespace nsK2EngineLow {
 		/// <param name="rc"></param>
 		/// <param name="came"></param>
 		void OnRenderShadowMap(RenderContext& rc, Camera& came);
+
+		void OnRenderReflectionMap(RenderContext& rc, Camera& came);
 
 		/// <summary>
 		/// 行列を設定。
@@ -149,6 +174,11 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void UpdateWorldMatrixInModes();
 
+		Matrix GetWorldMatrix() const
+		{
+			return m_model.GetWorldMatrix();
+		}
+
 		/// <summary>
 		/// アニメーション再生。
 		/// </summary>
@@ -175,6 +205,13 @@ namespace nsK2EngineLow {
 		void SetAnimationSpeed(const float animationSpeed)
 		{
 			m_animationSpeed = animationSpeed;
+		}
+
+		void ChangeAlbedoMap(const char* filePath, Texture& albedoMap)
+		{
+			m_model.ChangeAlbedoMap(filePath, albedoMap);
+			m_renderToGBufferModel.ChangeAlbedoMap(filePath, albedoMap);
+			m_shadowModel.ChangeAlbedoMap(filePath, albedoMap);
 		}
 
 	private:
@@ -212,7 +249,7 @@ namespace nsK2EngineLow {
 		/// <param name="enModelUpAxis"></param>
 		void InitShadowModel(const char* filePath, EnModelUpAxis enModelUpAxis);
 
-
+		void InitReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis);
 
 
 
@@ -228,18 +265,19 @@ namespace nsK2EngineLow {
 		Quaternion					m_rotation = Quaternion::Identity;		    //回転
 
 		Model						m_model;								    //モデルクラス
-		Model						m_translucentModel;					        // 半透明モデル。
+		Model						m_frowardRenderModel;					    // フォワードレンダリングの描画パスで描画されるモデル
 		ModelInitData				m_modelInitData;						    //モデルを初期化するための情報を設定するクラス
 
 
+		bool						m_isFowardRender = false;					//フォワードレンダリングで描画するか
 		bool						m_setWorldMatrix = false;			        // ワールド行列が外部から設定されている
 		bool						m_isInit = false;					        //初期化したか
-
+		std::map<ReflectLayer, bool> m_enableReflection;   // 反射で映り込むかどうか
 		SceneLight  			    m_sceneLight;                               //シーンライト
 
 		Model                       m_renderToGBufferModel;	                    // RenderToGBufferで描画されるモデル
 		Model                       m_shadowModel;							    //影描画用モデル
-
+		Model                       m_ReflectionModel;                          //反射マップ描画用モデル
 	};
 }
 

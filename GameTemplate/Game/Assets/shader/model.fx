@@ -66,6 +66,7 @@ StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
 sampler g_sampler : register(s0);	                    //サンプラステート。
 Texture2D<float4> g_normalMap : register(t1);           //法線マップにアクセスするための変数。
 Texture2D<float4> g_specularMap : register(t2);         //スペキュラマップにアクセスするための変数。
+Texture2D<float4> g_refLect : register(t10);            // 反射マップ
 
 
 ////////////////////////////////////////////////
@@ -152,6 +153,7 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
     float3 normal = psIn.normal;
      normal = psIn.tangent * localNormal.x + psIn.biNormal * localNormal.y + normal * localNormal.z;
 
+    float3 reflect = g_refLect.Sample(g_sampler, psIn.uv).xyz;
 
 
     
@@ -161,7 +163,9 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
     
     //最終的な色
     float4 finalColor = albedoColor;
-    finalColor.xyz *= lig;
+    //finalColor.xyz *= lig;
+    //finalColor.xyz = float3(1.0f, 0.0f, 1.0f); //環境光を足す
+    finalColor.xyz = reflect; 
     
     return finalColor;
 }

@@ -23,11 +23,11 @@ namespace nsK2EngineLow {
 			SCENELIGHT_AMBIENTLIGHT_COLOR
 		);
 
-		// ライトカメラの設定
 		SetLightCamera(
-			LIGHTCAMERA_POSITION, 
+			LIGHTCAMERA_POSITION,
 			SCENELIGHT_DHIRECTIONLIGHT_DIRECTION
 		);
+
 
 		// ライトビュー投影行列の設定
 		SetLightLVP(
@@ -35,16 +35,5 @@ namespace nsK2EngineLow {
 		);
 
 	}
-	void SceneLight::LightCameraUpdate()
-	{
-		//カメラの位置を設定
-		m_lightCamera.SetPosition(g_camera3D->GetTarget() + Vector3(0, 600, -300));
-		//カメラの注視点を設定
-		m_lightCamera.SetTarget(g_camera3D->GetTarget());
-		//ライトビュープロジェクション行列の計算
-		m_lightCamera.Update();
-		//ライトビュー投影行列の設定
-		SetLightLVP(m_lightCamera.GetViewProjectionMatrix());
 
-	}
 }

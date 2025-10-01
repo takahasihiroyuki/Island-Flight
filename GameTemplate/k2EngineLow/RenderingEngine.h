@@ -3,7 +3,8 @@
 #include "Light.h"
 #include "PostEffect.h"
 #include "Shadow.h"
-
+#include "PlaneReflectionPass.h"
+#include "GraphicsEnums.h"
 
 namespace nsK2EngineLow {
 	class ModelRender;
@@ -12,14 +13,20 @@ namespace nsK2EngineLow {
 	class RenderingEngine
 	{
 	public:
+		RenderTarget m_mainRenderTarget;						//メインレンダリングターゲット
+
 		RenderingEngine();
 		~RenderingEngine();
+		void Update();
 		void Init();
 
 		void InitGBuffer();
 		void InitMainRenderTarget();
 		void InitCopyToframeBufferSprite();
 		void InitDefferedLightingSprite();
+
+		void ForwardRendering(RenderContext& rc);
+
 		/// <summary>
 		/// GBufferにレンダリングする。
 		/// </summary>
@@ -71,7 +78,7 @@ namespace nsK2EngineLow {
 		/// <param name="color">ライトの色</param>
 		void SetDirectionLight(Vector3 direction, Vector3 color)
 		{
-			m_sceneLight.SetDirectionLight( direction, color);
+			m_sceneLight.SetDirectionLight(direction, color);
 		}
 
 		/// <summary>
@@ -127,12 +134,25 @@ namespace nsK2EngineLow {
 		}
 
 		/// <summary>
-		/// リストにモデルレンダーを追加する。
+		/// リストにディファード用のモデルレンダーを追加する。
 		/// </summary>
 		/// <param name="modelRender"></param>
-		void AddModelList(ModelRender* modelRender)
+		void AddDeferredModelList(ModelRender* modelRender)
 		{
-			m_modelList.push_back(modelRender);
+			m_deferredModelList.push_back(modelRender);
+		}
+
+		void AddForwardModelList(ModelRender* modelRender)
+		{
+			m_forwardModelList.push_back(modelRender);
+		}
+
+		void AddreflectedModelList(ModelRender* modelRender, ReflectLayer reflectLayer)
+		{
+			for (auto it = m_reflectedModelList.begin(); it != m_reflectedModelList.end(); ++it) {
+				auto& list = it->second;
+				list.push_back(modelRender);
+			}
 		}
 
 		/// <summary>
@@ -143,6 +163,26 @@ namespace nsK2EngineLow {
 		{
 			return m_sceneLight.GetLightCamera();
 		}
+
+		RenderTarget& GetPlaneReflectionRenderTarget(ReflectLayer layer)
+		{
+			return m_planeReflectionPass[layer].GetPlanarReflectionTarget();
+		}
+
+		void SetReflectPlane(Plane& plane, ReflectLayer layer)
+		{
+			m_reflectPlane.insert_or_assign(layer, plane);
+		}
+
+		Matrix GetReflectViewMatrix(ReflectLayer layer) {
+			return m_planeReflectionPass[layer].GetReflectViewMatrix();
+		}
+
+
+		Camera& GetReflectCamera(ReflectLayer layer) {
+			return m_planeReflectionPass[layer].GetReflectCamera();
+		}
+
 	private:
 
 		/// <summary>
@@ -157,7 +197,7 @@ namespace nsK2EngineLow {
 		// GBufferに入れるレンダリングターゲットの役割。
 		enum EnGBuffer
 		{
-			enGBufferAlbedo,           // アルベド
+			enGBufferAlbedoDepth,      // アルベド
 			enGBufferNormal,           // 法線
 			enGBufferSpecular,         // スペキュラ
 			enGBufferWorldPos,         // ワールド座標
@@ -166,18 +206,28 @@ namespace nsK2EngineLow {
 
 		};
 
-		Sprite m_copyToframeBufferSprite;				//メインレンダリングターゲットをフレームバッファにコピーするためのスプライト
-		Sprite m_diferredLightingSprite;				//ディファードライティング用のスプライト
-
-		std::array<RenderTarget, enGBufferNum> m_gBuffer;			//GBuffer用のレンダリングターゲット。
-		RenderTarget m_mainRenderTarget;				//メインレンダリングターゲット
 
 
-		std::vector<ModelRender*>		m_modelList;	//モデルリスト
-		SceneLight						m_sceneLight;	//シーンライト
-		PostEffect						m_postEffect;	//ポストエフェクト
-		RenderTarget         m_shadowMapRenderTarget;   //シャドウマップ用レンダリングターゲット
-		Shadow						   m_shadow;        //シャドウ
+		Sprite m_copyToframeBufferSprite;						//メインレンダリングターゲットをフレームバッファにコピーするためのスプライト
+		Sprite m_diferredLightingSprite;						//ディファードライティング用のスプライト
+
+		std::array<RenderTarget, enGBufferNum> m_gBuffer;		//GBuffer用のレンダリングターゲット。
+
+
+		std::vector<ModelRender*>							m_deferredModelList;	   //ディファードモデルリスト
+		std::vector<ModelRender*>							m_forwardModelList;		   //フォワードモデルリスト
+		SceneLight											m_sceneLight;	           //シーンライト
+		PostEffect											m_postEffect;	           //ポストエフェクト
+		RenderTarget										m_shadowMapRenderTarget;   //シャドウマップ用レンダリングターゲット
+		Shadow												m_shadow;                  //シャドウ
+		std::map<ReflectLayer,PlaneReflectionPass>			m_planeReflectionPass;     // 平面反射パス
+		std::map<ReflectLayer, std::vector<ModelRender*>>	m_reflectedModelList;	   //平面モデルリスト
+		std::map<ReflectLayer, Plane>						m_reflectPlane;	           // 反射平面
+
+
+		// デバッグ用
+		Sprite m_debugReflectionSprite;
+		bool   m_showReflectionDebug = true; // 一時的
 	};
 
 }

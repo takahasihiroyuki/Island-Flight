@@ -2,7 +2,25 @@
 #include "ModelRender.h"
 
 namespace nsK2EngineLow {
-	void ModelRender::Init(const char* filePath, AnimationClip* animationClips, int numAnimationCrips, EnModelUpAxis enModelUpAxis, bool isShadowReciever)
+	ModelRender::ModelRender()
+	{
+		for (int i = 0; i < static_cast<int>(ReflectLayer::enNum); i++) {
+			ReflectLayer layer = static_cast<ReflectLayer>(i);
+			m_enableReflection[layer] = true;
+		}
+	}
+	ModelRender::~ModelRender()
+	{
+	}
+	void ModelRender::Init(
+		const char* filePath,
+		AnimationClip* animationClips,
+		int numAnimationCrips,
+		EnModelUpAxis enModelUpAxis,
+		bool isShadowReciever,
+		bool isFowardRender,
+		ReflectLayer disableLayer
+	)
 	{
 		// スケルトンを初期化。
 		InitSkeleton(filePath);
@@ -18,8 +36,28 @@ namespace nsK2EngineLow {
 		// GBuffer描画用のモデルを初期化
 		InitModelOnRenderGBuffer(filePath, enModelUpAxis, isShadowReciever);
 
+		//反射に移すなら。
+		if (disableLayer == ReflectLayer::enNone) {
+			InitReflectionModel(filePath, enModelUpAxis);
+		}
+		else {
+			m_enableReflection[disableLayer] = false;
+		}
+
+		m_isFowardRender = isFowardRender;
+
 		// 初期化完了。
 		m_isInit = true;
+	}
+
+	void ModelRender::InitOcean(ModelInitData& initData)
+	{
+		m_isFowardRender = true;
+		m_enableReflection[ReflectLayer::enOcean] = false;
+
+		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		m_frowardRenderModel.Init(initData);
+		m_frowardRenderModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	}
 
 	void ModelRender::InitSkyCubeModel(ModelInitData& initData)
@@ -50,18 +88,39 @@ namespace nsK2EngineLow {
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
-		g_renderingEngine->AddModelList(this);
-	}
+		if (!m_isFowardRender) {
+			//ディファードレンダリングで描画するなら
+			g_renderingEngine->AddDeferredModelList(this);
+		}
+		else {
+			//フォワードレンダリングで描画するなら
+			g_renderingEngine->AddForwardModelList(this);
+		}
 
+		//反射に映りこむなら
+		for (int i = 0; i < static_cast<int>(ReflectLayer::enNum); i++) {
+			ReflectLayer layer = static_cast<ReflectLayer>(i);
+			if (m_enableReflection[layer]) {
+				g_renderingEngine->AddreflectedModelList(this, layer);
+			}
+		}
+	}
 
 	void ModelRender::OnRenderShadowMap(RenderContext& rc, Camera& came)
 	{
 		if (m_shadowModel.IsInited())
 		{
 			m_shadowModel.Draw(rc, came, 1);
-
 		}
 
+	}
+
+	void ModelRender::OnRenderReflectionMap(RenderContext& rc, Camera& came)
+	{
+		if (m_ReflectionModel.IsInited())
+		{
+			m_ReflectionModel.Draw(rc, came, 1);
+		}
 	}
 
 	void ModelRender::SetWorldMatrix(const Matrix& matrix)
@@ -146,6 +205,26 @@ namespace nsK2EngineLow {
 
 		shadowInitData.m_modelUpAxis = enModelUpAxis;
 		m_shadowModel.Init(shadowInitData);
+	}
+
+	void ModelRender::InitReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis)
+	{
+		ModelInitData reflectionInitData;
+		reflectionInitData.m_tkmFilePath = filePath;
+		reflectionInitData.m_fxFilePath = "Assets/shader/DrawReflection.fx";
+		reflectionInitData.m_vsEntryPointFunc = "VSMain";
+		reflectionInitData.m_psEntryPointFunc = "PSMain";
+		if (m_animationClips != nullptr) {
+			reflectionInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			reflectionInitData.m_skeleton = &m_skeleton;
+		}
+		reflectionInitData.m_expandConstantBuffer = &g_renderingEngine->GetSceneLight().GetLight();
+		reflectionInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetSceneLight().GetLight());
+
+		reflectionInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+		reflectionInitData.m_modelUpAxis = enModelUpAxis;
+		m_ReflectionModel.Init(reflectionInitData);
 	}
 
 }

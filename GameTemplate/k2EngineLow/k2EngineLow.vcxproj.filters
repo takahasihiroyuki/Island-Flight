@@ -235,6 +235,8 @@
       <Filter>PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Shadow.cpp" />
+    <ClCompile Include="Ocean.cpp" />
+    <ClCompile Include="PlaneReflectionPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -519,6 +521,9 @@
       <Filter>PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Shadow.h" />
+    <ClInclude Include="Ocean.h" />
+    <ClInclude Include="PlaneReflectionPass.h" />
+    <ClInclude Include="GraphicsEnums.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

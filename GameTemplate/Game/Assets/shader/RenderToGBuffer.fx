@@ -120,6 +120,9 @@ SPSOut PSMain(SPSIn psIn,bool isShadowReciever)
     
     //アルベドカラーの抽出
     psOut.albedo = g_albedo.Sample(g_sampler, psIn.uv);
+    clip(psOut.albedo.a - 0.2f); // ピクセルキル
+    psOut.albedo.w = psIn.pos.z;
+
         
     psOut.normal.xyz = CalcNormal(psIn);
     

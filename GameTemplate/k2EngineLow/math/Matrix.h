@@ -308,6 +308,65 @@ namespace nsK2EngineLow {
 			);
 		}
 
+		//‚±‚±‚©‚ç’Ç‰Á
+
+		// s‚ğİ’è‚·‚éŠÖ”
+
+		void SetRow1(const Vector4& row) {
+			mat._11 = row.x; mat._12 = row.y; mat._13 = row.z; mat._14 = row.w;
+		}
+
+		void SetRow2(const Vector4& row) {
+			mat._21 = row.x; mat._22 = row.y; mat._23 = row.z; mat._24 = row.w;
+		}
+
+		void SetRow3(const Vector4& row) {
+			mat._31 = row.x; mat._32 = row.y; mat._33 = row.z; mat._34 = row.w;
+		}
+
+		void SetRow4(const Vector4& row) {
+			mat._41 = row.x; mat._42 = row.y; mat._43 = row.z; mat._44 = row.w;
+		}
+
+		void SetRow(int rowIndex, const Vector4& row)
+		{
+			switch (rowIndex) {
+			case 0: SetRow1(row); break;
+			case 1: SetRow2(row); break;
+			case 2: SetRow3(row); break;
+			case 3: SetRow4(row); break;
+			default:;
+				
+			}
+
+		}
+
+
+		// s‚ğæ“¾‚·‚éŠÖ”
+
+		Vector4 GetRow1() const {
+			return Vector4(mat._11, mat._12, mat._13, mat._14);
+		}
+		Vector4 GetRow2() const {
+			return Vector4(mat._21, mat._22, mat._23, mat._24);
+		}
+		Vector4 GetRow3() const {
+			return Vector4(mat._31, mat._32, mat._33, mat._34);
+		}
+		Vector4 GetRow4() const {
+			return Vector4(mat._41, mat._42, mat._43, mat._44);
+		}
+
+		Vector4 GetRow(int index) const {
+			switch (index) {
+			case 0: return GetRow1();
+			case 1: return GetRow2();
+			case 2: return GetRow3();
+			case 3: return GetRow4();
+			default:;
+			}
+		}
+		//‚±‚±‚Ü‚Å’Ç‰Á
 	};
 	/// <summary>
 	/// s—ñ“¯m‚ÌæZ

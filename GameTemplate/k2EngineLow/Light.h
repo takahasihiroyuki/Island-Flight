@@ -32,14 +32,9 @@ namespace nsK2EngineLow {
 		void Init();
 		void LightCameraUpdate();
 
-		Light& GetSceneLight()
+		Light& GetLight()
 		{
 			return m_light;
-		}
-
-		Camera& GetLightCamera()
-		{
-			return m_lightCamera;
 		}
 
 		//////////////////////////////////////////////////////////////////////
@@ -138,11 +133,7 @@ namespace nsK2EngineLow {
 		///ライトカメラの関数
 		////////////////////////////////////////////////////////
 
-		/// <summary>
-		/// ライトカメラの設定。
-		/// </summary>
-		/// <param name="pos"></param>
-		/// <param name="target"></param>
+
 		void SetLightCamera(Vector3 pos, Vector3 target)
 		{
 			m_lightCamera.SetPosition(pos);
@@ -150,9 +141,15 @@ namespace nsK2EngineLow {
 			m_lightCamera.SetTarget(target);
 		}
 
+
+		Camera& GetLightCamera()
+		{
+			return m_lightCamera;
+		}
+
 	private:
-		Light m_light;
-		Camera 					       m_lightCamera;   //ライトカメラ
+		Light            m_light;
+		Camera     m_lightCamera;   //ライトカメラ
 	};
 }
 
