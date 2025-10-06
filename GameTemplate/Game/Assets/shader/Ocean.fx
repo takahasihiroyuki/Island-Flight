@@ -25,13 +25,14 @@ struct SVSIn
 //ピクセルシェーダーへの入力。
 struct SPSIn
 {
-    float4 pos                  : SV_POSITION;  //スクリーン空間でのピクセルの座標。
-    float2 uv                   : TEXCOORD0;    //uv座標。
-    float3 worldPos             : TEXCOORD1;    //ワールド座標
-    float3 normal               : NORMAL;       //法線
-    float3 tangent              : TANGENT;      // 接ベクトル
-    float3 biNormal             : BINORMAL;     // 従ベクトル
-    float4 posRefCamViewProj    : TEXCOORD3;    // 反射用カメラのビュー投影行列をかけた座標
+    float4 pos : SV_POSITION; //スクリーン空間でのピクセルの座標。
+    float2 uv : TEXCOORD0; //uv座標。
+    float3 worldPos : TEXCOORD1; //ワールド座標
+    float3 normal : NORMAL; //法線
+    float3 tangent : TANGENT; // 接ベクトル
+    float3 biNormal : BINORMAL; // 従ベクトル
+    float4 posRefCamViewProj : TEXCOORD3; // 反射用カメラのビュー投影行列をかけた座標
+    float4 refClip : TEXCOORDn;
 };
 
 //ディレクションライト構造体
@@ -45,9 +46,7 @@ struct Light
 {
     DirectionLight directionLight; //ディレクションライト
     float3 cameraEyePos; //カメラの座標
-    float pad; //パティング
     float3 ambientColor; //アンビエントカラー
-    float pad1; //パティング
     float4x4 mLVP; //ライトビュー投影行列。
 };
 
@@ -67,6 +66,8 @@ cbuffer LightCb : register(b1)
 {
     float4x4 ReflectionCameraVP; // 反射用カメラビュー投影行列
     Light light;
+    //反射の割合の下限値、必ずこの値以上は反射する。（真上から見た反射率）
+    float baseReflectance; // 基本反射率
 
 }
 
@@ -87,6 +88,8 @@ Texture2D<float4> g_refLect : register(t10); // 反射マップ
 float3 CalcLigFromDrectionLight(SPSIn psIn, float3 normal);
 float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 normal);
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv);
+float2 CalcReflectUV(float4 clip);
+float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance);
 
 /// <summary>
 //スキン行列を計算する。
@@ -123,13 +126,14 @@ SPSIn VSMain(SVSIn vsIn)
     psIn.uv = vsIn.uv;
    
     psIn.normal = mul(mWorld, vsIn.normal);
-    psIn.tangent = normalize(mul(mWorld, vsIn.tangent));
     
     //接ベクトルと従ベクトルをワールド空間に変換する
     psIn.tangent = normalize(mul(mWorld, vsIn.tangent));
     psIn.biNormal = normalize(mul(mWorld, vsIn.biNormal));
-
-
+    
+    //クリップ座標を用意しておく。
+    psIn.refClip = mul(ReflectionCameraVP, float4(psIn.worldPos.xyz, 1.0));
+    
     return psIn;
 }
 
@@ -138,6 +142,7 @@ SPSIn VSMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
+    
     float3 ligDirection = light.directionLight.direction;
     
     //アルベドテクスチャのサンプリング
@@ -151,7 +156,10 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float3 normal = psIn.normal;
     normal = psIn.tangent * localNormal.x + psIn.biNormal * localNormal.y + normal * localNormal.z;
 
-    float4 reflect = g_refLect.Sample(g_sampler, psIn.uv);
+    
+    float2 uvR = CalcReflectUV(psIn.refClip);
+    uvR = saturate(uvR);
+    float4 reflect = g_refLect.Sample(g_sampler, uvR);
 
 
     
@@ -161,9 +169,15 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     //最終的な色
     float4 finalColor = albedoColor;
-    //finalColor.xyz *= lig;
+    finalColor.xyz *= directionLight;
     //finalColor.xyz = float3(1.0f, 0.0f, 1.0f); //環境光を足す
     finalColor = reflect;
+    
+    //フレネル反射率を計算
+    float flesnel = ComputeFresnel(normal, normalize(light.cameraEyePos - psIn.worldPos), baseReflectance);
+    
+    finalColor = lerp(albedoColor, reflect, flesnel);
+    
     
     return finalColor;
 }
@@ -229,4 +243,30 @@ float3 CalcLigFromDrectionLight(SPSIn psIn, float3 normal)
 
 	//最終的な光
     return diffDirection + specDirection;
+}
+
+
+float2 CalcReflectUV(float4 clip)
+{
+    //これから除算するので、0割りを防止するために絶対値の最大値を1e-6で制限する。
+    float w = max(abs(clip.w), 1e-6);
+    //rcpは1/xを計算する関数。(普通にするより早い)
+    float invW = rcp(w);
+    float2 uv = clip.xy * invW * 0.5f + 0.5f; // NDC→[0,1]
+    uv.y = 1.0f - uv.y;
+    return uv;
+}
+
+float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance)
+{
+    
+    float cosTheta = saturate(dot(normalize(normal), -normalize(viewDir)));
+    
+    //角度により反射率の係数。
+    float angleFactor = pow(1.0f - cosTheta, 5.0f);
+    //angleFactorの割合の上限。
+    float remainingReflectance = 1 - baseReflectance;
+
+    //フレネル反射率
+    return baseReflectance + remainingReflectance * angleFactor;
 }
