@@ -237,6 +237,7 @@
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="PlaneReflectionPass.cpp" />
+    <ClCompile Include="SkyCube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -524,6 +525,7 @@
     <ClInclude Include="Ocean.h" />
     <ClInclude Include="PlaneReflectionPass.h" />
     <ClInclude Include="GraphicsEnums.h" />
+    <ClInclude Include="SkyCube.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

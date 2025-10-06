@@ -7,6 +7,7 @@ namespace nsK2EngineLow {
 		for (int i = 0; i < static_cast<int>(ReflectLayer::enNum); i++) {
 			ReflectLayer layer = static_cast<ReflectLayer>(i);
 			m_enableReflection[layer] = true;
+			m_ReflectionModel.try_emplace(layer);
 		}
 	}
 	ModelRender::~ModelRender()
@@ -36,12 +37,17 @@ namespace nsK2EngineLow {
 		// GBuffer•`‰æ—p‚Ìƒ‚ƒfƒ‹‚ð‰Šú‰»
 		InitModelOnRenderGBuffer(filePath, enModelUpAxis, isShadowReciever);
 
-		//”½ŽË‚ÉˆÚ‚·‚È‚çB
-		if (disableLayer == ReflectLayer::enNone) {
-			InitReflectionModel(filePath, enModelUpAxis);
-		}
-		else {
+		//”½ŽË‚Å‰f‚èž‚Ü‚È‚¢ƒŒƒCƒ„[‚ª‚ ‚é‚È‚çB
+		if (disableLayer != ReflectLayer::enNone) {
+			// ‚»‚ÌƒŒƒCƒ„[‚Ì”½ŽËƒ‚ƒfƒ‹‚ðmap‚©‚çíœBifor‚ÅŽ×–‚‚É‚È‚é‚Ì‚ÅBj
+			m_ReflectionModel.erase(disableLayer);
 			m_enableReflection[disableLayer] = false;
+		}
+
+
+		for (auto it = m_ReflectionModel.begin(); it != m_ReflectionModel.end(); ++it) {
+			auto& rayer = it->first;
+			InitReflectionModel(filePath, enModelUpAxis, rayer);
 		}
 
 		m_isFowardRender = isFowardRender;
@@ -62,15 +68,50 @@ namespace nsK2EngineLow {
 
 	void ModelRender::InitSkyCubeModel(ModelInitData& initData)
 	{
+		m_isFowardRender = true;
+		m_frowardRenderModel.Init(initData);
+
+	}
+
+	void ModelRender::InitSkyCubeReflectionModel(ModelInitData& initData)
+	{
+		m_isFowardRender = true;
+		for (auto it = m_ReflectionModel.begin(); it != m_ReflectionModel.end(); ++it) {
+			auto& layer = it->first;
+			m_enableReflection[layer] = true;
+			m_ReflectionModel[layer].Init(initData);
+
+		}
 	}
 
 	void ModelRender::Update()
 	{
-		//ƒ‚ƒfƒ‹‘¤‚ÉˆÚ“®‰ñ“]Šg‘å‚ð“n‚·
-		m_renderToGBufferModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+		if (m_isFowardRender)
+		{
+			if (m_frowardRenderModel.IsInited()) {
+				//ƒtƒHƒ[ƒhƒŒƒ“ƒ_ƒŠƒ“ƒO—p‚Ìƒ‚ƒfƒ‹‚ÉˆÚ“®‰ñ“]Šg‘å‚ð“n‚·
+				m_frowardRenderModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+			}
+		}
+		else {
+			if (m_renderToGBufferModel.IsInited()) {
+				//ƒ‚ƒfƒ‹‘¤‚ÉˆÚ“®‰ñ“]Šg‘å‚ð“n‚·
+				m_renderToGBufferModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+			}
+		}
+
 
 		//‰e‚Ìƒ‚ƒfƒ‹‚ÉˆÚ“®‰ñ“]Šg‘å‚ð“n‚·
 		m_shadowModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+
+		for (auto it = m_ReflectionModel.begin(); it != m_ReflectionModel.end(); ++it) {
+			auto& rayer = it->first;
+
+			//”½ŽË‚Ìƒ‚ƒfƒ‹‚ÉˆÚ“®‰ñ“]Šg‘å‚ð“n‚·
+			m_ReflectionModel[rayer].UpdateWorldMatrix(m_position, m_rotation, m_scale);
+		}
+
+
 
 		//ƒXƒPƒ‹ƒgƒ“‚ðXVB
 		if (m_skeleton.IsInited())
@@ -117,9 +158,13 @@ namespace nsK2EngineLow {
 
 	void ModelRender::OnRenderReflectionMap(RenderContext& rc, Camera& came)
 	{
-		if (m_ReflectionModel.IsInited())
-		{
-			m_ReflectionModel.Draw(rc, came, 1);
+		for (auto it = m_ReflectionModel.begin(); it != m_ReflectionModel.end(); ++it) {
+			auto& rayer = it->first;
+
+			if (m_ReflectionModel[rayer].IsInited())
+			{
+				m_ReflectionModel[rayer].Draw(rc, came, 1);
+			}
 		}
 	}
 
@@ -207,25 +252,45 @@ namespace nsK2EngineLow {
 		m_shadowModel.Init(shadowInitData);
 	}
 
-	void ModelRender::InitReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis)
+	void ModelRender::InitReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis, ReflectLayer layer)
 	{
 		ModelInitData reflectionInitData;
 		reflectionInitData.m_tkmFilePath = filePath;
 		reflectionInitData.m_fxFilePath = "Assets/shader/DrawReflection.fx";
 		reflectionInitData.m_vsEntryPointFunc = "VSMain";
-		reflectionInitData.m_psEntryPointFunc = "PSMain";
+
+			reflectionInitData.m_psEntryPointFunc = "PSMain";
+
 		if (m_animationClips != nullptr) {
 			reflectionInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
 			reflectionInitData.m_skeleton = &m_skeleton;
 		}
-		reflectionInitData.m_expandConstantBuffer = &g_renderingEngine->GetSceneLight().GetLight();
-		reflectionInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetSceneLight().GetLight());
+		reflectionInitData.m_expandConstantBuffer = &g_renderingEngine->GetReflectionModelCB(layer);
+		reflectionInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetReflectionModelCB(layer));
 
 		reflectionInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 		reflectionInitData.m_modelUpAxis = enModelUpAxis;
-		m_ReflectionModel.Init(reflectionInitData);
+		m_ReflectionModel[layer].Init(reflectionInitData);
 	}
+
+	//void ModelRender::InitSkyCubeReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis, ReflectLayer layer)
+	//{
+	//	ModelInitData reflectionInitData;
+	//	reflectionInitData.m_tkmFilePath = filePath;
+	//	reflectionInitData.m_fxFilePath = "Assets/shader/SkyCubeReflection.fx";
+	//	reflectionInitData.m_vsEntryPointFunc = "VSMain";
+
+	//	reflectionInitData.m_psEntryPointFunc = "PSMain";
+
+	//	reflectionInitData.m_expandConstantBuffer = &g_renderingEngine->GetReflectionModelCB(layer);
+	//	reflectionInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetReflectionModelCB(layer));
+
+	//	reflectionInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	//	reflectionInitData.m_modelUpAxis = enModelUpAxis;
+	//	m_ReflectionModel[layer].Init(reflectionInitData);
+	//}
 
 }
 

@@ -13,14 +13,21 @@ namespace nsK2EngineLow
 
     void PlaneReflectionPass::Init()
     {
+        SetConstatntBuffer(g_renderingEngine->GetSceneLight().GetLight(), m_reflectionPlane.GetEquation());
+
         m_planarReflectionTarget.Create(
             g_graphicsEngine->GetFrameBufferWidth(),
             g_graphicsEngine->GetFrameBufferHeight(),
             1,
-			1,
+            1,
             DXGI_FORMAT_R11G11B10_FLOAT,
             DXGI_FORMAT_D24_UNORM_S8_UINT
         );
+    }
+
+    void PlaneReflectionPass::Update()
+    {
+        UpdatePlaneCB(m_reflectionPlane.GetEquation());
     }
 
     void PlaneReflectionPass::Execute(RenderContext& rc, std::vector<ModelRender*>& obj)
@@ -29,7 +36,7 @@ namespace nsK2EngineLow
         rc.SetRenderTargetAndViewport(m_planarReflectionTarget);
         rc.ClearRenderTargetView(m_planarReflectionTarget);
         rc.ClearDepthStencilView(m_planarReflectionTarget.GetDSVCpuDescriptorHandle(), 1.0f);
-        
+
         // まとめてモ平面に映すデルレンダーを描画
         for (auto MobjData : obj)
         {
@@ -50,12 +57,13 @@ namespace nsK2EngineLow
         m_reflectCamera.SetUp(ReflectVectorAcrossPlane(g_camera3D->GetUp(), plane));
 
         // 斜めクリップ面をビュー空間へ
-        Plane planeVS = TransformPlaneToView(plane, m_reflectCamera.GetViewMatrix());
+        m_reflectionPlane = TransformPlaneToView(plane, m_reflectCamera.GetViewMatrix());
 
         //// 面をクリップ面として使うような射影行列を作成
-        //m_reflectCamera.SetProjectionMatrix(MakeObliqueProjectionLike(g_camera3D->GetProjectionMatrix(), planeVS));
+        //m_reflectCamera.SetProjectionMatrix(MakeObliqueProjectionLike(g_camera3D->GetProjectionMatrix(), m_reflectionPlane));
 
         m_reflectCamera.SetProjectionMatrix(g_camera3D->GetProjectionMatrix());
+
     }
 
     Plane PlaneReflectionPass::TransformPlaneToView(const Plane& planeWS, const Matrix& view)

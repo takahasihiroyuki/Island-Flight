@@ -1,4 +1,9 @@
 #include "k2EngineLowPreCompile.h"
+
+namespace {
+	const float BASEREFLECTANCE = 0.05f;
+}
+
 namespace nsK2EngineLow {
 	Ocean::Ocean()
 	{
@@ -9,12 +14,13 @@ namespace nsK2EngineLow {
 	bool Ocean::Start()
 	{
 		SetConstatntBuffer(
-			g_renderingEngine->GetReflectViewMatrix(ReflectLayer::enOcean),
+			g_renderingEngine->GetReflectViewProjectionMatrix(ReflectLayer::enOcean),
 			g_renderingEngine->GetSceneLight().GetLight(),
-			g_renderingEngine->GetReflectCamera(ReflectLayer::enOcean).GetPosition()
-		);
+			g_renderingEngine->GetReflectCamera(ReflectLayer::enOcean).GetPosition(),
+			BASEREFLECTANCE
+			);
 
-		g_renderingEngine->SetReflectPlane(m_plane, ReflectLayer::enOcean);
+		//g_renderingEngine->SetReflectPlane(m_plane, ReflectLayer::enOcean);
 
 		ModelInitData initData;
 		//tkmファイルのファイルパスを指定する。
@@ -50,9 +56,10 @@ namespace nsK2EngineLow {
 	void Ocean::Update()
 	{
 		SetConstatntBuffer(
-			g_renderingEngine->GetReflectViewMatrix(ReflectLayer::enOcean),
+			g_renderingEngine->GetReflectViewProjectionMatrix(ReflectLayer::enOcean),
 			g_renderingEngine->GetSceneLight().GetLight(),
-			g_renderingEngine->GetReflectCamera(ReflectLayer::enOcean).GetPosition()
+			g_renderingEngine->GetReflectCamera(ReflectLayer::enOcean).GetPosition(),
+			BASEREFLECTANCE
 		);
 	}
 	void Ocean::Render(RenderContext& rc)

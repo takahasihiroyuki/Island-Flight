@@ -174,14 +174,27 @@ namespace nsK2EngineLow {
 			m_reflectPlane.insert_or_assign(layer, plane);
 		}
 
-		Matrix GetReflectViewMatrix(ReflectLayer layer) {
-			return m_planeReflectionPass[layer].GetReflectViewMatrix();
+		Matrix GetReflectViewProjectionMatrix(ReflectLayer layer) {
+			return m_planeReflectionPass[layer].GetReflectViewProjectionMatrix();
 		}
 
 
 		Camera& GetReflectCamera(ReflectLayer layer) {
 			return m_planeReflectionPass[layer].GetReflectCamera();
 		}
+
+		ReflectionModelCB& GetReflectionModelCB(ReflectLayer layer) {
+			return m_planeReflectionPass[layer].GetConstantBuffer();
+		}
+
+		Vector4 GetReflectPlaneEquation(ReflectLayer layer) {
+			auto it = m_reflectPlane.find(layer);
+			if (it == m_reflectPlane.end()) {
+				return Vector4(0, 1, 0, 0);
+			}
+			return it->second.GetEquation();
+		}
+
 
 	private:
 
@@ -220,7 +233,7 @@ namespace nsK2EngineLow {
 		PostEffect											m_postEffect;	           //ポストエフェクト
 		RenderTarget										m_shadowMapRenderTarget;   //シャドウマップ用レンダリングターゲット
 		Shadow												m_shadow;                  //シャドウ
-		std::map<ReflectLayer,PlaneReflectionPass>			m_planeReflectionPass;     // 平面反射パス
+		std::map<ReflectLayer, PlaneReflectionPass>			m_planeReflectionPass;     // 平面反射パス
 		std::map<ReflectLayer, std::vector<ModelRender*>>	m_reflectedModelList;	   //平面モデルリスト
 		std::map<ReflectLayer, Plane>						m_reflectPlane;	           // 反射平面
 

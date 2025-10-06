@@ -254,6 +254,7 @@ namespace nsK2EngineLow
 			auto& pass = it->second;
 			auto& objects = m_reflectedModelList[layer];
 			pass.UpdateReflectCamera(m_reflectPlane.at(layer));
+			pass.Update();
 			pass.Execute(rc, objects);
 		}
 

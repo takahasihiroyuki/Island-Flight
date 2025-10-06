@@ -1,6 +1,10 @@
 #pragma once
 namespace nsK2EngineLow
 {
+	namespace {
+		const Vector3 INIT_PLANE_NORMAL = g_vec3Up;	// 平面の法線
+		const Vector3 INIT_PLANE_POSITION = g_vec3Zero;// 平面のポジション（平面が通る点）
+	}
 	/// <summary>
 	/// 平面の方程式を表す構造体。
 	/// 平面を扱いやすいように方程式の形にしている。
@@ -82,13 +86,25 @@ namespace nsK2EngineLow
 		Vector4 equation;     // 平面の方程式 Ax + By + Cz + D = 0 の係数 (A, B, C, D)
 		float signedDistance; // 原点から平面の符号付き最短距離
 	};
+	
+	/// <summary>
+	/// 反射に映るモデルの定数バッファー
+	/// </summary>
+	struct ReflectionModelCB
+	{
+		Vector4 reflectionPlane;		// 反射面の方程式
+		Light light;					// ライト情報
+	};
 
 	class PlaneReflectionPass
 	{
 	public:
+
+
 		PlaneReflectionPass();
 		~PlaneReflectionPass();
 		void Init();
+		void Update();
 		void Execute(RenderContext& rc, std::vector<ModelRender*>& obj);
 
 		/// <summary>
@@ -105,8 +121,23 @@ namespace nsK2EngineLow
 			return m_planarReflectionTarget;
 		}
 
-		Matrix GetReflectViewMatrix() {
-			return m_reflectCamera.GetViewMatrix();
+		Matrix GetReflectViewProjectionMatrix() {
+			return m_reflectCamera.GetViewProjectionMatrix();
+		}
+
+		ReflectionModelCB& GetConstantBuffer() {
+			return m_constantBuffer;
+		}
+
+
+
+		void SetConstatntBuffer(const Light& inLight, const Vector4& plane) {
+			m_constantBuffer.light = inLight;
+			m_constantBuffer.reflectionPlane = plane;
+		};
+
+		void UpdatePlaneCB(const Vector4& plane) {
+			m_constantBuffer.reflectionPlane = plane;
 		}
 
 	private:
@@ -159,7 +190,8 @@ namespace nsK2EngineLow
 		RenderTarget m_planarReflectionTarget;
 		float clearColor[4] = { 0.0f,0.0f,0.0f,1.0f };	//カラーバッファーは真っ黒
 		Camera m_reflectCamera;                         // 反射用カメラ
-
+		ReflectionModelCB m_constantBuffer;             // 反射に映るモデルの定数バッファー
+		Plane m_reflectionPlane = Plane(INIT_PLANE_NORMAL, INIT_PLANE_POSITION);	// 反射面
 	};
 }
 

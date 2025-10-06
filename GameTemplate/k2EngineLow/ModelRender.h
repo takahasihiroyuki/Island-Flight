@@ -41,6 +41,8 @@ namespace nsK2EngineLow {
 		/// <param name="initData"></param>
 		void InitSkyCubeModel(ModelInitData& initData);
 
+		void InitSkyCubeReflectionModel(ModelInitData& initData);
+
 		/// <summary>
 		/// 更新処理
 		/// </summary>
@@ -214,6 +216,7 @@ namespace nsK2EngineLow {
 			m_shadowModel.ChangeAlbedoMap(filePath, albedoMap);
 		}
 
+
 	private:
 
 		/// <summary>
@@ -249,35 +252,40 @@ namespace nsK2EngineLow {
 		/// <param name="enModelUpAxis"></param>
 		void InitShadowModel(const char* filePath, EnModelUpAxis enModelUpAxis);
 
-		void InitReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis);
+		void InitReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis, ReflectLayer layer);
+
+		void InitSkyCubeReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis, ReflectLayer layer);
+
+
 
 
 
 	private:
-		Skeleton					m_skeleton;									//スケルトン
-		AnimationClip* m_animationClips = nullptr;					            //アニメーションクリップ。
-		int							m_numAnimationClips = 0;					//アニメーションクリップの数。
-		Animation					m_animation;								//アニメーション。
-		float						m_animationSpeed = 1.0f;					//アニメーションの速度。
+		Skeleton						m_skeleton;									//スケルトン
+		AnimationClip*					m_animationClips = nullptr;					            //アニメーションクリップ。
+		int								m_numAnimationClips = 0;					//アニメーションクリップの数。
+		Animation						m_animation;								//アニメーション。
+		float							m_animationSpeed = 1.0f;					//アニメーションの速度。
 
-		Vector3						m_position = Vector3::Zero;				    //座標
-		Vector3						m_scale = Vector3::One;					    //大きさ
-		Quaternion					m_rotation = Quaternion::Identity;		    //回転
+		Vector3							m_position = Vector3::Zero;				    //座標
+		Vector3							m_scale = Vector3::One;					    //大きさ
+		Quaternion						m_rotation = Quaternion::Identity;		    //回転
 
-		Model						m_model;								    //モデルクラス
-		Model						m_frowardRenderModel;					    // フォワードレンダリングの描画パスで描画されるモデル
-		ModelInitData				m_modelInitData;						    //モデルを初期化するための情報を設定するクラス
+		Model							m_model;								    //モデルクラス
+		Model							m_frowardRenderModel;					    // フォワードレンダリングの描画パスで描画されるモデル
+		ModelInitData					m_modelInitData;						    //モデルを初期化するための情報を設定するクラス
 
 
-		bool						m_isFowardRender = false;					//フォワードレンダリングで描画するか
-		bool						m_setWorldMatrix = false;			        // ワールド行列が外部から設定されている
-		bool						m_isInit = false;					        //初期化したか
-		std::map<ReflectLayer, bool> m_enableReflection;   // 反射で映り込むかどうか
-		SceneLight  			    m_sceneLight;                               //シーンライト
+		bool							m_isFowardRender = false;					//フォワードレンダリングで描画するか
+		bool							m_setWorldMatrix = false;			        // ワールド行列が外部から設定されている
+		bool							m_isInit = false;					        //初期化したか
+		std::map<ReflectLayer, bool>	m_enableReflection;   // 反射で映り込むかどうか
+		SceneLight  					m_sceneLight;                               //シーンライト
 
-		Model                       m_renderToGBufferModel;	                    // RenderToGBufferで描画されるモデル
-		Model                       m_shadowModel;							    //影描画用モデル
-		Model                       m_ReflectionModel;                          //反射マップ描画用モデル
+		Model							m_renderToGBufferModel;	                    // RenderToGBufferで描画されるモデル
+		Model							m_shadowModel;							    //影描画用モデル
+		std::map<ReflectLayer,Model>	m_ReflectionModel;                          //反射マップ描画用モデル
+		bool							m_isSkyCube = false;						// スカイキューブモデルかどうか
 	};
 }
 

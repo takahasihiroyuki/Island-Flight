@@ -2,8 +2,8 @@
 
 namespace nsK2EngineLow {
 	namespace {
-		const Vector3 PLANE_NORMAL = g_vec3Up;	// 平面の法線
-		const Vector3 PLANE_POSITION = g_vec3Zero;// 平面のポジション（平面が通る点）
+		const Vector3 INIT_OCEAN_PLANE_NORMAL = g_vec3Up;	// 平面の法線
+		const Vector3 INIT_OCEAN_PLANE_POSITION = g_vec3Zero;// 平面のポジション（平面が通る点）
 	}
 
 	class Ocean :public IGameObject
@@ -12,6 +12,10 @@ namespace nsK2EngineLow {
 		{
 			Matrix ReflectionCameraVP; // 反射用カメラビュー投影行列
 			Light light;
+
+			//反射の割合の下限値、必ずこの値以上は反射する。
+			//（真上から見た反射率）
+			float baseReflectance=0.0f; // 基本反射率
 		};
 
 
@@ -63,10 +67,16 @@ namespace nsK2EngineLow {
 			m_isDirty = true;
 		}
 
-		void SetConstatntBuffer(const Matrix& vpMatrix, const Light& inLight,Vector3 cameraPos) {
+		void SetConstatntBuffer(
+			const Matrix& vpMatrix,
+			const Light& inLight, 
+			Vector3 cameraPos,
+			float baseReflectance
+			) {
 			m_constantBuffer.ReflectionCameraVP = vpMatrix;
 			m_constantBuffer.light = inLight;
 			m_constantBuffer.light.cameraEyePos = cameraPos;
+			m_constantBuffer.baseReflectance = baseReflectance;
 		};
 
 
@@ -79,7 +89,7 @@ namespace nsK2EngineLow {
 		bool m_isDirty = false;
 		RenderTarget* m_reflectionRenderTarget;
 		Light m_light;
-		Plane m_plane = Plane(PLANE_NORMAL, PLANE_POSITION);
+		Plane m_plane = Plane(INIT_OCEAN_PLANE_NORMAL, INIT_OCEAN_PLANE_POSITION);
 		OceanConstantBuffer m_constantBuffer;
 	};
 }
