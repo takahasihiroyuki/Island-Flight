@@ -15,6 +15,7 @@ namespace nsK2EngineLow {
 	* 下記のサンプルプログラムを参考にしてください。\n
 	* Sample/Sample07
 	*/
+	class ModelRender;
 	class CharacterController {
 	public:
 		CharacterController() {
@@ -31,6 +32,9 @@ namespace nsK2EngineLow {
 			*@param[in]	position	初期位置。
 			*/
 		void Init(float radius, float height, const Vector3& position);
+
+		void Init(const ModelRender& model, const Vector3& position);
+
 		/*!
 			* @brief	実行。
 			*@param[in, out]	moveSpeed		移動速度。
@@ -70,9 +74,9 @@ namespace nsK2EngineLow {
 		/*!
 		* @brief	コライダーを取得。
 		*/
-		CCapsuleCollider* GetCollider()
+		ICollider* GetCollider()
 		{
-			return &m_collider;
+			return m_activeCollider;
 		}
 		/*!
 		* @brief	剛体を取得。
@@ -90,7 +94,9 @@ namespace nsK2EngineLow {
 		Vector3 			m_position;						//!<座標。
 		bool 				m_isJump = false;				//!<ジャンプ中？
 		bool				m_isOnGround = true;			//!<地面の上にいる？
-		CCapsuleCollider	m_collider;						//!<コライダー。
+		ICollider*			m_activeCollider;				//!<コライダー。
+		CCapsuleCollider	m_capsuleCollider;				//!<カプセルコライダー。
+		MeshCollider		m_meshCollider;					//!<メッシュコライダー。
 		float				m_radius = 0.0f;				//!<カプセルコライダーの半径。
 		float				m_height = 0.0f;				//!<カプセルコライダーの高さ。
 		RigidBody			m_rigidBody;					//剛体。

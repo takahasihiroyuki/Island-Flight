@@ -16,7 +16,6 @@ namespace nsK2EngineLow {
 		/// <param name="numAnimationClips">アニメーションクリップの数</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
 		/// <param name="isShadowReciever">影を受ける側か</param>
-		/// <param name="enableReflection">反射で映り込むかどうか</param>
 		/// <param name="isFowardRender">フォワードレンダリングで描画するか</param>
 		/// <param name="disableLayer">反射で映り込まないレイヤー</param>
 		void Init(const char* filePath,
@@ -181,6 +180,16 @@ namespace nsK2EngineLow {
 			return m_model.GetWorldMatrix();
 		}
 
+		const Model& GetModel() const
+		{
+			return m_model;
+		}
+
+		const Model& GetRenderToGBufferModel()const 
+		{
+			return m_renderToGBufferModel;
+		}
+
 		/// <summary>
 		/// アニメーション再生。
 		/// </summary>
@@ -262,7 +271,7 @@ namespace nsK2EngineLow {
 
 	private:
 		Skeleton						m_skeleton;									//スケルトン
-		AnimationClip*					m_animationClips = nullptr;					            //アニメーションクリップ。
+		AnimationClip* m_animationClips = nullptr;					            //アニメーションクリップ。
 		int								m_numAnimationClips = 0;					//アニメーションクリップの数。
 		Animation						m_animation;								//アニメーション。
 		float							m_animationSpeed = 1.0f;					//アニメーションの速度。
@@ -284,7 +293,7 @@ namespace nsK2EngineLow {
 
 		Model							m_renderToGBufferModel;	                    // RenderToGBufferで描画されるモデル
 		Model							m_shadowModel;							    //影描画用モデル
-		std::map<ReflectLayer,Model>	m_ReflectionModel;                          //反射マップ描画用モデル
+		std::map<ReflectLayer, Model>	m_ReflectionModel;                          //反射マップ描画用モデル
 		bool							m_isSkyCube = false;						// スカイキューブモデルかどうか
 	};
 }

@@ -52,6 +52,7 @@ namespace nsK2EngineLow {
 
 		m_isFowardRender = isFowardRender;
 
+		m_model;
 		// ‰Šú‰»Š®—¹B
 		m_isInit = true;
 	}

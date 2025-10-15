@@ -23,7 +23,7 @@ namespace nsK2EngineLow {
 			btCollisionObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
 			float dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 
-																//衝突したときに呼ばれるコールバック関数。
+			//衝突したときに呼ばれるコールバック関数。
 			virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 			{
 				if (convexResult.m_hitCollisionObject == me
@@ -67,7 +67,7 @@ namespace nsK2EngineLow {
 			float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 			Vector3 hitNormal;						//衝突点の法線。
 			btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
-													//衝突したときに呼ばれるコールバック関数。
+			//衝突したときに呼ばれるコールバック関数。
 			virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 			{
 				if (convexResult.m_hitCollisionObject == me
@@ -113,11 +113,14 @@ namespace nsK2EngineLow {
 		//コリジョン作成。
 		m_radius = radius;
 		m_height = height;
-		m_collider.Init(radius, height);
+
+		m_capsuleCollider.Init(radius, height);
+
+		m_activeCollider = &m_capsuleCollider;
 
 		//剛体を初期化。
 		RigidBodyInitData rbInfo;
-		rbInfo.collider = &m_collider;
+		rbInfo.collider = m_activeCollider;
 		rbInfo.mass = 0.0f;
 		m_rigidBody.Init(rbInfo);
 		btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
@@ -129,6 +132,31 @@ namespace nsK2EngineLow {
 
 		m_isInited = true;
 	}
+
+	void CharacterController::Init(const ModelRender& model, const Vector3& position)
+	{
+		m_position = position;
+
+		m_meshCollider.CreateFromModel(model.GetRenderToGBufferModel(), model.GetWorldMatrix());
+
+		m_activeCollider = &m_meshCollider;
+
+		//剛体を初期化。
+		RigidBodyInitData rbInfo;
+		rbInfo.collider = &m_meshCollider;
+		rbInfo.mass = 0.0f;
+		m_rigidBody.Init(rbInfo);
+		btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
+		//剛体の位置を更新。
+		trans.setOrigin(btVector3(position.x, position.y + m_height * 0.5f + m_radius, position.z));
+		//@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
+		m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Character);
+		m_rigidBody.GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+
+		m_isInited = true;
+
+	}
+
 	const Vector3& CharacterController::Execute(Vector3& moveSpeed, float deltaTime)
 	{
 		if (moveSpeed.y > 0.0f) {
@@ -176,7 +204,7 @@ namespace nsK2EngineLow {
 				callback.me = m_rigidBody.GetBody();
 				callback.startPos = posTmp;
 				//衝突検出。
-				PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
+				PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_activeCollider->GetBody(), start, end, callback);
 
 				if (callback.isHit) {
 					//当たった。
@@ -232,7 +260,7 @@ namespace nsK2EngineLow {
 			addPos.Subtract(nextPosition, m_position);
 
 			m_position = nextPosition;	//移動の仮確定。
-										//レイを作成する。
+			//レイを作成する。
 			btTransform start, end;
 			start.setIdentity();
 			end.setIdentity();
@@ -266,7 +294,7 @@ namespace nsK2EngineLow {
 
 			//衝突検出。
 			if (fabsf(endPos.y - callback.startPos.y) > FLT_EPSILON) {
-				PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
+				PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_activeCollider->GetBody(), start, end, callback);
 				if (callback.isHit) {
 					//当たった。
 					moveSpeed.y = 0.0f;

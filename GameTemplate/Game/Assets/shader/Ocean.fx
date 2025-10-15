@@ -169,6 +169,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     //ÅI“I‚ÈF
     float4 finalColor = albedoColor;
+    albedoColor = float4(0.20f,0.35f,0.47f,0.0f);
     finalColor.xyz *= directionLight;
     //finalColor.xyz = float3(1.0f, 0.0f, 1.0f); //ŠÂ‹«Œõ‚ğ‘«‚·
     finalColor = reflect;
