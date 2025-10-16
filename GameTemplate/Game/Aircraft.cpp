@@ -26,7 +26,28 @@ void Aircraft::Init(const char* filePath)
 
 	InitOrientation();
 
+	InitWingPositionOffset();
+
 	InitAllLiftingSurfaces();
+}
+
+void Aircraft::Update()
+{
+	ApplyControlInputs();
+	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
+		m_wings[i]->UpdateControlSurface();
+		m_wings[i]->UpdateOrientation(m_state.orientation);
+	}
+
+	m_engine->UpdateOrientation(m_state.orientation);
+
+	Move();
+
+	ComputeMoment();
+
+	UpdateRelWind();
+
+	UpdateModel();
 }
 void Aircraft::Render(RenderContext& rc)
 {
@@ -36,10 +57,11 @@ void Aircraft::InitLiftingSurface(
 	WingType wingsType,
 	Quaternion orientation,
 	bool isMirroed,
+	Vector3 momentArm,
 	float maxWingDeflectionAngle
 )
 {
-	m_wings[static_cast<int>(wingsType)] = new LiftingSurface(orientation, isMirroed, maxWingDeflectionAngle);
+	m_wings[static_cast<int>(wingsType)] = new LiftingSurface(orientation, isMirroed, maxWingDeflectionAngle, momentArm);
 }
 
 
@@ -51,6 +73,14 @@ void Aircraft::InitOrientation()
 	m_initWingsOrientation[static_cast<int>(WingType::Vertical)].SetRotationZ(3.1415 * 2 / 4);
 }
 
+void Aircraft::InitWingPositionOffset()
+{
+	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(-3.5f, 0.0f, 0.20f);
+	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(3.5f, 0.0f, 0.20f);
+	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 3.00f);
+	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 1.20f, 3.00f);
+}
+
 void Aircraft::InitAllLiftingSurfaces()
 {
 	// 左右・上下の翼を順に初期化
@@ -59,57 +89,58 @@ void Aircraft::InitAllLiftingSurfaces()
 	// 主翼（左）
 	InitLiftingSurface(
 		WingType::MainLeft,
-		m_initWingsOrientation[static_cast<int>(WingType::MainLeft)],  // 向き（必要なら回転を設定）
-		false,                 // ミラーではない
-		20.0f                  // 最大舵角（例）
+		m_initWingsOrientation[static_cast<int>(WingType::MainLeft)],
+		false,
+		m_wingPositionOffset[static_cast<int>(WingType::MainLeft)],
+		3.1415f * 2 / 18
 	);
 
 	// 主翼（右）
 	InitLiftingSurface(
 		WingType::MainRight,
-		m_initWingsOrientation[static_cast<int>(WingType::MainRight)],  // 反転
-		true,                                              // ミラーあり
-		20.0f
+		m_initWingsOrientation[static_cast<int>(WingType::MainRight)],
+		true,
+		m_wingPositionOffset[static_cast<int>(WingType::MainRight)],
+		3.1415f * 2 / 18
 	);
 
 	// 水平尾翼
 	InitLiftingSurface(
 		WingType::Tail,
-		m_initWingsOrientation[static_cast<int>(WingType::Tail)],      // 向き（必要に応じて）
+		m_initWingsOrientation[static_cast<int>(WingType::Tail)],
 		false,
-		15.0f
+		m_wingPositionOffset[static_cast<int>(WingType::Tail)],
+		3.1415f * 2 / 18
+
 	);
 
 	// 垂直尾翼
 	InitLiftingSurface(
 		WingType::Vertical,
-		m_initWingsOrientation[static_cast<int>(WingType::Vertical)], // 上向き
+		m_initWingsOrientation[static_cast<int>(WingType::Vertical)],
 		false,
-		25.0f
+		m_wingPositionOffset[static_cast<int>(WingType::Vertical)],
+		3.1415f * 2 / 18
 	);
+}
+
+void Aircraft::ApplyControlInputs()
+{
+	m_wings[static_cast<int>(WingType::MainLeft)]->SetControlInput(g_pad[0]->GetLStickXF());
+	m_wings[static_cast<int>(WingType::MainRight)]->SetControlInput(-g_pad[0]->GetLStickXF());
+	m_wings[static_cast<int>(WingType::Tail)]->SetControlInput(g_pad[0]->GetLStickYF());
+	m_wings[static_cast<int>(WingType::Vertical)]->SetControlInput(g_pad[0]->GetRStickXF());
+
 }
 
 void Aircraft::Move()
 {
-	m_engine->SetThrottleInput(true/*g_pad[0]->IsPress(enButtonA)*/);
-	m_engine->UpdateThrustForce();
+	Vector3 force = ComputeForce();
 
-	Vector3 thrust = m_engine->GetThrustForce();
+	//Vector3 debug;
+	//debug = Vector3::Up * 10;
 
-	m_wings[static_cast<int>(WingType::MainLeft)]->ComputeForces(m_state);
-
-	Vector3 Force = thrust + m_wings[static_cast<int>(WingType::MainLeft)]->GetForce();
-
-	Vector3 debug;
-	if (g_pad[0]->IsPress(enButtonA)) {
-		/*debug = Vector3::Up * 100;*/
-	}
-	else {
-		debug = Vector3::Zero;
-	}
-
-	AddLinearVelocity(((Force / m_mass) + debug) * g_gameTime->GetFrameDeltaTime());
-
+	AddLinearVelocity(((force / m_mass)) * g_gameTime->GetFrameDeltaTime());
 
 
 
@@ -118,11 +149,67 @@ void Aircraft::Move()
 			m_linearVelocity,
 			g_gameTime->GetFrameDeltaTime()
 		);
+
+
+}
+Vector3 Aircraft::ComputeForce()
+{
+	m_engine->SetThrottleInput(true/*g_pad[0]->IsPress(enButtonA)*/);
+	m_engine->UpdateThrustForce();
+
+	Vector3 thrust = m_engine->GetThrustForce();
+
+
+	Vector3 wingsForce = Vector3::Zero;
+	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
+		m_wings[i]->ComputeForces(m_state);
+		wingsForce += m_wings[i]->GetForce();
+	}
+
+	Vector3 force = thrust + wingsForce;
+	force += ComputeGravity();
+
+	return force;
+}
+void Aircraft::ComputeMoment()
+{
+	Vector3 totalMoment=Vector3::Zero;
+	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
+		totalMoment += m_wings[i]->ComputeMoment();
+	}
+
+	//慣性モーメント
+	Vector3 inertia = m_inertia;
+
+	//角加速度
+	Vector3 angularAcc;
+	angularAcc.x = totalMoment.x / inertia.x;
+	angularAcc.y = totalMoment.y / inertia.y;
+	angularAcc.z = totalMoment.z / inertia.z;
+
+	//角速度
+	m_angularVelocity += angularAcc * g_gameTime->GetFrameDeltaTime();
+
+	Vector3 angularAxis = m_angularVelocity;
+	angularAxis.Normalize();
+
+
+	float omega = m_angularVelocity.Length();
+	if (omega > 1e-5f) { // 小さすぎる場合は無視
+		// 姿勢を更新
+		Quaternion deltaQuaternion;
+		deltaQuaternion.SetRotation(angularAxis, m_angularVelocity.Length() * g_gameTime->GetFrameDeltaTime());
+		m_state.orientation = deltaQuaternion * m_state.orientation;
+	}
+
+	float debug = m_angularVelocity.Length();
+
 }
 void Aircraft::UpdateModel()
 {
 	m_model.SetPosition(m_position);
 	m_characterController.SetPosition(m_position);
+	m_model.SetRotation(m_state.orientation);
 	m_model.Update();
 }
 

@@ -20,19 +20,18 @@ bool LiftingSurface::Start()
 
 LiftingSurface::LiftingSurface(
 	Quaternion orientation,
-	bool isMirroed, 
-	float maxWingDeflectionAngle)
+	bool isMirroed,
+	float maxWingDeflectionAngle,
+	Vector3 momentArm,
+	bool isVertical
+) :m_localMomentArm(momentArm)
 {
 	m_controlSurface.Init(maxWingDeflectionAngle);
-	InitOrientation(orientation, isMirroed);
+	InitOrientation(orientation, isMirroed, isVertical);
 
 }
 
 LiftingSurface::~LiftingSurface()
-{
-}
-
-void LiftingSurface::Update()
 {
 }
 
@@ -61,6 +60,7 @@ float LiftingSurface::ComputeAngleOfAttack(const Vector3& relWind)
 	// 翼の前後方向と相対風のなす角を求める
 	Vector3 relWindDir = relWind;//相対風
 	relWindDir.Normalize();
+
 	float dot = Dot(relWindDir, m_wingChordDir);
 	if (dot < -1) dot = -1;
 	if (dot > 1) dot = 1;
@@ -74,7 +74,7 @@ float LiftingSurface::ComputeAngleOfAttack(const Vector3& relWind)
 	if (sign < 0.0f) {
 		angle = -angle; // 負の値にする
 	}
-	return angle+m_controlSurface.GetDelection();
+	return angle + m_controlSurface.GetDelection();
 }
 
 float LiftingSurface::ComputeDynamicPressure(const AircraftState& state)
@@ -93,11 +93,20 @@ Vector3 LiftingSurface::ComputeLift(
 	float dynamicPressure,
 	float angleOfAttack)
 {
+
+	Vector3 relWind = state.relWind;
+	relWind.Normalize();
+
+	// 揚力方向は相対風とスパンの外積
+	Vector3 liftDir;
+	liftDir.Cross(relWind, m_wingSpanDir);
+	liftDir.Normalize();
+
 	// 揚力係数
 	float liftCoefficient = ComputeLiftCoefficient(angleOfAttack);
 
 	//揚力ベクトル
-	Vector3 liftForce = m_wingNormal * dynamicPressure * liftCoefficient * m_area;
+	Vector3 liftForce = liftDir * dynamicPressure * liftCoefficient * m_area;
 
 	return liftForce;
 }
@@ -109,7 +118,7 @@ Vector3 LiftingSurface::ComputeDrag(
 {
 	float dragCoefficient = ComputeDragCoefficient(angleOfAttack);
 
-	Vector3 dragDirection = state.relWind;
+	Vector3 dragDirection = state.relWind * -1;
 	dragDirection.Normalize();
 
 	Vector3 DragForce = dragDirection * dynamicPressure * dragCoefficient * m_area;
@@ -119,15 +128,16 @@ Vector3 LiftingSurface::ComputeDrag(
 
 float LiftingSurface::ComputeLiftCoefficient(float angleOfAttack) const
 {
+	//個の角度を超えると減速（15度）
+	constexpr float stall = 0.261799f;
+	// この関数の傾き、簡易的な関数にしているので傾きは一定（線形）。
+	const float slope = 0.05f;
 
 	// 迎角が-15度から15度の範囲でのみ揚力を発生させる
-	if (angleOfAttack < -15.0f || angleOfAttack > 15.0f)
-		return 0.0f;
+	if (angleOfAttack < -stall)	return -slope * angleOfAttack;
+	if (angleOfAttack > stall)	return	(-slope * (angleOfAttack - stall)) + (slope * stall);
 
-	// この関数の傾き、簡易的な関数にしているので傾きは一定（線形）。
-	const float slope = 0.1f;
-
-	return  +slope * angleOfAttack;
+	return  slope * angleOfAttack;
 }
 
 float LiftingSurface::ComputeDragCoefficient(float angleOfAttack) const
@@ -136,9 +146,37 @@ float LiftingSurface::ComputeDragCoefficient(float angleOfAttack) const
 
 	float dragCofficient =
 		pow(ComputeLiftCoefficient(angleOfAttack), 2.0f)
-		/ OSWALD_EFFICIENCY * ASPECT_RATIO /** m_controlSurface.GetMaxDeflection()*/;
+		/ (OSWALD_EFFICIENCY * ASPECT_RATIO * PI);
 
 	return dragCofficient;
 
+}
+
+void LiftingSurface::UpdateOrientation(Quaternion orientation)
+{
+
+
+	// 翼ローカル基底（初期姿勢）
+	Vector3 localChord = m_localChordDir;
+	Vector3 localSpan = m_localSpanDir;
+	Vector3 localNormal = m_localNormalDir;
+	Vector3 localMomentArm = m_localMomentArm;
+
+	orientation.Apply(localChord);
+	orientation.Apply(localSpan);
+	orientation.Apply(localNormal);
+	orientation.Apply(localMomentArm);
+
+	//小数点誤差を無くすため正規化。
+	localChord.Normalize();
+	localSpan.Normalize();
+	localMomentArm.Normalize();
+
+
+	// 機体の姿勢クォータニオンを掛けてワールド方向に変換
+	m_wingChordDir = localChord;
+	m_wingSpanDir = localSpan;
+	m_wingNormal = localNormal;
+	m_worldMomentArm = localMomentArm;
 }
 

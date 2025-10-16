@@ -22,8 +22,17 @@ public:
 	void SetAreaRatio(float ratio) { areaRatio = ratio; }
 	void SetControlInput(float input)
 	{
-		if (input >= 1)controlInput = 1; return;
-		if (input <= 0)controlInput = 0; return;
+		if (input >= 1) {
+			controlInput = 1; 
+			return;
+		}
+
+		if (input <= 0)
+		{
+			controlInput = -1;
+			return;
+		}
+
 		controlInput = input;
 	}
 	void SetDeflection(float def) { deflection = def; }
@@ -32,8 +41,8 @@ public:
 		deflection = controlInput * maxDeflection;
 	}
 
-	float GetAreaRatio() const{ return areaRatio; };
-	float GetDelection() const{ return deflection; };
+	float GetAreaRatio() const { return areaRatio; };
+	float GetDelection() const { return deflection; };
 	float GetMaxDeflection()const { return maxDeflection; };
 
 private:
@@ -52,37 +61,65 @@ public:
 	LiftingSurface(
 		Quaternion orientation,
 		bool isMirroed,
-		float maxWingDeflectionAngle);
+		float maxWingDeflectionAngle,
+		Vector3 momentArm,
+		bool isVertical = false
+	);
 	~LiftingSurface();
-	void Update();
 	//void Render(RenderContext& rc) override;
 	bool Start();
 
 public:
+	void UpdateControlSurface() {
+		m_controlSurface.UpdateDeflection();
+	}
 
 	void SetControlInput(float input) {
 		m_controlSurface.SetControlInput(input);
 	}
 
-	Vector3 GetForce() const { return m_force; }
+	Vector3 GetForce() const {
+		return m_force;
+	}
 
 	void ComputeForces(const AircraftState& state);
 
-	void InitOrientation(const Quaternion& rot,bool isMirrored)
+	/// <summary>
+	/// モーメントを計算
+	/// モーメントの向きが回す軸
+	/// 大きさが回る量
+	/// ComputeForcesを読んだ後に呼ぶ
+	/// </summary>
+	/// <returns></returns>
+	Vector3 ComputeMoment() {
+		Vector3 moment;
+		moment.Cross(m_worldMomentArm, m_force);
+		return moment;
+	};
+
+	void InitOrientation(const Quaternion& rot, bool isMirrored, bool isVertical)
 	{
-		m_orientation = rot;
-		m_wingChordDir= Vector3::Back;
-		m_wingNormal= Vector3::Up;
-		m_wingSpanDir= Vector3::Right;
+		m_localChordDir = Vector3::Back;
+		m_localNormalDir = Vector3::Up;
+		m_localSpanDir = Vector3::Right;
+
+		if (isVertical) {
+			// 垂直尾翼の基底
+			m_localChordDir = Vector3::Back; // 弦はそのまま前後
+			m_localNormalDir = Vector3::Right; // 法線を +X に
+			m_localSpanDir = Vector3::Up;    // スパンを +Y に
+		}
 
 		// 回転を適用して翼方向をワールド空間に変換
-		rot.Apply(m_wingChordDir);
-		rot.Apply(m_wingNormal);
-		rot.Apply(m_wingSpanDir);
+		rot.Apply(m_localChordDir);
+		rot.Apply(m_localNormalDir);
+		rot.Apply(m_localSpanDir);
 
 		if (isMirrored)
-			m_wingSpanDir *= -1.0f;
+			m_localSpanDir *= -1.0f;
 	}
+
+	void UpdateOrientation(Quaternion orientation);
 private:
 
 	/// <summary>
@@ -129,6 +166,8 @@ private:
 	/// <returns></returns>
 	float ComputeDragCoefficient(float angleOfAttack) const;
 
+	
+
 
 private:
 
@@ -139,10 +178,14 @@ private:
 	Vector3 m_wingChordDir = Vector3::Back; // 翼の前側から後ろへ伸ばしたベクトルの方向（前後方向）
 	Vector3 m_wingSpanDir;					// 翼の根本から翼端へ伸ばしたベクトルの方向（左右方向）
 	Vector3 m_wingNormal = Vector3::Up;		// 翼の法線
+	Vector3 m_localChordDir ;
+	Vector3 m_localSpanDir ;
+	Vector3 m_localNormalDir;
 	Vector3 m_force;						// 翼に働く力（揚力＋抗力）
 	float m_area = 1.0f;				// 翼面積
 	float m_airDensity = 1.225f;		// 空気密度 (kg/m^3) 標準大気条件での値
 	ControlSurface m_controlSurface;
-	Quaternion m_orientation;
+	Vector3 m_localMomentArm;				//モーメントを計算するための（重心から翼への距離）
+	Vector3 m_worldMomentArm;
 };
 
