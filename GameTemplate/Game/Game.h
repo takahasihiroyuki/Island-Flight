@@ -1,6 +1,6 @@
 #pragma once
 #include "SkyCube.h"
-
+class PlacementObject;
 class Aircraft;
 class Game : public IGameObject
 {
@@ -66,5 +66,6 @@ private:
 	Vector3 m_moveSpeed = Vector3::Zero;
 	float angle = 0.0f;
 	Aircraft* m_aircraft = nullptr;
+	std::vector<PlacementObject*> m_placementObject;
 };
 

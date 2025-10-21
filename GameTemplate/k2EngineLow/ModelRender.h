@@ -185,7 +185,7 @@ namespace nsK2EngineLow {
 			return m_model;
 		}
 
-		const Model& GetRenderToGBufferModel()const 
+		const Model& GetRenderToGBufferModel()const
 		{
 			return m_renderToGBufferModel;
 		}
@@ -225,6 +225,9 @@ namespace nsK2EngineLow {
 			m_shadowModel.ChangeAlbedoMap(filePath, albedoMap);
 		}
 
+		Vector3 GetPosition()const {
+			return m_position;
+		}
 
 	private:
 

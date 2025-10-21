@@ -1,6 +1,35 @@
 #include "stdafx.h"
 #include "Game.h"
 #include "Aircraft.h"
+#include"PlacementObject.h"
+
+#include "level3D/Level.h"
+
+
+namespace
+{
+	bool ForwardMatchName(const wchar_t* name, const wchar_t* n)
+	{
+		auto len = wcslen(n);
+		auto namelen = wcslen(name);
+		if (len > namelen) {
+			//名前が長い。不一致。
+			return false;
+		}
+		return wcsncmp(n, name, len) == 0;
+	}
+
+	std::string FindAssetPath(const wchar_t* name)
+	{
+		if (ForwardMatchName(name, L"StaticMesh_Bush")) {
+			return "Assets/modelData/unityChan.tkm";
+		}
+		if (ForwardMatchName(name, L"StaticMesh_Mounten")) {
+			return "Assets/modelData/unityChan.tkm";
+		}
+	}
+
+}
 
 
 Game::Game()
@@ -44,6 +73,30 @@ bool Game::Start()
 	m_ocean = NewGO<Ocean>(0);
 	m_aircraft = NewGO<Aircraft>(0, "aircraft");
 	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm");
+
+	nsK2EngineLow::Level level3D;
+	level3D.Init("Assets/level/stageTest.tkl", [&](LevelObjectData& objData)
+		{
+			if (objData.ForwardMatchName(L"StaticMesh"))
+			{
+				auto* object = NewGO<StageMeshObject>(0);
+				object->Initialize(FindAssetPath(objData.name).c_str(), objData.position, objData.rotation, objData.scale);
+
+				m_placementObject.push_back(object);
+				return true;
+			}
+			if (objData.ForwardMatchName(L""))
+			{	
+				//m_placementObject = NewGO<Bush>(0);
+				//m_placementObject->Initialize("Assets/modelData/unityChan.tkm", objData.position, objData.rotation, objData.scale);
+				return true;
+			}
+			
+
+
+			return true;
+		});
+
 	return true;
 }
 void Game::Update()

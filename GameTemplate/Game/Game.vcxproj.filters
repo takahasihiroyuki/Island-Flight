@@ -14,6 +14,11 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Aircraft.cpp" />
     <ClCompile Include="LiftingSurface.cpp" />
+    <ClCompile Include="PlacementObject.cpp" />
+    <ClCompile Include="CoinManager.cpp" />
+    <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -24,5 +29,10 @@
     <ClInclude Include="Aircraft.h" />
     <ClInclude Include="LiftingSurface.h" />
     <ClInclude Include="AircraftState.h" />
+    <ClInclude Include="PlacementObject.h" />
+    <ClInclude Include="CoinManager.h" />
+    <ClInclude Include="Coin.h" />
+    <ClInclude Include="ScoreManager.h" />
+    <ClInclude Include="SoundManager.h" />
   </ItemGroup>
 </Project>
