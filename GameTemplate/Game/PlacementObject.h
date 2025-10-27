@@ -9,8 +9,14 @@ public:
 
 
 public:
-	// 配置情報を受け取って設定する
-	void Initialize(const char* name, const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+	using TransformTuple = std::tuple<Vector3, Quaternion, Vector3>;
+	/// <summary>
+	/// 初期化
+	/// トランスフォームはタプルで受け取る。
+	/// Position,Rotation,Scale
+	/// </summary>
+	/// <param name="transform"></param>
+	void Initialize(const char* name, const TransformTuple& transform);
 
 	Vector3 GetPosition()
 	{
@@ -26,6 +32,7 @@ protected:
 class StageMeshObject : public PlacementObject
 {
 private:
+	//親クラスをわかりやすくするためのエイリアス
 	using SuperClass = PlacementObject;
 
 public:

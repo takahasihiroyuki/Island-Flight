@@ -15,8 +15,13 @@ void PlacementObject::Render(RenderContext& rc)
 	m_modelRender.Draw(rc);
 }
 
-void PlacementObject::Initialize(const char* name, const Vector3& position, const Quaternion& rotation, const Vector3& scale)
+void PlacementObject::Initialize(const char* name, const TransformTuple& transform)
 {
+	Vector3 position;
+	Quaternion rotation;
+	Vector3 scale;
+	std::tie(position, rotation, scale) = transform;
+
 	m_modelRender.Init(name);
 
 	m_modelRender.SetPosition(position);

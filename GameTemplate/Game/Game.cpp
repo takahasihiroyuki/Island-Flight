@@ -6,6 +6,7 @@
 #include "Coin.h"
 #include "ScoreManager.h"
 #include "level3D/Level.h"
+#include"Stage.h"
 
 
 namespace
@@ -43,8 +44,10 @@ Game::Game()
 		m_model.Init("Assets/modelData/Plane/Plane.tkm", nullptr, 0, enModelUpAxisZ, false);
 	}
 	m_bg.Init("Assets/modelData/bg/bg.tkm", nullptr, 0, enModelUpAxisZ, true);
-	m_island.Init("Assets/modelData/stage/islandStage/BananaTree_1.tkm", nullptr, 0, enModelUpAxisZ, true);
-
+	m_bg.SetScale(Vector3(10.0f, 10.0f, 10.0f));
+	m_bg.Update();
+	m_island.Init("Assets/modelData/unityChan.tkm", nullptr, 0, enModelUpAxisZ, true);
+	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 
 }
@@ -56,8 +59,11 @@ Game::~Game()
 bool Game::Start()
 {
 	m_island.SetPosition({ 300.0f,0.0f,2000.0f });
-
 	m_island.Update();
+
+	m_bg.SetPosition(Vector3::Zero);
+	m_bg.Update();
+
 
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 	m_skyCube->SetLuminance(1.0f);
@@ -72,6 +78,8 @@ bool Game::Start()
 	m_scoreManager = NewGO<ScoreManager>(0, "ScoreManager");
 
 	m_coinManager->SetScoreManager(m_scoreManager);
+	m_aircraft->SetPosition(Vector3::Up * 500);
+	m_stage = NewGO<Stage>(0);
 
 	nsK2EngineLow::Level level3D;
 
@@ -79,16 +87,16 @@ bool Game::Start()
 		{
 			if (objData.ForwardMatchName(L"StaticMesh"))
 			{
-				auto* object = NewGO<StageMeshObject>(0);
-				object->Initialize(FindAssetPath(objData.name).c_str(), objData.position, objData.rotation, objData.scale);
+				//auto* object = NewGO<StageMeshObject>(0);
+				//object->Initialize(FindAssetPath(objData.name).c_str(), objData.position, objData.rotation, objData.scale);
 
-				m_placementObject.push_back(object);
-				return true;
+				//m_placementObject.push_back(object);
+				//return true;
 			}
 			if (objData.ForwardMatchName(L"Bush"))
 			{
 				CoinDesc desc;
-				desc.pos = objData.position + Vector3::Right * 200 + Vector3::Front*20.0f;
+				desc.pos = objData.position + Vector3::Right * 200 + Vector3::Front * 20.0f;
 				desc.rot = objData.rotation;
 				desc.scale = objData.scale;
 				m_coinManager->Spawn(desc);
@@ -111,6 +119,9 @@ bool Game::Start()
 			return true;
 		});
 
+	//m_ground.CreateFromModel(m_bg.GetModel(), m_bg.GetModel().GetWorldMatrix());
+
+
 	return true;
 }
 void Game::Update()
@@ -131,9 +142,9 @@ void Game::Update()
 
 
 
-	g_camera3D->SetPosition(m_aircraft->GetPosition() + Vector3(0.0f, 300.0f, -500.0f));
-	g_camera3D->SetTarget(m_aircraft->GetPosition() + Vector3(0.0f, 100.0f, 0.0f));
-	m_skyCube->SetPosition(Vector3(m_position.x,0.0f,m_position.z));
+	//g_camera3D->SetPosition(m_aircraft->GetPosition() + Vector3(0.0f, 300.0f, -500.0f));
+	//g_camera3D->SetTarget(m_aircraft->GetPosition() + Vector3(0.0f, 100.0f, 0.0f));
+	m_skyCube->SetPosition(Vector3(m_position.x, 0.0f, m_position.z));
 
 
 	for (int i = 0; i < 5; i++) {
@@ -148,5 +159,5 @@ void Game::Update()
 void Game::Render(RenderContext& rc)
 {
 	m_skyCube->Render(rc);
-	/*m_island.Draw(rc);*/
+	m_island.Draw(rc);
 }

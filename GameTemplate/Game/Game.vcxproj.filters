@@ -19,6 +19,9 @@
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="SceneLoader\SceneLoader.cpp" />
+    <ClCompile Include="SceneLoader\TransformHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -34,5 +37,8 @@
     <ClInclude Include="Coin.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Stage.h" />
+    <ClInclude Include="SceneLoader\SceneLoader.h" />
+    <ClInclude Include="SceneLoader\TransformHelper.h" />
   </ItemGroup>
 </Project>

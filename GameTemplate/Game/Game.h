@@ -4,6 +4,7 @@ class CoinManager;
 class PlacementObject;
 class Aircraft;
 class ScoreManager;
+class Stage;
 class Game : public IGameObject
 {
 public:
@@ -43,5 +44,7 @@ private:
 
 	CoinManager* m_coinManager=nullptr;
 	ScoreManager* m_scoreManager = nullptr;
+	PhysicsStaticObject m_ground;
+	Stage* m_stage = nullptr;
 };
 
