@@ -5,3 +5,5 @@
 using namespace nsK2EngineLow;
 // K2EngineLowのグローバルアクセスポイント
 extern K2EngineLow* g_k2EngineLow;
+
+#include "Assets/Json/json.hpp"
