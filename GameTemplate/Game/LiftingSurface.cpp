@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "LiftingSurface.h"
 #include <algorithm>
 #include "Aircraft.h"
@@ -6,9 +6,9 @@
 
 namespace
 {
-	static constexpr float ASPECT_RATIO = 4.0f;        // ƒAƒXƒyƒNƒg”ä
-	static constexpr float OSWALD_EFFICIENCY = 0.7f;   // ƒIƒYƒƒ‹ƒhŒø—¦ŒW”
-	static constexpr float PI = 3.1415f;               // ‰~ü—¦
+	static constexpr float ASPECT_RATIO = 4.0f;        // ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”
+	static constexpr float OSWALD_EFFICIENCY = 0.7f;   // ã‚ªã‚ºãƒ¯ãƒ«ãƒ‰åŠ¹ç‡ä¿‚æ•°
+	static constexpr float PI = 3.1415f;               // å††å‘¨ç‡
 }
 
 bool LiftingSurface::Start()
@@ -20,9 +20,9 @@ bool LiftingSurface::Start()
 
 LiftingSurface::LiftingSurface(
 	Quaternion orientation,
-	bool isMirroed,
 	float maxWingDeflectionAngle,
 	Vector3 momentArm,
+	bool isMirroed,
 	bool isVertical
 ) :m_localMomentArm(momentArm)
 {
@@ -37,52 +37,52 @@ LiftingSurface::~LiftingSurface()
 
 void LiftingSurface::ComputeForces(const AircraftState& state)
 {
-	//“®ˆ³
+	//å‹•åœ§
 	float dynamicPressure = ComputeDynamicPressure(state);
-	//Œ}Šp
+	//è¿è§’
 	float angleOfAttack = ComputeAngleOfAttack(state.relWind);
-	//—g—Í
+	//æšåŠ›
 	Vector3 lift = ComputeLift(state, dynamicPressure, angleOfAttack);
-	//R—Í
+	//æŠ—åŠ›
 	Vector3 drag = ComputeDrag(state, dynamicPressure, angleOfAttack);
+
+	//æšåŠ›ãƒ»æŠ—åŠ›ã®å¤§ãã•ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
+	float liftMag = lift.Length();
+	float dragMag = drag.Length();
 
 	m_force = lift + drag;
 }
 
 float LiftingSurface::ComputeAngleOfAttack(const Vector3& relWind)
 {
-	//“àÏ‚Íƒ[ƒƒxƒNƒgƒ‹‚ª‚ ‚é‚ÆŒvZ‚Å‚«‚È‚¢‚Ì‚Å
-	//ƒ[ƒ‚ª‚ ‚éê‡ƒ[ƒ“x‚ğ“n‚·B
-	//ˆê‰“àÏ‚ÌŠÖ”‚Å‚Íƒ[ƒƒxƒNƒgƒ‹‚ª“ü‚é‚Æƒ[ƒi‚X‚O“xj‚É‚È‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚é‚ª
-	//¡‰ñ‚Í0“x‚Ì•û‚ª‚¢‚¢‚Ì‚Å‚±‚ê‚ğ‘‚¢‚½B
-	if (relWind.Length() == 0 || m_wingChordDir.Length() == 0) return 0.0f;
+	const float eps = 1e-6f;
 
-	// —ƒ‚Ì‘OŒã•ûŒü‚Æ‘Š‘Î•—‚Ì‚È‚·Šp‚ğ‹‚ß‚é
-	Vector3 relWindDir = relWind;//‘Š‘Î•—
+	// é•·ã•ã‚¼ãƒ­ã«è¿‘ã„å ´åˆã¯ 0 ã¨ã¿ãªã™
+	if (relWind.Length() < eps) return 0.0f;
+
+	// ç›¸å¯¾é¢¨
+	Vector3 relWindDir = relWind;
 	relWindDir.Normalize();
 
-	float dot = Dot(relWindDir, m_wingChordDir);
-	if (dot < -1) dot = -1;
-	if (dot > 1) dot = 1;
-	float angle = acosf(dot);
+	//ã‚¹ãƒ‘ãƒ³æˆåˆ†ã‚’é™¤å»ã—ã¦ã€ã‚³ãƒ¼ãƒ‰ãƒ»æ³•ç·šã®å¼µã‚‹å¹³é¢ã¸æŠ•å½±
+	Vector3 windProj = relWindDir - m_wingSpanDir * Dot(relWindDir, m_wingSpanDir);
 
-	// ŠOÏ‚ğŒvZ‚µ‚ÄA‚Ç‚¿‚ç‘¤‚É‹È‚ª‚Á‚Ä‚¢‚é‚©‚ğ’²‚×‚é
-	Vector3 cross;
-	cross.Cross(m_wingChordDir, relWindDir);
-	// –@ü‚ÆŠOÏ‚Ì‚È‚·Šp‚ğ‹‚ß‚é
-	float sign = m_wingNormal.Dot(cross);
-	if (sign < 0.0f) {
-		angle = -angle; // •‰‚Ì’l‚É‚·‚é
-	}
-	return angle + m_controlSurface.GetDelection();
+	float sinTerm = Dot(Cross(m_wingChordDir, windProj), m_wingNormal);
+	float cosTerm = Dot(m_wingChordDir, windProj);
+	float aoa = atan2f(sinTerm, cosTerm);
+
+	//æ“èˆµé¢
+	float defl = m_controlSurface.GetDeFlection();
+
+	return aoa + defl;
 }
 
 float LiftingSurface::ComputeDynamicPressure(const AircraftState& state)
 {
-	//‘¬“x
+	//é€Ÿåº¦
 	float velocity = state.linearVelocity.Length();
 
-	// “®ˆ³(’PˆÊ‘ÌÏ‚ ‚½‚è‚Ì‰^“®ƒGƒlƒ‹ƒM[)
+	// å‹•åœ§(å˜ä½ä½“ç©ã‚ãŸã‚Šã®é‹å‹•ã‚¨ãƒãƒ«ã‚®ãƒ¼)
 	float dynamicPressure = 0.5f * m_airDensity * std::pow(velocity, 2);
 
 	return dynamicPressure;
@@ -94,18 +94,38 @@ Vector3 LiftingSurface::ComputeLift(
 	float angleOfAttack)
 {
 
-	Vector3 relWind = state.relWind;
-	relWind.Normalize();
+	Vector3 rw = state.relWind; if (rw.LengthSq() > 1e-12f) rw.Normalize();
+	Vector3 n = m_wingNormal;  if (n.LengthSq() > 1e-12f)  n.Normalize();
 
-	// —g—Í•ûŒü‚Í‘Š‘Î•—‚ÆƒXƒpƒ“‚ÌŠOÏ
-	Vector3 liftDir;
-	liftDir.Cross(relWind, m_wingSpanDir);
+	// ç›¸å¯¾é¢¨ã«ç›´äº¤ãª n ã®æˆåˆ†ï¼æšåŠ›æ–¹å‘
+	Vector3 liftDir = n + rw * (-Dot(n, rw));
+	if (liftDir.LengthSq() < 1e-12f) liftDir = Cross(n, rw); // é€€é¿
 	liftDir.Normalize();
 
-	// —g—ÍŒW”
+	//Vector3 relWind = state.relWind;
+	//relWind.Normalize();
+
+
+	//// ç›¸å¯¾é¢¨ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«
+	//Vector3 rw = state.relWind;
+	//if (rw.LengthSq() > 1e-12f) rw.Normalize();
+
+	//// ç¿¼æ³•ç·š
+	//Vector3 n = m_wingNormal;
+	//if (n.LengthSq() > 1e-12f) n.Normalize();
+
+	//// æ³•ç·šã‚’ç›¸å¯¾é¢¨ã«ç›´äº¤ãªå¹³é¢ã¸å°„å½±ï¼ˆã“ã‚ŒãŒæšåŠ›æ–¹å‘ï¼‰
+	//Vector3 liftDir = n + rw * (-Dot(n, rw));
+
+	//// æšåŠ›æ–¹å‘ã¯ç›¸å¯¾é¢¨ã¨ã‚¹ãƒ‘ãƒ³ã®å¤–ç©
+	////Vector3 liftDir;
+	////liftDir.Cross(relWind, m_wingSpanDir);
+	////liftDir.Normalize();
+
+	// æšåŠ›ä¿‚æ•°
 	float liftCoefficient = ComputeLiftCoefficient(angleOfAttack);
 
-	//—g—ÍƒxƒNƒgƒ‹
+	//æšåŠ›ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 liftForce = liftDir * dynamicPressure * liftCoefficient * m_area;
 
 	return liftForce;
@@ -118,7 +138,7 @@ Vector3 LiftingSurface::ComputeDrag(
 {
 	float dragCoefficient = ComputeDragCoefficient(angleOfAttack);
 
-	Vector3 dragDirection = state.relWind * -1;
+	Vector3 dragDirection = state.relWind;
 	dragDirection.Normalize();
 
 	Vector3 DragForce = dragDirection * dynamicPressure * dragCoefficient * m_area;
@@ -128,12 +148,12 @@ Vector3 LiftingSurface::ComputeDrag(
 
 float LiftingSurface::ComputeLiftCoefficient(float angleOfAttack) const
 {
-	//ŒÂ‚ÌŠp“x‚ğ’´‚¦‚é‚ÆŒ¸‘¬i15“xj
+	//å€‹ã®è§’åº¦ã‚’è¶…ãˆã‚‹ã¨æ¸›é€Ÿï¼ˆ15åº¦ï¼‰
 	constexpr float stall = 0.261799f;
-	// ‚±‚ÌŠÖ”‚ÌŒX‚«AŠÈˆÕ“I‚ÈŠÖ”‚É‚µ‚Ä‚¢‚é‚Ì‚ÅŒX‚«‚Íˆê’èiüŒ`jB
+	// ã“ã®é–¢æ•°ã®å‚¾ãã€ç°¡æ˜“çš„ãªé–¢æ•°ã«ã—ã¦ã„ã‚‹ã®ã§å‚¾ãã¯ä¸€å®šï¼ˆç·šå½¢ï¼‰ã€‚
 	const float slope = 0.05f;
 
-	// Œ}Šp‚ª-15“x‚©‚ç15“x‚Ì”ÍˆÍ‚Å‚Ì‚İ—g—Í‚ğ”­¶‚³‚¹‚é
+	// è¿è§’ãŒ-15åº¦ã‹ã‚‰15åº¦ã®ç¯„å›²ã§ã®ã¿æšåŠ›ã‚’ç™ºç”Ÿã•ã›ã‚‹
 	if (angleOfAttack < -stall)	return -slope * angleOfAttack;
 	if (angleOfAttack > stall)	return	(-slope * (angleOfAttack - stall)) + (slope * stall);
 
@@ -142,11 +162,19 @@ float LiftingSurface::ComputeLiftCoefficient(float angleOfAttack) const
 
 float LiftingSurface::ComputeDragCoefficient(float angleOfAttack) const
 {
-	//«—g—ÍŒW”‚ÆR—ÍŒW”‚ÌŠÖŒW®
+	//TODO:ä»ŠæŠ—åŠ›ãŒã¡ã‚ƒã‚“ã¨åƒã„ã¦ã„ãªã„ï¼ˆæŠ—åŠ›ä¿‚æ•°ã®ã›ã„ï¼‰ã€
+	//æŠ—åŠ›ãŒæšåŠ›ã«å¯¾ã—ã¦å°ã•ã™ãã‚‹ã€‚
+	//æšåŠ›ã¨æŠ—åŠ›ã‚’ç–‘ä¼¼çš„ãªè¨ˆç®—ã§æ±‚ã‚ã‚‹ã®ã§ã¯ãªãã¦ã€
+	//å®Ÿéš›ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã™ã‚‹ã€‚
 
+	constexpr float DragBase = 0.0002f; // åŸºæœ¬æŠ—åŠ›ä¿‚æ•°
+
+	//â†“æšåŠ›ä¿‚æ•°ã¨æŠ—åŠ›ä¿‚æ•°ã®é–¢ä¿‚å¼
+	float debug = pow(ComputeLiftCoefficient(angleOfAttack), 2.0);
 	float dragCofficient =
 		pow(ComputeLiftCoefficient(angleOfAttack), 2.0f)
 		/ (OSWALD_EFFICIENCY * ASPECT_RATIO * PI);
+	dragCofficient += DragBase;
 
 	return dragCofficient;
 
@@ -154,29 +182,36 @@ float LiftingSurface::ComputeDragCoefficient(float angleOfAttack) const
 
 void LiftingSurface::UpdateOrientation(Quaternion orientation)
 {
+	//èª¤å·®ã‚’ç„¡ãã™ãŸã‚æ­£è¦åŒ–ã€‚
+	orientation.Normalize();
 
+	//å°æ•°ç‚¹èª¤å·®ã‚’ç„¡ãã™ãŸã‚æ­£è¦åŒ–ã€‚
+	m_localChordDir.Normalize();
+	m_localSpanDir.Normalize();
+	m_localNormalDir.Normalize();
 
-	// —ƒƒ[ƒJƒ‹Šî’êi‰Šúp¨j
-	Vector3 localChord = m_localChordDir;
-	Vector3 localSpan = m_localSpanDir;
-	Vector3 localNormal = m_localNormalDir;
-	Vector3 localMomentArm = m_localMomentArm;
+	Vector3 chordWorld = m_localChordDir;
+	orientation.Apply(chordWorld);
+	Vector3 spanWorld = m_localSpanDir;
+	orientation.Apply(spanWorld);
+	Vector3 normalWorld = m_localNormalDir;
+	orientation.Apply(normalWorld);
+	Vector3 momentArmWorld = m_localMomentArm;
+	orientation.Apply(momentArmWorld);
 
-	orientation.Apply(localChord);
-	orientation.Apply(localSpan);
-	orientation.Apply(localNormal);
-	orientation.Apply(localMomentArm);
+	// ç›´äº¤å†èª¿æ•´
+	chordWorld.Normalize();
+	// normal = chord Ã— spanï¼ˆå³æ‰‹ç³»ï¼‰ã§å†ç”Ÿæˆ â†’ ç›´äº¤ã‚’ä¿è¨¼
+	normalWorld = Cross(chordWorld, spanWorld);
+	normalWorld.Normalize();
+	// span = normal Ã— chord ã§å†æ§‹ç¯‰
+	spanWorld = Cross(normalWorld, chordWorld);
+	spanWorld.Normalize();
 
-	//¬”“_Œë·‚ğ–³‚­‚·‚½‚ß³‹K‰»B
-	localChord.Normalize();
-	localSpan.Normalize();
-	localMomentArm.Normalize();
-
-
-	// ‹@‘Ì‚Ìp¨ƒNƒH[ƒ^ƒjƒIƒ“‚ğŠ|‚¯‚Äƒ[ƒ‹ƒh•ûŒü‚É•ÏŠ·
-	m_wingChordDir = localChord;
-	m_wingSpanDir = localSpan;
-	m_wingNormal = localNormal;
-	m_worldMomentArm = localMomentArm;
+	// æ©Ÿä½“ã®å§¿å‹¢ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚’æ›ã‘ã¦ãƒ¯ãƒ¼ãƒ«ãƒ‰æ–¹å‘ã«å¤‰æ›
+	m_wingChordDir = chordWorld;
+	m_wingSpanDir = spanWorld;
+	m_wingNormal = normalWorld;
+	m_worldMomentArm = momentArmWorld;
 }
 

@@ -7,12 +7,11 @@ class Engine :public IGameObject
 public:
 	Engine() {}
 	~Engine() {}
+	void Update() override{}
 
-	void Update() override
-	{
-
-	}
-
+	/// <summary>
+	/// 推力の更新
+	/// </summary>
 	void UpdateThrustForce()
 	{
 		//入力値を非線形にして推力に反映。
@@ -24,6 +23,10 @@ public:
 
 	void SetThrottleInput(bool input);
 
+	/// <summary>
+	/// 推力の方向を更新
+	/// </summary>
+	/// <param name="orientation"></param>
 	void UpdateOrientation(Quaternion orientation) {
 		Vector3 localthrustDir = m_localThrustDir;
 		orientation.Apply(localthrustDir);
@@ -34,13 +37,13 @@ public:
 	const Vector3& GetThrustForce() const { return m_thrustForce; }
 
 private:
-	float m_thrust = 0.0f;					// 現在の推力
+	float m_thrust = 0.0f;						// 現在の推力
 	float m_maxThrust = 1000.0f;				// 最大推力
-	float m_throttleInput = 0.0f;			// スロットル入力
-	float m_holdTime = 0.0f;				// 時間保持
-	Vector3 m_thrustForce = Vector3::Zero;	// 推力ベクトル
+	float m_throttleInput = 0.0f;				// スロットル入力
+	float m_holdTime = 0.0f;					// 時間保持
+	Vector3 m_thrustForce = Vector3::Zero;		// 推力ベクトル
 	Vector3 m_localThrustDir = Vector3::AxisZ;	// 機体前方方向（初期値）
-	Vector3 m_WoldeThrustDir = m_localThrustDir;
+	Vector3 m_WoldeThrustDir = m_localThrustDir;// ワールド座標での推力方向
 };
 
 enum class WingType {
@@ -64,25 +67,28 @@ public:
 
 	Vector3 GetPosition() const { return m_position; }
 
-	void ComputeMoment();
+	void SetPosition(const Vector3& position) {
+		m_position = position;
+	}
+
+
 private:
 	void InitLiftingSurface(
 		WingType wingsType,
 		Quaternion orientation,
-		bool isMirroed,
 		Vector3 momentArm,
-		float maxWingDeflectionAngle
-	);
+		float maxWingDeflectionAngle,
+		bool isMirroed = false,
+		bool isVertical = false
+		);
 
 	void InitOrientation();
 	void InitWingPositionOffset();
 	void InitAllLiftingSurfaces();
 
 	void ApplyControlInputs();
-
-	void Move();
-	Vector3 ComputeForce();
 	void UpdateModel();
+
 	/// <summary>
 	/// 相対風を更新
 	/// アップデートの最後に呼ぶ
@@ -97,11 +103,64 @@ private:
 		m_state.linearVelocity += linearVelocity;
 	}
 
+
+	/// <summary>
+	/// 重力を計算
+	/// </summary>
+	/// <returns>重力</returns>
 	Vector3 ComputeGravity() {
 		const float mass = m_mass;
 		const Vector3 gravity(0.0f, -9.81f, 0.0f);
 		return gravity * mass;
 	}
+	////////////力計算系///////////////////
+
+	/// <summary>
+	/// 力計算
+	/// </summary>
+	/// <returns></returns>
+	Vector3 ComputeForce();
+
+	void Move();
+
+	/////////////モーメント計算系///////////////////
+
+	/// <summary>
+	/// モーメントを計算
+	/// </summary>
+	void ComputeMoment();
+
+	/// <summary>
+	/// 翼の総モーメントをワールド座標で計算
+	/// </summary>
+	/// <returns></returns>
+	Vector3  ComputeTotalMomentWorld();
+
+	/// <summary>
+	/// オイラー方程式を計算
+	/// </summary>
+	/// <param name="momentObj">オブジェクト座標のモーメント</param>
+	/// <returns></returns>
+	Vector3 ComputeOmegaDotBody(const Vector3& momentObj) const
+	{
+		// 主慣性モーメント
+		const float Ix = m_inertia.x;
+		const float Iy = m_inertia.y;
+		const float Iz = m_inertia.z;
+
+		// Iω（対角なら要素積）
+		Vector3 Iw(Ix * m_angularVelocity.x,
+			Iy * m_angularVelocity.y,
+			Iz * m_angularVelocity.z);
+
+		// ジャイロ項
+		Vector3 gyro = Cross(m_angularVelocity,Iw);
+
+		Vector3 rhs = momentObj - gyro;
+
+		return Vector3(rhs.x / Ix, rhs.y / Iy, rhs.z / Iz);
+	}
+
 
 private:
 	CharacterController m_characterController;
@@ -119,4 +178,8 @@ private:
 	// 各軸の慣性モーメントを定数として定義
 	Vector3 m_inertia = { 800.0f, 1000.0f, 900.0f }; //慣性モーメント
 	Vector3 m_angularVelocity = Vector3::Zero;
+
+	mutable Matrix m_world;							//ワールド行列
+	mutable bool m_worldDirty = true;				// ワールド行列が最新かどうか
+
 };

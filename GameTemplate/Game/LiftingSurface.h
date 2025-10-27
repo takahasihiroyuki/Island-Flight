@@ -22,17 +22,19 @@ public:
 	void SetAreaRatio(float ratio) { areaRatio = ratio; }
 	void SetControlInput(float input)
 	{
-		if (input >= 1) {
-			controlInput = 1; 
+		if (input > 1) {
+			controlInput = 1;
 			return;
 		}
 
-		if (input <= 0)
+		if (input <-1)
 		{
 			controlInput = -1;
 			return;
 		}
-
+		if (controlInput == -1) {
+			float a = 0;
+		}
 		controlInput = input;
 	}
 	void SetDeflection(float def) { deflection = def; }
@@ -42,7 +44,7 @@ public:
 	}
 
 	float GetAreaRatio() const { return areaRatio; };
-	float GetDelection() const { return deflection; };
+	float GetDeFlection() const { return deflection; };
 	float GetMaxDeflection()const { return maxDeflection; };
 
 private:
@@ -60,9 +62,9 @@ public:
 	LiftingSurface() {};
 	LiftingSurface(
 		Quaternion orientation,
-		bool isMirroed,
 		float maxWingDeflectionAngle,
 		Vector3 momentArm,
+		bool isMirroed = false,
 		bool isVertical = false
 	);
 	~LiftingSurface();
@@ -88,12 +90,19 @@ public:
 	/// モーメントを計算
 	/// モーメントの向きが回す軸
 	/// 大きさが回る量
-	/// ComputeForcesを読んだ後に呼ぶ
+	/// ComputeForcesを呼んだ後に呼ぶ
 	/// </summary>
 	/// <returns></returns>
-	Vector3 ComputeMoment() {
+	Vector3 ComputeMoment(const AircraftState& state) {
+
+		// FIXME:左右翼のモーメントが非対称で、モーメントが釣り合わず機体がスピンしてしまっている。
+		// TODO:原因を調査し、修正する。
 		Vector3 moment;
 		moment.Cross(m_worldMomentArm, m_force);
+
+		/*	state.orientation.Apply(moment);*/
+
+
 		return moment;
 	};
 
@@ -102,6 +111,10 @@ public:
 		m_localChordDir = Vector3::Back;
 		m_localNormalDir = Vector3::Up;
 		m_localSpanDir = Vector3::Right;
+
+		if (isMirrored) {
+			m_localSpanDir = Vector3::Left;
+		}
 
 		if (isVertical) {
 			// 垂直尾翼の基底
@@ -115,8 +128,7 @@ public:
 		rot.Apply(m_localNormalDir);
 		rot.Apply(m_localSpanDir);
 
-		if (isMirrored)
-			m_localSpanDir *= -1.0f;
+
 	}
 
 	void UpdateOrientation(Quaternion orientation);
@@ -166,7 +178,7 @@ private:
 	/// <returns></returns>
 	float ComputeDragCoefficient(float angleOfAttack) const;
 
-	
+
 
 
 private:
@@ -178,8 +190,8 @@ private:
 	Vector3 m_wingChordDir = Vector3::Back; // 翼の前側から後ろへ伸ばしたベクトルの方向（前後方向）
 	Vector3 m_wingSpanDir;					// 翼の根本から翼端へ伸ばしたベクトルの方向（左右方向）
 	Vector3 m_wingNormal = Vector3::Up;		// 翼の法線
-	Vector3 m_localChordDir ;
-	Vector3 m_localSpanDir ;
+	Vector3 m_localChordDir;
+	Vector3 m_localSpanDir;
 	Vector3 m_localNormalDir;
 	Vector3 m_force;						// 翼に働く力（揚力＋抗力）
 	float m_area = 1.0f;				// 翼面積
