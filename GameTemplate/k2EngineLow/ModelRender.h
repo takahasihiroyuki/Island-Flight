@@ -177,12 +177,12 @@ namespace nsK2EngineLow {
 
 		Matrix GetWorldMatrix() const
 		{
-			return m_model.GetWorldMatrix();
+			return m_renderToGBufferModel.GetWorldMatrix();
 		}
 
-		const Model& GetModel() const
+		Model& GetModel() 
 		{
-			return m_model;
+			return m_renderToGBufferModel;
 		}
 
 		const Model& GetRenderToGBufferModel()const
