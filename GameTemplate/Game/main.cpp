@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "system/system.h"
-#include "Game.h"
+#include "GameManager.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -20,7 +20,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
-	Game* game = NewGO<Game>(0);
+	GameManager* game = NewGO<GameManager>(0);
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
