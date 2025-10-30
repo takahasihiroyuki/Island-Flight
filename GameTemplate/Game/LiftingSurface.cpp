@@ -74,6 +74,7 @@ float LiftingSurface::ComputeAngleOfAttack(const Vector3& relWind)
 	//操舵面
 	float defl = m_controlSurface.GetDeFlection();
 
+
 	return aoa + defl;
 }
 
@@ -117,10 +118,10 @@ Vector3 LiftingSurface::ComputeLift(
 	//// 法線を相対風に直交な平面へ射影（これが揚力方向）
 	//Vector3 liftDir = n + rw * (-Dot(n, rw));
 
-	//// 揚力方向は相対風とスパンの外積
-	////Vector3 liftDir;
-	////liftDir.Cross(relWind, m_wingSpanDir);
-	////liftDir.Normalize();
+	// 揚力方向は相対風とスパンの外積
+	//Vector3 liftDir;
+	//liftDir.Cross(relWind, m_wingSpanDir);
+	//liftDir.Normalize();
 
 	// 揚力係数
 	float liftCoefficient = ComputeLiftCoefficient(angleOfAttack);
@@ -139,6 +140,8 @@ Vector3 LiftingSurface::ComputeDrag(
 	float dragCoefficient = ComputeDragCoefficient(angleOfAttack);
 
 	Vector3 dragDirection = state.relWind;
+
+
 	dragDirection.Normalize();
 
 	Vector3 DragForce = dragDirection * dynamicPressure * dragCoefficient * m_area;
@@ -157,17 +160,16 @@ float LiftingSurface::ComputeLiftCoefficient(float angleOfAttack) const
 	if (angleOfAttack < -stall)	return -slope * angleOfAttack;
 	if (angleOfAttack > stall)	return	(-slope * (angleOfAttack - stall)) + (slope * stall);
 
-	return  slope * angleOfAttack;
+	return  (slope * angleOfAttack);
 }
 
 float LiftingSurface::ComputeDragCoefficient(float angleOfAttack) const
 {
-	//TODO:今抗力がちゃんと働いていない（抗力係数のせい）、
-	//抗力が揚力に対して小さすぎる。
-	//揚力と抗力を疑似的な計算で求めるのではなくて、
-	//実際のデータをサンプリングする。
+	//NOTE:基本抗力ををこれより小さくすると、なぜかローカル X 軸または Y 軸まわりに
+	//ゆっくりと回転する現象が発生する（数値誤差またはモーメント不均衡とかが原因かも）。
+	//現状の値 (0.0005f) では安定しているため、修正の優先度は低い。
 
-	constexpr float DragBase = 0.0002f; // 基本抗力係数
+	constexpr float DragBase = 0.0005f; // 基本抗力係数(迎角が0の時の抗力係数)
 
 	//↓揚力係数と抗力係数の関係式
 	float debug = pow(ComputeLiftCoefficient(angleOfAttack), 2.0);

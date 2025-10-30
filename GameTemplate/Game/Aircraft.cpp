@@ -4,10 +4,22 @@
 
 namespace
 {
-	const float MAX_THROTLEINPUT = 1.0f; // 最大推力
-	const Vector3 INIT_POSITION = Vector3(0.0f, 0.0f, -8000.0f); // 初期位置
-	const float CAPSELLE_RADIUS = 100.0f; // カプセルコライダーの半径
-	const float CAPSELLE_HEIGHT = 10.0f; // カプセルコライダーの高さ
+	constexpr float MAX_THROTLEINPUT = 1.0f; // 最大推力
+	const Vector3 INIT_POSITION = Vector3(0.0f, 0.0f, 100.0f); // 初期位置
+	constexpr float CAPSELLE_RADIUS = 100.0f; // カプセルコライダーの半径
+	constexpr float CAPSELLE_HEIGHT = 10.0f; // カプセルコライダーの高さ
+
+	// 各操縦面の最大操舵角度（度数法）
+	constexpr float MAX_LEFT_AILERON_ANGLE = 3.0f;
+	constexpr float MAX_RIGHT_AILERON_ANGLE = 3.0f;
+	constexpr float MAX_ELEVATOR_ANGLE = 3.0f;
+	constexpr float MAX_RUDDER_ANGLE = 5.0f;
+
+
+	float DegToRad(float deg)
+	{
+		return deg * (3.1415f / 180.0f);
+	}
 }
 
 Aircraft::Aircraft()
@@ -39,7 +51,7 @@ void Aircraft::Update()
 
 	ApplyControlInputs();
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
-		//if (i == 3 /*|| i == 3*/ /*|| i == 1*/) {
+		//if (i == 0||i==1 || i == 3/*|| i == 3*/ /*|| i == 1*/) {
 		m_wings[i]->UpdateControlSurface();
 		m_wings[i]->UpdateOrientation(m_state.orientation);
 		//}
@@ -61,7 +73,7 @@ void Aircraft::Update()
 	Vector3 camPosL = Vector3(0.0f, 300.0f, -500.0f); // 機体の後方・上
 	Vector3 camTgtL = Vector3(0.0f, 100.0f, 0.0f); // 機体の少し前方上
 	Vector3 upL = Vector3::Up;                     // 機体ローカルUp
-	m_state.orientation.Apply(camPosL);
+	//m_state.orientation.Apply(camPosL);
 	//m_state.orientation.Apply(camTgtL);
 	//m_state.orientation.Apply(upL);
 
@@ -107,7 +119,7 @@ void Aircraft::InitWingPositionOffset()
 	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(-3.5f, 0.0f, 0.20f);
 	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(3.5f, 0.0f, 0.20f);
 	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 3.00f);
-	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 1.20f, 3.00f);
+	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f,0.0f,3.00f);
 }
 
 void Aircraft::InitAllLiftingSurfaces()
@@ -119,7 +131,7 @@ void Aircraft::InitAllLiftingSurfaces()
 		WingType::MainLeft,
 		m_initWingsOrientation[static_cast<int>(WingType::MainLeft)],
 		m_wingPositionOffset[static_cast<int>(WingType::MainLeft)],
-		3.1415f * 2 / (18 * 8),
+		DegToRad(MAX_LEFT_AILERON_ANGLE),
 		true
 	);
 
@@ -128,7 +140,7 @@ void Aircraft::InitAllLiftingSurfaces()
 		WingType::MainRight,
 		m_initWingsOrientation[static_cast<int>(WingType::MainRight)],
 		m_wingPositionOffset[static_cast<int>(WingType::MainRight)],
-		(3.1415f * 2) / (18 * 8)
+		DegToRad(MAX_RIGHT_AILERON_ANGLE)
 	);
 
 	// 水平尾翼
@@ -136,8 +148,7 @@ void Aircraft::InitAllLiftingSurfaces()
 		WingType::Tail,
 		m_initWingsOrientation[static_cast<int>(WingType::Tail)],
 		m_wingPositionOffset[static_cast<int>(WingType::Tail)],
-		3.1415f * 2 / (18 * 8)
-
+		DegToRad(MAX_ELEVATOR_ANGLE)
 	);
 
 	// 垂直尾翼
@@ -145,7 +156,7 @@ void Aircraft::InitAllLiftingSurfaces()
 		WingType::Vertical,
 		m_initWingsOrientation[static_cast<int>(WingType::Vertical)],
 		m_wingPositionOffset[static_cast<int>(WingType::Vertical)],
-		3.1415f * 2 / (18 * 2),
+		DegToRad(MAX_RUDDER_ANGLE),
 		false,
 		true
 	);
@@ -166,7 +177,6 @@ void Aircraft::Move()
 	AddLinearVelocity(((force / m_mass)) * g_gameTime->GetFrameDeltaTime());
 
 
-
 	m_position = m_characterController
 		.Execute(
 			m_linearVelocity,
@@ -183,13 +193,12 @@ Vector3 Aircraft::ComputeForce()
 
 	Vector3 thrust = m_engine->GetThrustForce();
 
-	Vector3 debug = m_wings[0]->ComputeMoment(m_state) + m_wings[1]->ComputeMoment(m_state);
-	K2_LOG("Sum Moment = (%.5f, %.5f, %.5f) |Len=%.5f\n", debug.x, debug.y, debug.z, debug.Length());
-
 	Vector3 wingsForce = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
-		m_wings[i]->ComputeForces(m_state);
-		wingsForce += m_wings[i]->GetForce();
+		//if (i == 0 || i == 1 || i == 3) {
+			m_wings[i]->ComputeForces(m_state);
+			wingsForce += m_wings[i]->GetForce();
+		//}
 	}
 
 	Vector3 debugWing0 = m_wings[0]->GetForce();
@@ -197,7 +206,7 @@ Vector3 Aircraft::ComputeForce()
 	Vector3 debug2 = m_wings[0]->GetForce() + m_wings[1]->GetForce();
 
 	Vector3 force = thrust + wingsForce;
-	force += ComputeGravity();
+	//force += ComputeGravity();
 
 	Vector3 thrustNormal = thrust;
 	thrustNormal.Normalize();
@@ -212,19 +221,19 @@ void Aircraft::ComputeMoment()
 	//全ての翼のモーメント（world系）を合計
 	Vector3 totalMomentWold = ComputeTotalMomentWorld();
 
-	////モーメントの計算はオブジェクト座標系でしたいので
-	//// （オイラー方程式をそのまま使えるから）
-	//// 求めたモーメントをオブジェクト座標系に変換する。
+	//モーメントの計算はオブジェクト座標系でしたいので
+	// （オイラー方程式をそのまま使えるから）
+	// 求めたモーメントをオブジェクト座標系に変換する。
 
 
-	////ワールド座標の逆回転行列（オブジェクト行列）を求める。
-	////移動は考慮しないので逆回転行列。
-	////ワールド行列は直交行列なので転置行列で逆行列になる。
-	//Matrix objMat;
-	//objMat.MakeRotationFromQuaternion(m_state.orientation);
-	//objMat.Transpose();
-	//Vector3 totalMomentObj = totalMomentWold;
-	//objMat.Apply(totalMomentObj);
+	//ワールド座標の逆回転行列（オブジェクト行列）を求める。
+	//移動は考慮しないので逆回転行列。
+	//ワールド行列は直交行列なので転置行列で逆行列になる。
+	Matrix objMat;
+	objMat.MakeRotationFromQuaternion(m_state.orientation);
+	objMat.Transpose();
+	Vector3 totalMomentObj = totalMomentWold;
+	objMat.Apply(totalMomentObj);
 
 
 	//角加速度
@@ -251,9 +260,6 @@ void Aircraft::ComputeMoment()
 		m_state.orientation = deltaQuaternion * m_state.orientation;
 		m_state.orientation.Normalize();
 	}
-
-	float debug = m_angularVelocity.Length();
-
 }
 void Aircraft::UpdateModel()
 {
@@ -267,30 +273,12 @@ Vector3 Aircraft::ComputeTotalMomentWorld()
 {
 	Vector3 totalMomentWorld = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
-		if (m_wings[i]) {
-			totalMomentWorld += m_wings[i]->ComputeMoment(m_state);
-		}
+		//if (i == 0 || i == 1||i==3) {
+			if (m_wings[i]) {
+				totalMomentWorld += m_wings[i]->ComputeMoment(m_state);
+			}
+		//}
 	}
-	Vector3 wing1 = m_wings[0]->ComputeMoment(m_state);
-	Vector3 wing2 = m_wings[1]->ComputeMoment(m_state);
-	float Leng1 = wing1.Length();
-	float Leng2 = wing2.Length();
-
-	//wing1.Normalize();
-	//wing2.Normalize();
-	Vector3 normalwing1 = wing1;
-	Vector3 debug = wing1 + wing2;
-
-	wing1.Normalize();
-	wing2.Normalize();
-	float debugDot = wing1.Dot(wing2);
-
-	float L1 = wing1.Length();
-	float L2 = wing2.Length();
-	float cosOpp = (L1 > 0 && L2 > 0) ? Dot(wing1, (wing2 * -1)) / (L1 * L2) : 1.0f;
-
-	Vector3 sum = wing1 + wing2;
-	float sumMag = sum.Length();
 	return totalMomentWorld;
 }
 

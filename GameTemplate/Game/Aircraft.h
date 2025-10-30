@@ -29,6 +29,7 @@ public:
 	/// <param name="orientation"></param>
 	void UpdateOrientation(Quaternion orientation) {
 		Vector3 localthrustDir = m_localThrustDir;
+		orientation.Normalize();
 		orientation.Apply(localthrustDir);
 		m_WoldeThrustDir = localthrustDir;
 
@@ -38,7 +39,7 @@ public:
 
 private:
 	float m_thrust = 0.0f;						// 現在の推力
-	float m_maxThrust = 1000.0f;				// 最大推力
+	float m_maxThrust = 5000.0f;				// 最大推力
 	float m_throttleInput = 0.0f;				// スロットル入力
 	float m_holdTime = 0.0f;					// 時間保持
 	Vector3 m_thrustForce = Vector3::Zero;		// 推力ベクトル

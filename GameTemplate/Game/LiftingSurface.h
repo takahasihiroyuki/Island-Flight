@@ -95,14 +95,8 @@ public:
 	/// <returns></returns>
 	Vector3 ComputeMoment(const AircraftState& state) {
 
-		// FIXME:左右翼のモーメントが非対称で、モーメントが釣り合わず機体がスピンしてしまっている。
-		// TODO:原因を調査し、修正する。
 		Vector3 moment;
 		moment.Cross(m_worldMomentArm, m_force);
-
-		/*	state.orientation.Apply(moment);*/
-
-
 		return moment;
 	};
 
