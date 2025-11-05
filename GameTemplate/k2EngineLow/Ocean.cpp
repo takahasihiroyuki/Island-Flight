@@ -24,7 +24,7 @@ namespace nsK2EngineLow {
 
 		ModelInitData initData;
 		//tkmファイルのファイルパスを指定する。
-		initData.m_tkmFilePath = "Assets/modelData/bg/bg.tkm";
+		initData.m_tkmFilePath = "Assets/modelData/Stylize Water Texture/Textures/ocean.tkm";
 		//シェーダーファイルのファイルパスを指定する。
 		initData.m_fxFilePath = "Assets/shader/Ocean.fx";
 		initData.m_vsEntryPointFunc = "VSMain";
@@ -61,6 +61,7 @@ namespace nsK2EngineLow {
 			g_renderingEngine->GetReflectCamera(ReflectLayer::enOcean).GetPosition(),
 			BASEREFLECTANCE
 		);
+		UpdateWaveOffset();
 	}
 	void Ocean::Render(RenderContext& rc)
 	{

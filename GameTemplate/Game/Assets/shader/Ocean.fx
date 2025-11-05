@@ -62,12 +62,13 @@ cbuffer ModelCb : register(b0)
 };
 
 //海用の定数バッファー
-cbuffer LightCb : register(b1)
+cbuffer OceanCb : register(b1)
 {
     float4x4 ReflectionCameraVP; // 反射用カメラビュー投影行列
     Light light;
     //反射の割合の下限値、必ずこの値以上は反射する。（真上から見た反射率）
     float baseReflectance; // 基本反射率
+    float waveScroll;
 
 }
 
@@ -90,6 +91,9 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv);
 float2 CalcReflectUV(float4 clip);
 float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance);
+float2 DistortUVByNormal(float2 uv, float3 normal, float distortionStrength);
+float3 ComputeNomal(SPSIn psIn, float2 uv, float scroll);
+
 
 /// <summary>
 //スキン行列を計算する。
@@ -142,24 +146,21 @@ SPSIn VSMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
+    //UV座標をスケーリングしてテクスチャを繰り返す。
+    float2 uvScaled = psIn.uv * float2(10.0, 10.0);
     
     float3 ligDirection = light.directionLight.direction;
     
-    //アルベドテクスチャのサンプリング
-    float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
-    
-    //法線マップのサンプリング
-    float3 localNormal = g_normalMap.Sample(g_sampler, psIn.uv).xyz;
-    //0～1の範囲を-1～1の範囲にする。
-    localNormal = (localNormal - 0.5f) * 2.0f;
-    //接ベクトル空間からワールド空間に変換する
-    float3 normal = psIn.normal;
-    normal = psIn.tangent * localNormal.x + psIn.biNormal * localNormal.y + normal * localNormal.z;
-
+    //法線の計算
+    float3 normal = ComputeNomal(psIn, uvScaled, waveScroll);
     
     float2 uvR = CalcReflectUV(psIn.refClip);
     uvR = saturate(uvR);
-    float4 reflect = g_refLect.Sample(g_sampler, uvR);
+    //法線でUVを歪ませる
+    float2 distortedUV = DistortUVByNormal(uvR, normal, 0.2);
+    float4 reflect = g_refLect.Sample(g_sampler, distortedUV);
+        //アルベドテクスチャのサンプリング
+    float4 albedoColor = g_albedo.Sample(g_sampler, distortedUV);
 
 
     
@@ -168,18 +169,23 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float3 lig = directionLight;
     
     //最終的な色
-    float4 finalColor = albedoColor;
-    albedoColor = float4(0.20f,0.35f,0.47f,0.0f);
-    finalColor.xyz *= directionLight;
-    //finalColor.xyz = float3(1.0f, 0.0f, 1.0f); //環境光を足す
-    finalColor = reflect;
     
     //フレネル反射率を計算
     float flesnel = ComputeFresnel(normal, normalize(light.cameraEyePos - psIn.worldPos), baseReflectance);
     
-    finalColor = lerp(albedoColor, reflect, flesnel);
+    float4 litColor = albedoColor;
+    //litColor.xyz += lig;
     
-    
+    float4 finalColor;
+    finalColor = lerp(litColor, reflect, flesnel);
+    //float specPower = g_specularMap.Sample(g_sampler, uvScaled).a * 0.1;
+  //  if (light.directionLight.direction.z >=0.00000001f)
+  //  {
+  //      finalColor = float4(CalcLambertDiffuse(
+		//light.directionLight.direction, float3(1.0f, 1.0f, 1.0f), normal),
+  //  0);
+  //  }
+    //finalColor=float4(specPower, specPower, specPower, 0.0f);
     return finalColor;
 }
 
@@ -225,7 +231,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
     float specPower = g_specularMap.Sample(g_sampler, uv).r;
     
 	//鏡面反射光
-    float3 specularLig = lightColor * t * specPower;
+    float3 specularLig = lightColor * t;
 
     return specularLig;
 }
@@ -270,4 +276,24 @@ float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance)
 
     //フレネル反射率
     return baseReflectance + remainingReflectance * angleFactor;
+}
+
+float2 DistortUVByNormal(float2 uv, float3 normal, float distortionStrength)
+{
+    float2 distortion = normal.xz * distortionStrength;
+    return uv + distortion;
+}
+
+float3 ComputeNomal(SPSIn psIn, float2 uv, float scroll)
+{
+    //法線マップのサンプリング
+    float3 localNormal = g_normalMap.Sample(g_sampler, uv + scroll).xyz;
+    
+    
+    //0～1の範囲を-1～1の範囲にする。
+    localNormal = (localNormal - 0.5f) * 2.0f;
+    //接ベクトル空間からワールド空間に変換する
+    float3 normal = psIn.normal;
+    normal = psIn.tangent * localNormal.x + psIn.biNormal * localNormal.y + normal * localNormal.z;
+    return normal;
 }

@@ -37,7 +37,7 @@ namespace nsK2EngineLow
         rc.ClearRenderTargetView(m_planarReflectionTarget);
         rc.ClearDepthStencilView(m_planarReflectionTarget.GetDSVCpuDescriptorHandle(), 1.0f);
 
-        // まとめてモ平面に映すデルレンダーを描画
+        // まとめて平面に映すモデルレンダーを描画
         for (auto MobjData : obj)
         {
             //平面の描画

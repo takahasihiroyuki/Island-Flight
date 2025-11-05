@@ -16,6 +16,8 @@ namespace nsK2EngineLow {
 			//反射の割合の下限値、必ずこの値以上は反射する。
 			//（真上から見た反射率）
 			float baseReflectance=0.0f; // 基本反射率
+
+			float waveScroll = 0.0f; // 波のスクロール値
 		};
 
 
@@ -29,10 +31,17 @@ namespace nsK2EngineLow {
 		void Render(RenderContext& rc)override;
 
 	private:
+		void UpdateWaveOffset()
+		{
+			float deltaTime =g_gameTime->GetFrameDeltaTime();
+			m_constantBuffer.waveScroll+= deltaTime * m_waveSpeed;
+		}
+
 		/// <summary>
-/// 位置を設定
-/// </summary>
-/// <param name="pos">座標</param>
+		/// 位置を設定
+		/// </summary>
+		/// <param name="pos">座標</param>
+
 		void SetPosition(const Vector3& pos)
 		{
 			m_position = pos;
@@ -91,6 +100,7 @@ namespace nsK2EngineLow {
 		Light m_light;
 		Plane m_plane = Plane(INIT_OCEAN_PLANE_NORMAL, INIT_OCEAN_PLANE_POSITION);
 		OceanConstantBuffer m_constantBuffer;
+		float m_waveSpeed = 0.1f;
 	};
 }
 
