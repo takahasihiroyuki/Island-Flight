@@ -2,6 +2,22 @@
 #include "ModelRender.h"
 
 namespace nsK2EngineLow {
+	namespace {
+		Matrix CalcWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale, EnModelUpAxis modelUpAxis)
+		{
+			Matrix mBias, mWorld;
+			if (modelUpAxis == enModelUpAxisY) {
+				mBias.MakeRotationX(Math::PI * -0.5f);
+			}
+
+			Matrix mTrans, mRot, mScale;
+			mTrans.MakeTranslation(pos);
+			mRot.MakeRotationFromQuaternion(rot);
+			mScale.MakeScaling(scale);
+			mWorld = mBias * mScale * mRot * mTrans;
+			return mWorld;
+		}
+	}
 	ModelRender::ModelRender()
 	{
 		for (int i = 0; i < static_cast<int>(ReflectLayer::enNum); i++) {
@@ -19,10 +35,13 @@ namespace nsK2EngineLow {
 		int numAnimationCrips,
 		EnModelUpAxis enModelUpAxis,
 		bool isShadowReciever,
+		size_t maxInstance,
 		bool isFowardRender,
 		ReflectLayer disableLayer
 	)
 	{
+		// インスタンシング描画用のデータを初期化。
+		InitInstancingDraw(maxInstance);
 		// スケルトンを初期化。
 		InitSkeleton(filePath);
 		// アニメーションを初期化。
@@ -44,7 +63,6 @@ namespace nsK2EngineLow {
 			m_enableReflection[disableLayer] = false;
 		}
 
-
 		for (auto it = m_ReflectionModel.begin(); it != m_ReflectionModel.end(); ++it) {
 			auto& rayer = it->first;
 			InitReflectionModel(filePath, enModelUpAxis, rayer);
@@ -52,7 +70,7 @@ namespace nsK2EngineLow {
 
 		m_isFowardRender = isFowardRender;
 
-		m_model;
+		m_modelUpAxis = enModelUpAxis;
 		// 初期化完了。
 		m_isInit = true;
 	}
@@ -65,12 +83,15 @@ namespace nsK2EngineLow {
 		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		m_frowardRenderModel.Init(initData);
 		m_frowardRenderModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+		InitInstancingDraw(1);
+
 	}
 
 	void ModelRender::InitSkyCubeModel(ModelInitData& initData)
 	{
 		m_isFowardRender = true;
 		m_frowardRenderModel.Init(initData);
+		InitInstancingDraw(1);
 
 	}
 
@@ -83,10 +104,12 @@ namespace nsK2EngineLow {
 			m_ReflectionModel[layer].Init(initData);
 
 		}
+		InitInstancingDraw(1);
 	}
 
 	void ModelRender::Update()
 	{
+		if (m_isEnableInstancingDraw)return;
 		if (m_isFowardRender)
 		{
 			if (m_frowardRenderModel.IsInited()) {
@@ -125,11 +148,14 @@ namespace nsK2EngineLow {
 
 		//アニメーションを進める。
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
-
 	}
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
+		if (m_isEnableInstancingDraw) {
+			m_worldMatrixArraySB.Update(m_worldMatrixArray.get());
+		}
+
 		if (!m_isFowardRender) {
 			//ディファードレンダリングで描画するなら
 			g_renderingEngine->AddDeferredModelList(this);
@@ -178,6 +204,45 @@ namespace nsK2EngineLow {
 
 	}
 
+	void ModelRender::UpdateInstancingData(
+		int instanceNo,
+		const char* instanceName,
+		const Vector3& pos,
+		const Quaternion& rot,
+		const Vector3& scale)
+	{
+		Matrix worldMatrix;
+		worldMatrix = CalcWorldMatrix(pos, rot, scale, m_modelUpAxis);
+		// インスタンス番号から行列のインデックスを取得する。
+		int matrixArrayIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
+		// ワールド行列の配列にワールド行列を設定する。
+		m_worldMatrixArray[matrixArrayIndex] = worldMatrix;
+
+	}
+
+	void ModelRender::InitInstancingDraw(int maxInstance)
+	{
+		m_maxInstance = maxInstance;
+		if (m_maxInstance > 1) {
+			// ワールド行列の配列のメモリを確保する。
+			m_worldMatrixArray = std::make_unique<Matrix[]>(m_maxInstance);
+			// ワールド行列をGPUに転送するためのストラクチャードバッファを確保。
+			m_worldMatrixArraySB.Init(
+				sizeof(Matrix),
+				m_maxInstance,
+				nullptr
+			);
+			m_isEnableInstancingDraw = true;
+			// インスタンス番号からワールド行列の配列のインデックスに変換するテーブルを初期化する。
+			m_instanceNoToWorldMatrixArrayIndexTable = std::make_unique<int[]>(m_maxInstance);
+			for (int instanceNo = 0; instanceNo < m_maxInstance; instanceNo++) {
+				m_instanceNoToWorldMatrixArrayIndexTable[instanceNo] = instanceNo;
+			}
+		}
+		else {
+		}
+	}
+
 	void ModelRender::InitSkeleton(const char* filePath)
 	{
 		//スケルトンのデータを読み込み。
@@ -215,18 +280,35 @@ namespace nsK2EngineLow {
 		{
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
-			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+
+			if (m_isEnableInstancingDraw) {
+				modelInitData.m_vsSkinEntryPointFunc = "VSSkinInstancingMain";
+			}
+			else {
+				modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			}
+
 		}
 		else
 		{
-			modelInitData.m_vsEntryPointFunc = "VSMain";
+			if (m_isEnableInstancingDraw) {
+				modelInitData.m_vsEntryPointFunc = "VSInstancingMain";
+			}
+			else {
+				modelInitData.m_vsEntryPointFunc = "VSMain";
+			}
 		}
+
 		if (isShadowReciever) {
 			modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
 		}
 		else
 		{
 			modelInitData.m_psEntryPointFunc = "PSNormalMain";
+		}
+		if (m_isEnableInstancingDraw) {
+			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		modelInitData.m_tkmFilePath = tkmFilePath;
@@ -247,6 +329,10 @@ namespace nsK2EngineLow {
 			shadowInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
 			shadowInitData.m_skeleton = &m_skeleton;
 		}
+		if (m_isEnableInstancingDraw) {
+			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+			shadowInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+		}
 		shadowInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
 
 		shadowInitData.m_modelUpAxis = enModelUpAxis;
@@ -260,7 +346,7 @@ namespace nsK2EngineLow {
 		reflectionInitData.m_fxFilePath = "Assets/shader/DrawReflection.fx";
 		reflectionInitData.m_vsEntryPointFunc = "VSMain";
 
-			reflectionInitData.m_psEntryPointFunc = "PSMain";
+		reflectionInitData.m_psEntryPointFunc = "PSMain";
 
 		if (m_animationClips != nullptr) {
 			reflectionInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
@@ -268,12 +354,24 @@ namespace nsK2EngineLow {
 		}
 		reflectionInitData.m_expandConstantBuffer = &g_renderingEngine->GetReflectionModelCB(layer);
 		reflectionInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetReflectionModelCB(layer));
+		if (m_isEnableInstancingDraw) {
+			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+			reflectionInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+		}
 
 		reflectionInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 		reflectionInitData.m_modelUpAxis = enModelUpAxis;
 		m_ReflectionModel[layer].Init(reflectionInitData);
 	}
+
+	void ModelRender::RemoveInstance(int instanceNo)
+	{
+		int matrixIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
+
+		m_worldMatrixArray[matrixIndex] = Matrix::Identity;
+	}
+
 
 	//void ModelRender::InitSkyCubeReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis, ReflectLayer layer)
 	//{

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 #include"CoinManager.h"
 #include "Coin.h"
 #include "PlacementObject.h"
@@ -11,7 +12,12 @@
 
 namespace {
 
-	const std::array<std::string, 137> objectNames =
+	//各オブジェクトごとに objectNames を線形探索すると全体で O(N²) になるため
+	//高速に存在判定できる unordered_set にしておく。
+
+	// 名前の集合を作成。
+
+	const std::unordered_set<std::string> stageObjectNameSet =
 	{
 		//"BananaTree_1",
 		//"BananaTree_2",
@@ -31,6 +37,7 @@ namespace {
 		//"Bridge",
 		//"Bucket_1",
 		//"Bucket_2",
+		//"Coin",
 		//"Canon",
 		//"CanonBall",
 		//"CanonBalls",
@@ -52,10 +59,10 @@ namespace {
 		//"Crate_2",
 		//"Elephant_Statue",
 		//"Fence_1",
-		"Fence_2",
-		"Fence_3",
-		"Fence_4",
-		"Footbridge",
+		//"Fence_2",
+		//"Fence_3",
+		//"Fence_4",
+		//"Footbridge",
 		//"Island_1",
 		//"Island_2",
 		//"Island_3",
@@ -91,10 +98,10 @@ namespace {
 		//"Rock_5",
 		//"Rock_6",
 		//"Rock_7",
-		//"Rock_8",
+		"Rock_8",
 		//"Rock_9",
 		//"Rock_10",
-		////"Rock_Formation_1",
+		//////"Rock_Formation_1",
 		//"Shipwreck",
 		//"Spear",
 		//"Stall_1",
@@ -131,11 +138,6 @@ namespace {
 		//"WodenLog_2",
 		//"Wooden_Box"
 	};
-	//各オブジェクトごとに objectNames を線形探索すると全体で O(N²) になるため
-	//高速に存在判定できる unordered_set に変換しておく。
-
-	// 名前の集合を作成。
-	const std::unordered_set<std::string> stageObjectNameSet(objectNames.begin(), objectNames.end());
 
 	/// <summary>
 	/// ターゲットとJSON文字列が等しいか調べる。
@@ -164,7 +166,7 @@ namespace {
 	/// <returns></returns>
 	bool IsJsonStringEqualToAny(const char* json)
 	{
-		for (const auto& target : objectNames) {
+		for (const auto& target : stageObjectNameSet) {
 			if (IsJsonStringEqual(json, target.c_str())) {
 				return true;
 			}
@@ -176,41 +178,73 @@ namespace {
 
 bool Stage::Start()
 {
-	m_coinManager = FindGO<CoinManager>("coinManager");
-	static int count = 0;
-	LoadScene("Assets/Scene/SceneExport.json", [&](const nlohmann::json& json)
+	m_instancingManager = NewGO<InstancingManager>(0, "instancingManager");
+	std::unordered_set<std::string> usedStageObjectNameSet;
+	std::unordered_map<std::string, std::string> paths;
+	m_coinManager->SetInstancingManager(m_instancingManager);
+
+	LoadScene("Assets/Scene/SceneExport3.json", [&](const nlohmann::json& json)
 		{
 			//nlohmann::jsonはC++のライブラリでJSONデータを扱うためのものです。
 			//nlohmann::jsonはstd::mapのように動く。
 
 			//nameに対応する文字列を取得する。
-			const std::string name = json["name"];
+			std::string name = json["name"];
 
+
+			//nameとtargetNameが等しいか調べる。
+			//findはO(1)で済む。
+			if (stageObjectNameSet.find(name) != stageObjectNameSet.end()) {
 
 				//ParseTransformComponentsはtupleでposition, rotation, scaleをまとめた型のものを返す。
 				auto transform = ParseTransformComponents(json["Transform"]);
 
 				if (name == "Coin") {
-					CoinDesc desc;
-					std::tie(desc.pos, desc.rot, desc.scale) = transform;
-					m_coinManager->Spawn(desc);
+					Vector3 pos;
+					Quaternion rot;
+					Vector3 scale;
+					std::tie(pos, rot, scale) = transform;
+					m_coinManager->Spawn(pos, rot, scale);
 					return true;
 				}
 
-				//nameとtargetNameが等しいか調べる。
-				//findはO(1)で済む。
-				if (stageObjectNameSet.find(name) != stageObjectNameSet.end()) {
-					auto* object = NewGO<StageMeshObject>(0);
-					std::string path = "Assets/modelData/stage/islandStage/" + name + ".tkm";
-					std::get<0>(transform) = Vector3::One*100; // スケールは1固定
-					object->Initialize(path.c_str(), transform);
-					m_stageMeshObject.push_back(object);
+				//実際に使われたオブジェクト名を保存しておく。
+				usedStageObjectNameSet.insert(name);
 
-					count++;
+				paths[name] = "Assets/modelData/stage/islandStage/" + name + ".tkm";
 
-					return true;
-				}
+
+				auto* object = NewGO<StageMeshObject>(0);
+				Vector3 pos = std::get<0>(transform);
+				Quaternion rot = std::get<1>(transform);
+				Vector3 scale = std::get<2>(transform);
+				pos *= 1.0f; // ポジション
+				scale *= 1.0f; // スケール
+				object->Initialize(paths[name].c_str(), pos, rot, scale, name.c_str());
+				return true;
+			}
 		});
-	return true;
+	std::unordered_map<std::string, bool> instancingFlags;
+	std::unordered_map<std::string, size_t> maxInstanceTable;
 
+	//インスタンシング描画に登録するためのデータを用意する。
+	for (const auto& name : usedStageObjectNameSet) {
+
+		//各種類のオブジェクトがインスタンシングするかを保存。
+		instancingFlags[name] = PlacementObject::GetIsInstancing(name.c_str());
+
+		//マックスインスタンスのテーブルを準備
+		maxInstanceTable[name] = PlacementObject::GetMaxInstanceCount(name.c_str());
+	}
+
+	//インスタンシング描画に登録する。
+	m_instancingManager->RegisterInstancingModels(
+		usedStageObjectNameSet,
+		paths,
+		instancingFlags,
+		maxInstanceTable);
+
+	m_coinManager->RegisterCoinInstancingModel();
+
+	return true;
 }

@@ -31,7 +31,6 @@ private:
 	Quaternion m_rotation;			// 回転
 	Vector3 m_scale = g_vec3One;	// 拡大率
 	std::array<AnimationClip, 4> m_animationClipArray;	// アニメーションクリップ配列
-	Plane plane = Plane(Vector3{0.0f,1.0f,0.0f}, 0.0f); // 水平面
 	Ocean* m_ocean = nullptr;
 	bool m_cameraFlag = false;
 	float m_timer = 0.0f;

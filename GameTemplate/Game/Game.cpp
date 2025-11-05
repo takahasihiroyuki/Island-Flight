@@ -47,7 +47,6 @@ Game::Game()
 	m_bg.SetScale(Vector3(10.0f, 10.0f, 10.0f));
 	m_bg.Update();
 	m_island.Init("Assets/modelData/unityChan.tkm", nullptr, 0, enModelUpAxisZ, true);
-	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 
 }
@@ -95,12 +94,6 @@ bool Game::Start()
 			}
 			if (objData.ForwardMatchName(L"Bush"))
 			{
-				CoinDesc desc;
-				desc.pos = objData.position + Vector3::Right * 200 + Vector3::Front * 20.0f;
-				desc.rot = objData.rotation;
-				desc.scale = objData.scale;
-				m_coinManager->Spawn(desc);
-				return true;
 			}
 			if (objData.ForwardMatchName(L"Coin"))
 			{
@@ -129,8 +122,8 @@ void Game::Update()
 	m_coinManager->Update(*m_aircraft);
 
 	// 左スティック(キーボード：WASD)で平行移動。
-	//m_position.y += g_pad[0]->GetLStickXF()*100.0;
-	//m_position.z += g_pad[0]->GetLStickYF()*100.0f;
+	m_position.y += g_pad[0]->GetLStickXF()*100.0;
+	m_position.z += g_pad[0]->GetLStickYF()*100.0f;
 
 
 	// 右スティック(キーボード：上下左右)で回転。
@@ -139,6 +132,7 @@ void Game::Update()
 
 	m_cameraPosition.x += g_pad[0]->GetRStickXF() * 5;
 	m_cameraPosition.y += g_pad[0]->GetRStickYF() * 5;
+	m_cameraPosition.z += g_pad[0]->GetLStickYF() * 5.0f;
 
 
 
@@ -155,6 +149,8 @@ void Game::Update()
 	}
 
 	g_camera3D->SetFar(100000);
+	g_camera3D->SetPosition(m_cameraPosition);
+	g_camera3D->SetTarget(Vector3(0.0f,100.0f,300.0f));
 }
 void Game::Render(RenderContext& rc)
 {

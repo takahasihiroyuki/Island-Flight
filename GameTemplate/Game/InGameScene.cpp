@@ -41,7 +41,8 @@ bool InGameScene::Start()
 
 	m_coinManager->SetScoreManager(m_scoreManager);
 	m_aircraft->SetPosition(Vector3::Up * 500);
-	//m_stage = NewGO<Stage>(0);
+	m_stage = NewGO<Stage>(0);
+	m_stage->GetCoinManager(m_coinManager);
 
 	//m_ground.CreateFromModel(m_bg.GetModel(), m_bg.GetModel().GetWorldMatrix());
 
@@ -72,8 +73,8 @@ void InGameScene::OnUpdate()
 
 
 	g_camera3D->SetFar(100000);
-	//g_camera3D->SetPosition(m_cameraPosition);
-	//g_camera3D->SetTarget(Vector3(0.0f, 100.0f, 300.0f));
+	g_camera3D->SetPosition(m_cameraPosition);
+	g_camera3D->SetTarget(Vector3(0.0f, 100.0f, 300.0f));
 	//g_camera3D->SetTarget(m_aircraft->GetPosition() + Vector3(0.0f, 100.0f, 0.0f));
 	//g_camera3D->SetPosition(m_aircraft->GetPosition() + Vector3(0.0f, 300.0f, -500.0f));
 

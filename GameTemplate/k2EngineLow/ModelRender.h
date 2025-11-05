@@ -16,6 +16,7 @@ namespace nsK2EngineLow {
 		/// <param name="numAnimationClips">アニメーションクリップの数</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
 		/// <param name="isShadowReciever">影を受ける側か</param>
+		/// <param name="maxInstance">インスタンシング描画の最大数(1以下ならインスタンシング描画しない)</param>
 		/// <param name="isFowardRender">フォワードレンダリングで描画するか</param>
 		/// <param name="disableLayer">反射で映り込まないレイヤー</param>
 		void Init(const char* filePath,
@@ -23,6 +24,7 @@ namespace nsK2EngineLow {
 			int numAnimationCrips = 0,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isShadowReciever = true,
+			size_t maxInstance = 1,
 			bool isFowardRender = false,
 			ReflectLayer disableLayer = ReflectLayer::enNone
 		);
@@ -229,7 +231,20 @@ namespace nsK2EngineLow {
 			return m_position;
 		}
 
+		void UpdateInstancingData(
+			int instanceNo,
+			const char* instanceName,
+			const Vector3& pos,
+			const Quaternion& rot,
+			const Vector3& scale
+		);
+
 	private:
+		/// <summary>
+		/// インスタンスンシング描画用のデータを初期化。
+		/// </summary>
+		/// <param name="maxInstance"></param>
+		void InitInstancingDraw(int maxInstance);
 
 		/// <summary>
 		/// スケルトンの初期化。
@@ -266,11 +281,9 @@ namespace nsK2EngineLow {
 
 		void InitReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis, ReflectLayer layer);
 
-		void InitSkyCubeReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis, ReflectLayer layer);
+		//void InitSkyCubeReflectionModel(const char* filePath, EnModelUpAxis enModelUpAxis, ReflectLayer layer);
 
-
-
-
+		void RemoveInstance(int instanceNo);
 
 	private:
 		Skeleton						m_skeleton;									//スケルトン
@@ -298,6 +311,12 @@ namespace nsK2EngineLow {
 		Model							m_shadowModel;							    //影描画用モデル
 		std::map<ReflectLayer, Model>	m_ReflectionModel;                          //反射マップ描画用モデル
 		bool							m_isSkyCube = false;						// スカイキューブモデルかどうか
+		std::unique_ptr<Matrix[]>		m_worldMatrixArray;							// ワールド行列の配列。
+		EnModelUpAxis					m_modelUpAxis;								//モデルの上方向
+		size_t							m_maxInstance = 0;							// インスタンスングの最大数
+		bool							m_isEnableInstancingDraw = false;			// インスタンシング描画が有効か	
+		StructuredBuffer				m_worldMatrixArraySB;						// ワールド行列の配列のストラクチャードバッファ。
+		std::unique_ptr<int[]>			m_instanceNoToWorldMatrixArrayIndexTable;	// インスタンス番号からワールド行列の配列のインデックスに変換するテーブル。
 	};
 }
 

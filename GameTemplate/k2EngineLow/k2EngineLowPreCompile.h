@@ -119,4 +119,5 @@ static const int MAX_BONE = 512;	// ƒ{[ƒ“‚ÌÅ‘å”B
 #include "Ocean.h"
 #include "PlaneReflectionPass.h"
 #include "SkyCube.h"
+#include "InstancingManager.h"
 

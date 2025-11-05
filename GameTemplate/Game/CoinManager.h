@@ -10,6 +10,7 @@ public:
 	CoinManager();
 	~CoinManager();
 	void Update(const Aircraft& player);
+	bool Start()override;
 
 public:
 	void SetScoreManager(ScoreManager* scoreManager) {
@@ -20,15 +21,27 @@ public:
 	/// <summary>
 	/// コインを作る
 	/// </summary>
-	void Spawn(const CoinDesc& coinDesc);
+	void Spawn(
+		Vector3 position,
+		Quaternion rotation,
+		Vector3 scale);
 
 	/// <summary>
 	/// フレームの最後でコインを作る。
 	/// 途中でベクターへ要素を追加すると再配置が発生し、
 	/// 既存ポインタの無効化やエラーを引き起こす可能性があるため。
 	/// </summary>
-	void RequestSpawn(CoinDesc& coinDesc);
+	void RequestSpawn(
+		Vector3 position,
+		Quaternion rotation,
+		Vector3 scale);
 
+	void SetInstancingManager(InstancingManager* instancingManager) 
+	{
+		m_instancingManager = instancingManager;
+	}
+
+	void RegisterCoinInstancingModel();
 private:
 	/// <summary>
 	/// プレイヤーが取得したコインを判定する。
@@ -48,4 +61,5 @@ private:
 	std::vector<Coin*> m_coins;
 	std::vector<Coin*> m_pendingCoins;	//
 	ScoreManager* m_coreManager;
+	InstancingManager* m_instancingManager=nullptr;
 };

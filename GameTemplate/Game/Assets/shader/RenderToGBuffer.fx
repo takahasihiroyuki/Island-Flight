@@ -9,48 +9,54 @@ cbuffer ModelCb : register(b0)
 //スキニング用の頂点データをひとまとめ。
 struct SSkinVSIn
 {
-    int4 Indices   : BLENDINDICES0;
+    int4 Indices : BLENDINDICES0;
     float4 Weights : BLENDWEIGHT0;
 };
 
 // 頂点シェーダーへの入力
 struct SVSIn
 {
-    float4 pos      : POSITION;
-    float3 normal   : NORMAL;
-    float3 tangent  : TANGENT;
+    float4 pos : POSITION;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
     float3 biNormal : BINORMAL;
-    float2 uv       : TEXCOORD0;
+    float2 uv : TEXCOORD0;
     SSkinVSIn skinVert; //スキン用のデータ。
+    uint instanceID : SV_InstanceID;
 
 };
 
 //ピクセルシェーダーへの入力
 struct SPSIn
 {
-    float4 pos      : SV_POSITION; //座標。
-    float3 normal   : NORMAL;
-    float3 tangent  : TANGENT;
+    float4 pos : SV_POSITION; //座標。
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
     float3 biNormal : BINORMAL;
-    float2 uv       : TEXCOORD0;
+    float2 uv : TEXCOORD0;
     float3 worldPos : TEXCOORD1;
 };
 
 // ピクセルシェーダーからの出力
 struct SPSOut
 {
-    float4 albedo   : SV_Target0; // アルベド
-    float4 normal   : SV_Target1; // 法線
-    float specPow   : SV_Target2; // スペキュラ強度
+    float4 albedo : SV_Target0; // アルベド
+    float4 normal : SV_Target1; // 法線
+    float specPow : SV_Target2; // スペキュラ強度
     float3 worldPos : SV_Target3; // ワールド座標
 };
 
+///////////////////////////////////////
+// 頂点シェーダーの共通処理をインクルードする。
+///////////////////////////////////////
 
 //シェーダーリソース
 Texture2D<float4> g_albedo : register(t0); //アルベドマップ
 Texture2D<float4> g_normalMap : register(t1); //法線マップにアクセスするための変数。
 Texture2D<float4> g_specularMap : register(t2); //スペキュラマップにアクセスするための変数。
 StructuredBuffer<float4x4> g_boneMatrix : register(t3); //ボーン行列。
+StructuredBuffer<float4x4> g_worldMatrixArray : register(t10); //ワールド行列の配列。インスタンシング描画の際に有効。
+
 
 //サンプラーステート
 sampler g_sampler : register(s0);
@@ -75,7 +81,7 @@ float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
 }
 
 //モデル用の頂点シェーダーのエントリーポイント
-SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
+SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstancingDraw)
 {
     SPSIn psIn;
     float4x4 m;
@@ -85,7 +91,15 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     }
     else
     {
-        m = mWorld;
+        if (isEnableInstancingDraw)
+        {
+            m = g_worldMatrixArray[vsIn.instanceID]; //インスタンスIDに対応するワールド行列を取得。
+        }
+        else
+        {
+            m = mWorld;
+        }
+
     }
 
     psIn.pos = mul(m, vsIn.pos); // モデルの頂点をワールド座標系に変換
@@ -104,16 +118,26 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 // スキンなしメッシュ用の頂点シェーダーのエントリー関数。
 SPSIn VSMain(SVSIn vsIn)
 {
-    return VSMainCore(vsIn, false);
+    return VSMainCore(vsIn, false, false);
 }
 // スキンありメッシュの頂点シェーダーのエントリー関数。
 SPSIn VSSkinMain(SVSIn vsIn)
 {
-    return VSMainCore(vsIn, true);
+    return VSMainCore(vsIn, true, false);
 }
 
+// スキンなしメッシュ用の頂点シェーダーのエントリー関数。
+SPSIn VSInstancingMain(SVSIn vsIn)
+{
+    return VSMainCore(vsIn, false, true);
+}
+// スキンありメッシュの頂点シェーダーのエントリー関数。
+SPSIn VSSkinInstancingMain(SVSIn vsIn)
+{
+    return VSMainCore(vsIn, true, true);
+}
 //モデル用のピクセルシェーダーのエントリーポイント
-SPSOut PSMain(SPSIn psIn,bool isShadowReciever)
+SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
 {
     //GBufferに出力
     SPSOut psOut;
@@ -171,7 +195,7 @@ float3 CalcNormal(SPSIn psIn)
     // 出力は0～1に丸められてしまいマイナスの値が失われてしまうので-1～1を0～1に変換する
     normal = (normal / 2.0f) + 0.5f;
    
-    normal=normalize(normal);
+    normal = normalize(normal);
 
     return normal;
 }

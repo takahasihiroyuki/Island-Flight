@@ -13,7 +13,7 @@ namespace
 	constexpr float MAX_LEFT_AILERON_ANGLE = 3.0f;
 	constexpr float MAX_RIGHT_AILERON_ANGLE = 3.0f;
 	constexpr float MAX_ELEVATOR_ANGLE = 3.0f;
-	constexpr float MAX_RUDDER_ANGLE = 5.0f;
+	constexpr float MAX_RUDDER_ANGLE = 3.0f;
 
 
 	float DegToRad(float deg)
@@ -68,23 +68,23 @@ void Aircraft::Update()
 	UpdateModel();
 
 
-	//カメラ設定
-	//TODO:後でちゃんと他のクラスでかく。
-	Vector3 camPosL = Vector3(0.0f, 300.0f, -500.0f); // 機体の後方・上
-	Vector3 camTgtL = Vector3(0.0f, 100.0f, 0.0f); // 機体の少し前方上
-	Vector3 upL = Vector3::Up;                     // 機体ローカルUp
-	//m_state.orientation.Apply(camPosL);
-	//m_state.orientation.Apply(camTgtL);
-	//m_state.orientation.Apply(upL);
+	////カメラ設定
+	////TODO:後でちゃんと他のクラスでかく。
+	//Vector3 camPosL = Vector3(0.0f, 300.0f, -500.0f); // 機体の後方・上
+	//Vector3 camTgtL = Vector3(0.0f, 100.0f, 0.0f); // 機体の少し前方上
+	//Vector3 upL = Vector3::Up;                     // 機体ローカルUp
+	////m_state.orientation.Apply(camPosL);
+	////m_state.orientation.Apply(camTgtL);
+	////m_state.orientation.Apply(upL);
 
-	Vector3 camPosW = GetPosition() + camPosL;
-	Vector3 camTgtW = GetPosition() + camTgtL;
-	Vector3 upW = upL;
-	upW.Normalize();
+	//Vector3 camPosW = GetPosition() + camPosL;
+	//Vector3 camTgtW = GetPosition() + camTgtL;
+	//Vector3 upW = upL;
+	//upW.Normalize();
 
-	g_camera3D->SetPosition(camPosW);
-	g_camera3D->SetTarget(camTgtW);
-	g_camera3D->SetUp(upW);
+	//g_camera3D->SetPosition(camPosW);
+	//g_camera3D->SetTarget(camTgtW);
+	//g_camera3D->SetUp(upW);
 
 
 
@@ -176,7 +176,6 @@ void Aircraft::Move()
 
 	AddLinearVelocity(((force / m_mass)) * g_gameTime->GetFrameDeltaTime());
 
-
 	m_position = m_characterController
 		.Execute(
 			m_linearVelocity,
@@ -206,12 +205,7 @@ Vector3 Aircraft::ComputeForce()
 	Vector3 debug2 = m_wings[0]->GetForce() + m_wings[1]->GetForce();
 
 	Vector3 force = thrust + wingsForce;
-	//force += ComputeGravity();
-
-	Vector3 thrustNormal = thrust;
-	thrustNormal.Normalize();
-	Vector3 wingsForceNormal = wingsForce;
-	wingsForceNormal.Normalize();
+	force += ComputeGravity();
 
 	return force;
 }

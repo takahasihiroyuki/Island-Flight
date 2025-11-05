@@ -2,17 +2,20 @@
 
 class StageMeshObject;
 class CoinManager;
-class Stage:public IGameObject
+class Stage :public IGameObject
 {
 public:
 	Stage() {};
 	~Stage() {};
 
 	bool Start() override;
-
+	void GetCoinManager(CoinManager* coinManager)
+	{
+		m_coinManager = coinManager;
+	}
 
 private:
 	CoinManager* m_coinManager;
-	std::vector<StageMeshObject*> m_stageMeshObject;
+	InstancingManager* m_instancingManager = nullptr;
 };
 
