@@ -81,6 +81,7 @@ sampler g_sampler : register(s0); //サンプラステート。
 Texture2D<float4> g_normalMap : register(t1); //法線マップにアクセスするための変数。
 Texture2D<float4> g_specularMap : register(t2); //スペキュラマップにアクセスするための変数。
 Texture2D<float4> g_refLect : register(t10); // 反射マップ
+Texture2D<float4> g_shadowMap : register(t11);
 
 
 ////////////////////////////////////////////////
@@ -93,6 +94,7 @@ float2 CalcReflectUV(float4 clip);
 float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance);
 float2 DistortUVByNormal(float2 uv, float3 normal, float distortionStrength);
 float3 ComputeNomal(SPSIn psIn, float2 uv, float scroll);
+float CalcShadowPow(float3 worldPos);
 
 
 /// <summary>
@@ -176,16 +178,11 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float4 litColor = albedoColor;
     //litColor.xyz += lig;
     
+    float shadowPow = CalcShadowPow(psIn.worldPos);
+    
     float4 finalColor;
     finalColor = lerp(litColor, reflect, flesnel);
-    //float specPower = g_specularMap.Sample(g_sampler, uvScaled).a * 0.1;
-  //  if (light.directionLight.direction.z >=0.00000001f)
-  //  {
-  //      finalColor = float4(CalcLambertDiffuse(
-		//light.directionLight.direction, float3(1.0f, 1.0f, 1.0f), normal),
-  //  0);
-  //  }
-    //finalColor=float4(specPower, specPower, specPower, 0.0f);
+    finalColor * shadowPow;
     return finalColor;
 }
 
@@ -296,4 +293,33 @@ float3 ComputeNomal(SPSIn psIn, float2 uv, float scroll)
     float3 normal = psIn.normal;
     normal = psIn.tangent * localNormal.x + psIn.biNormal * localNormal.y + normal * localNormal.z;
     return normal;
+}
+
+float CalcShadowPow(float3 worldPos)
+{
+    float shadowPow = 1.0f;
+        //ライトビュースクリーン区間からUV座標空間に変換
+        float4 posInLVP = mul(light.mLVP, float4(worldPos, 1.0f));
+    
+        float zInLVP = posInLVP.z / posInLVP.w;
+        if (zInLVP >= 0.0f && zInLVP <= 1.0f)
+        {
+
+            float2 shadowUV = posInLVP.xy / posInLVP.w;
+            shadowUV *= float2(0.5f, -0.5f);
+            shadowUV += 0.5f;
+
+	        //UV座標を使ってシャドウマップから影情報をサンプリング
+            if (shadowUV.x >= 0.0f && shadowUV.x <= 1.0f &&
+                shadowUV.y >= 0.0f && shadowUV.y <= 1.0f)
+            {
+                //シャドウマップから深度をサンプリング
+                float zInShadowMap = g_shadowMap.Sample(g_sampler, shadowUV).r;
+                if (zInLVP > zInShadowMap)
+                {
+                    shadowPow = 0.5f; //影が落ちている。
+                }
+            }
+        }
+    return shadowPow;
 }

@@ -60,11 +60,11 @@ namespace nsK2EngineLow {
 		void OnDraw(RenderContext& rc)
 		{
 			if (m_isFowardRender) {
-				m_frowardRenderModel.Draw(rc);
+				m_frowardRenderModel.Draw(rc, m_maxInstance);
 				return;
 			}
 			else {
-				m_renderToGBufferModel.Draw(rc);
+				m_renderToGBufferModel.Draw(rc,m_maxInstance);
 
 			}
 		}
@@ -184,6 +184,9 @@ namespace nsK2EngineLow {
 
 		Model& GetModel() 
 		{
+			if (m_isFowardRender) {
+				return m_frowardRenderModel;
+			}
 			return m_renderToGBufferModel;
 		}
 

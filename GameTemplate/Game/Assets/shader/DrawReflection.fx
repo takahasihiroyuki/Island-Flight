@@ -20,6 +20,7 @@ struct SVSIn
     float3 normal : NORMAL; //法線
     float3 tangent : TANGENT;
     float3 biNormal : BINORMAL;
+    uint instanceID : SV_InstanceID;
 };
 
 //ピクセルシェーダーへの入力。
@@ -76,6 +77,7 @@ StructuredBuffer<float4x4> g_boneMatrix : register(t3); //ボーン行列。
 sampler g_sampler : register(s0); //サンプラステート。
 Texture2D<float4> g_normalMap : register(t1); //法線マップにアクセスするための変数。
 Texture2D<float4> g_specularMap : register(t2); //スペキュラマップにアクセスするための変数。
+StructuredBuffer<float4x4> g_worldMatrixArray : register(t10); //ワールド行列の配列。インスタンシング描画の際に有効。
 
 
 ////////////////////////////////////////////////
@@ -107,7 +109,7 @@ float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
 /// <summary>
 /// 頂点シェーダーのコア関数。
 /// </summary>
-SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
+SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstancingDraw)
 {
     SPSIn psIn;
     
@@ -118,7 +120,15 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     }
     else
     {
-        m = mWorld;
+        if (isEnableInstancingDraw)
+        {
+            m = g_worldMatrixArray[vsIn.instanceID]; //インスタンスIDに対応するワールド行列を取得。
+        }
+        else
+        {
+            m = mWorld;
+        }
+
     }
     psIn.pos = mul(m, vsIn.pos);
     psIn.worldPos = psIn.pos;
@@ -139,19 +149,26 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     return psIn;
 }
 
-/// <summary>
-/// スキンなしメッシュ用の頂点シェーダーのエントリー関数。
-/// </summary>
+// スキンなしメッシュ用の頂点シェーダーのエントリー関数。
 SPSIn VSMain(SVSIn vsIn)
 {
-    return VSMainCore(vsIn, false);
+    return VSMainCore(vsIn, false, false);
 }
-/// <summary>
-/// スキンありメッシュの頂点シェーダーのエントリー関数。
-/// </summary>
+// スキンありメッシュの頂点シェーダーのエントリー関数。
 SPSIn VSSkinMain(SVSIn vsIn)
 {
-    return VSMainCore(vsIn, true);
+    return VSMainCore(vsIn, true, false);
+}
+
+// インスタンシングありスキンなしメッシュ用の頂点シェーダーのエントリー関数。
+SPSIn VSInstancingMain(SVSIn vsIn)
+{
+    return VSMainCore(vsIn, false, true);
+}
+// インスタンシングありスキンありメッシュの頂点シェーダーのエントリー関数。
+SPSIn VSSkinInstancingMain(SVSIn vsIn)
+{
+    return VSMainCore(vsIn, true, true);
 }
 /// <summary>
 /// ピクセルシェーダーのエントリー関数。

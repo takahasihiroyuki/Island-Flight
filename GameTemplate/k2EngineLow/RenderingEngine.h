@@ -195,6 +195,11 @@ namespace nsK2EngineLow {
 			return it->second.GetEquation();
 		}
 
+		Texture& GetShadowTexture() 
+		{
+			return m_shadow.GetShadowTarget().GetRenderTargetTexture();
+		}
+
 
 	private:
 

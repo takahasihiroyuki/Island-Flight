@@ -32,6 +32,7 @@ namespace nsK2EngineLow {
 
 		m_reflectionRenderTarget = &g_renderingEngine->GetPlaneReflectionRenderTarget(ReflectLayer::enOcean);
 		initData.m_expandShaderResoruceView[0] = &m_reflectionRenderTarget->GetRenderTargetTexture();
+		initData.m_expandShaderResoruceView[1] = &g_renderingEngine->GetShadowTexture();
 
 		initData.m_expandConstantBuffer = &m_constantBuffer;
 		initData.m_expandConstantBufferSize = sizeof(m_constantBuffer);
@@ -41,6 +42,10 @@ namespace nsK2EngineLow {
 		m_modelRender.SetTransform(m_position, g_quatIdentity, m_scale);
 		//m_modelRender.ChangeAlbedoMap("", m_reflectionRenderTarget->GetRenderTargetTexture());
 		m_modelRender.Update();
+
+		//“–‚½‚è”»’è‚Ì‰Šú‰»
+		m_physics.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+
 		return true;
 	}
 	void Ocean::Init()

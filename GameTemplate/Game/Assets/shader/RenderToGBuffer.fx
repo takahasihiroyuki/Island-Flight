@@ -126,12 +126,12 @@ SPSIn VSSkinMain(SVSIn vsIn)
     return VSMainCore(vsIn, true, false);
 }
 
-// スキンなしメッシュ用の頂点シェーダーのエントリー関数。
+// インスタンシングありスキンなしメッシュ用の頂点シェーダーのエントリー関数。
 SPSIn VSInstancingMain(SVSIn vsIn)
 {
     return VSMainCore(vsIn, false, true);
 }
-// スキンありメッシュの頂点シェーダーのエントリー関数。
+// インスタンシングありスキンありメッシュの頂点シェーダーのエントリー関数。
 SPSIn VSSkinInstancingMain(SVSIn vsIn)
 {
     return VSMainCore(vsIn, true, true);

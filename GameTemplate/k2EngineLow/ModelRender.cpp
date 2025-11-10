@@ -63,6 +63,7 @@ namespace nsK2EngineLow {
 			m_enableReflection[disableLayer] = false;
 		}
 
+		//TODO:(auto it = m_enableReflection.begin(); it != m_enableReflection.end(); ++it)‚ÌŠÔˆá‚¢H
 		for (auto it = m_ReflectionModel.begin(); it != m_ReflectionModel.end(); ++it) {
 			auto& rayer = it->first;
 			InitReflectionModel(filePath, enModelUpAxis, rayer);
@@ -178,7 +179,7 @@ namespace nsK2EngineLow {
 	{
 		if (m_shadowModel.IsInited())
 		{
-			m_shadowModel.Draw(rc, came, 1);
+			m_shadowModel.Draw(rc, came, m_maxInstance);
 		}
 
 	}
@@ -190,7 +191,7 @@ namespace nsK2EngineLow {
 
 			if (m_ReflectionModel[rayer].IsInited())
 			{
-				m_ReflectionModel[rayer].Draw(rc, came, 1);
+				m_ReflectionModel[rayer].Draw(rc, came, m_maxInstance);
 			}
 		}
 	}
@@ -344,13 +345,26 @@ namespace nsK2EngineLow {
 		ModelInitData reflectionInitData;
 		reflectionInitData.m_tkmFilePath = filePath;
 		reflectionInitData.m_fxFilePath = "Assets/shader/DrawReflection.fx";
-		reflectionInitData.m_vsEntryPointFunc = "VSMain";
 
 		reflectionInitData.m_psEntryPointFunc = "PSMain";
 
 		if (m_animationClips != nullptr) {
-			reflectionInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			if (m_isEnableInstancingDraw) {
+				reflectionInitData.m_vsSkinEntryPointFunc = "VSSkinInstancingMain";
+			}
+			else {
+				reflectionInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			}
 			reflectionInitData.m_skeleton = &m_skeleton;
+		}
+		else
+		{
+			if (m_isEnableInstancingDraw) {
+				reflectionInitData.m_vsEntryPointFunc = "VSInstancingMain";
+			}
+			else {
+				reflectionInitData.m_vsEntryPointFunc = "VSMain";
+			}
 		}
 		reflectionInitData.m_expandConstantBuffer = &g_renderingEngine->GetReflectionModelCB(layer);
 		reflectionInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetReflectionModelCB(layer));
