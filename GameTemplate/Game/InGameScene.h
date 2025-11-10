@@ -1,12 +1,14 @@
 #pragma once
 #include"IScene.h"
 #include "SkyCube.h"
+#include"SceneStateContext.h"
 
 class CoinManager;
 class PlacementObject;
 class Aircraft;
 class ScoreManager;
 class Stage;
+class InGameStateManager;
 class InGameScene : public IScene
 {
 public:
@@ -17,6 +19,8 @@ public:
 	virtual void Render(RenderContext& rc) override;
 	virtual void CheckChangeScene() override;
 
+private:
+	void InitInGameContext();
 private:
 	ModelRender m_bg;				// îwåiÉÇÉfÉã
 	Vector3 m_position = Vector3{ 0.0,30.0f,100.0f };				// ç¿ïW
@@ -31,6 +35,7 @@ private:
 	ScoreManager* m_scoreManager = nullptr;
 	PhysicsStaticObject m_ground;
 	Stage* m_stage = nullptr;
-
+	InGameStateManager* m_inGameStateManeger = nullptr;
+	InGameContext m_context;
 };
 

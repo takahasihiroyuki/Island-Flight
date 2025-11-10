@@ -4,6 +4,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="InGame">
+      <UniqueIdentifier>{a3a26481-705e-462c-bc39-da83aaf30677}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -24,9 +27,20 @@
     <ClCompile Include="SceneLoader\TransformHelper.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="IScene.cpp" />
-    <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="IInGameState.cpp">
+      <Filter>InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameStateManager.cpp">
+      <Filter>InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayState.cpp">
+      <Filter>InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameScene.cpp">
+      <Filter>InGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -47,8 +61,20 @@
     <ClInclude Include="SceneLoader\TransformHelper.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="IScene.h" />
-    <ClInclude Include="InGameScene.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="SceneStateContext.h" />
+    <ClInclude Include="IInGameState.h">
+      <Filter>InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameStateManager.h">
+      <Filter>InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayState.h">
+      <Filter>InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameScene.h">
+      <Filter>InGame</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
