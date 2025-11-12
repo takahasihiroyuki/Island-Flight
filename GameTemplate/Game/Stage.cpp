@@ -98,7 +98,7 @@ namespace {
 		//"Rock_5",
 		//"Rock_6",
 		//"Rock_7",
-		"Rock_8",
+		//"Rock_8",
 		//"Rock_9",
 		//"Rock_10",
 		//////"Rock_Formation_1",
@@ -213,13 +213,14 @@ bool Stage::Start()
 
 				paths[name] = "Assets/modelData/stage/islandStage/" + name + ".tkm";
 
-
 				auto* object = NewGO<StageMeshObject>(0);
 				Vector3 pos = std::get<0>(transform);
 				Quaternion rot = std::get<1>(transform);
 				Vector3 scale = std::get<2>(transform);
-				pos *= 1.0f; // ポジション
-				scale *= 1.0f; // スケール
+				pos .y*= 39 *10; // ポジション
+				pos.x *= 39 * 10;
+				pos.z *= 39 * 10.0f;
+				scale *= 1*10; // スケール
 				object->Initialize(paths[name].c_str(), pos, rot, scale, name.c_str());
 				return true;
 			}

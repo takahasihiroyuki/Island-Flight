@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "system/system.h"
 #include "GameManager.h"
+#include "CameraManager.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -20,7 +21,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
-	GameManager* game = NewGO<GameManager>(0);
+	GameManager* gameManager = NewGO<GameManager>(0);
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -28,6 +29,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 
+		CameraManager::GetInstance().Update();
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 

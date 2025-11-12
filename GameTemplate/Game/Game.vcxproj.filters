@@ -7,6 +7,9 @@
     <Filter Include="InGame">
       <UniqueIdentifier>{a3a26481-705e-462c-bc39-da83aaf30677}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{0d78848c-98da-41fd-aa62-c00231c65f54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -40,6 +43,18 @@
     </ClCompile>
     <ClCompile Include="InGameScene.cpp">
       <Filter>InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ICameraController.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="SpringFollowController.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticController.cpp">
+      <Filter>Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +90,21 @@
     </ClInclude>
     <ClInclude Include="InGameScene.h">
       <Filter>InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ICameraController.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="SpringFollowController.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTypes.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticController.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

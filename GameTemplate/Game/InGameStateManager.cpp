@@ -9,6 +9,8 @@ namespace {
 
 InGameStateManager::InGameStateManager()
 {
+	int debug=0;
+
 }
 
 InGameStateManager::~InGameStateManager()
@@ -18,11 +20,12 @@ InGameStateManager::~InGameStateManager()
 bool InGameStateManager::Start()
 {
 	Change(INIT_STATE);
-	return false;
+	return true;
 }
 
 void InGameStateManager::Update()
 {
+	m_currentState->Update();
 }
 
 void InGameStateManager::Change(InGameStateType type)
@@ -34,7 +37,7 @@ void InGameStateManager::Change(InGameStateType type)
 
 	switch (type) {
 	case InGameStateType::enPlay:
-		m_currentState =new GamePlayState;
+		m_currentState =new GamePlayState();
 		m_currentState->Init();
 		break;
 	}

@@ -13,7 +13,7 @@ namespace
 	constexpr float MAX_LEFT_AILERON_ANGLE = 3.0f;
 	constexpr float MAX_RIGHT_AILERON_ANGLE = 3.0f;
 	constexpr float MAX_ELEVATOR_ANGLE = 3.0f;
-	constexpr float MAX_RUDDER_ANGLE = 3.0f;
+	constexpr float MAX_RUDDER_ANGLE = 6.0f;
 
 
 	float DegToRad(float deg)

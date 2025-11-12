@@ -5,7 +5,7 @@ class GamePlayState :public IInGameState
 public:
 	GamePlayState();
 	~GamePlayState();
-	void OnEnter() {};
+	void OnEnter();
 	void Update();
 	void Exit();
 	void Init();

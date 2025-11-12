@@ -7,3 +7,4 @@ using namespace nsK2EngineLow;
 extern K2EngineLow* g_k2EngineLow;
 
 #include "Assets/Json/json.hpp"
+#include "CameraManager.h"

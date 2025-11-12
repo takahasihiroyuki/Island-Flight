@@ -67,9 +67,14 @@ public:
 	void Render(RenderContext& rc) override;
 
 	Vector3 GetPosition() const { return m_position; }
+	Vector3 GetLinearVelocity()const { return m_linearVelocity; }
 
 	void SetPosition(const Vector3& position) {
 		m_position = position;
+	}
+
+	Quaternion GetOrientation()const {
+		return m_state.orientation;
 	}
 
 

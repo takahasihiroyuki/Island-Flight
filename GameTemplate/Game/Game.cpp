@@ -148,9 +148,9 @@ void Game::Update()
 		m_model.Update();
 	}
 
-	g_camera3D->SetFar(100000);
-	g_camera3D->SetPosition(m_cameraPosition);
-	g_camera3D->SetTarget(Vector3(0.0f,100.0f,300.0f));
+	//g_camera3D->SetFar(100000);
+	//g_camera3D->SetPosition(m_cameraPosition);
+	//g_camera3D->SetTarget(Vector3(0.0f,100.0f,300.0f));
 }
 void Game::Render(RenderContext& rc)
 {

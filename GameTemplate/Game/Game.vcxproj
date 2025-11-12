@@ -225,11 +225,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Aircraft.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="CoinManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GamePlayState.cpp" />
+    <ClCompile Include="ICameraController.cpp" />
     <ClCompile Include="IInGameState.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="InGameStateManager.cpp" />
@@ -242,7 +244,9 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="SpringFollowController.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="StaticController.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -254,11 +258,14 @@
   <ItemGroup>
     <ClInclude Include="Aircraft.h" />
     <ClInclude Include="AircraftState.h" />
+    <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="CameraTypes.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="CoinManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GamePlayState.h" />
+    <ClInclude Include="ICameraController.h" />
     <ClInclude Include="IInGameState.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="InGameStateManager.h" />
@@ -271,7 +278,9 @@
     <ClInclude Include="SceneStateContext.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="SpringFollowController.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="StaticController.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="TitleScene.h" />

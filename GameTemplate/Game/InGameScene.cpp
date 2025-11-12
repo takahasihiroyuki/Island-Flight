@@ -39,7 +39,6 @@ bool InGameScene::Start()
 	m_scoreManager = NewGO<ScoreManager>(0, "ScoreManager");
 
 	m_coinManager->SetScoreManager(m_scoreManager);
-	m_aircraft->SetPosition(Vector3::Up * 500);
 	m_stage = NewGO<Stage>(0);
 	m_stage->GetCoinManager(m_coinManager);
 
@@ -70,12 +69,12 @@ void InGameScene::OnUpdate()
 	}
 
 
-	//m_skyCube->SetPosition(Vector3(m_position.x, 0.0f, m_position.z));
+	m_skyCube->SetPosition(Vector3(m_position.x, 0.0f, m_position.z));
 
 
 	g_camera3D->SetFar(100000);
-	g_camera3D->SetPosition(m_cameraPosition);
-	g_camera3D->SetTarget(m_position + Vector3(0.0f, 100.0f, 300.0f));
+	//g_camera3D->SetPosition(m_cameraPosition);
+	//g_camera3D->SetTarget(m_position + Vector3(0.0f, 100.0f, 300.0f));
 	//g_camera3D->SetTarget(m_aircraft->GetPosition() + Vector3(0.0f, 100.0f, 0.0f));
 	//g_camera3D->SetPosition(m_aircraft->GetPosition() + Vector3(0.0f, 300.0f, -500.0f));
 
