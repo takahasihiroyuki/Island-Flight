@@ -194,7 +194,10 @@ namespace nsK2EngineLow {
 		{
 			return m_renderToGBufferModel;
 		}
-
+		Model& GetRenderToGBufferModel()
+		{
+			return m_renderToGBufferModel;
+		}
 		/// <summary>
 		/// アニメーション再生。
 		/// </summary>
@@ -241,6 +244,20 @@ namespace nsK2EngineLow {
 			const Quaternion& rot,
 			const Vector3& scale
 		);
+
+		Matrix GetWorldMatrixArray(size_t instanceNo)const
+		{
+			// インスタンス番号から行列のインデックスを取得する。
+			int matrixArrayIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
+
+			if(m_isEnableInstancingDraw)
+			{
+				return m_worldMatrixArray[matrixArrayIndex];
+			}
+
+			return Matrix::Identity;
+		}
+
 
 	private:
 		/// <summary>

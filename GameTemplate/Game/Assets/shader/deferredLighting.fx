@@ -88,7 +88,7 @@ float4 PSMain(PSIn psIn) : SV_Target0
     float4 finalColor = albedo;
     
     finalColor.xyz *= lig;
-    finalColor *= shadowPow;
+    //finalColor *= shadowPow;
     
     
     return finalColor;
@@ -109,7 +109,10 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
     {
         t = 0.0f;
     }
-    
+    if(t >= 1.0f)
+    {
+        t = 1.0f;
+    }
    
 	//ƒ‰ƒCƒg‚Ì‰e‹¿“x‚ð•Ô‚·
     return lightColor * t;

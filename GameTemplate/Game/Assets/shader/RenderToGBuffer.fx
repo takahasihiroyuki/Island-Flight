@@ -107,6 +107,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstanci
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
     psIn.normal = mul(m, vsIn.normal);
+    normalize(psIn.normal);
     psIn.tangent = normalize(mul(m, vsIn.tangent));
     psIn.biNormal = normalize(mul(m, vsIn.biNormal));
 
@@ -149,6 +150,9 @@ SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
 
         
     psOut.normal.xyz = CalcNormal(psIn);
+    normalize(psIn.normal);
+
+    
     
     psOut.specPow = g_specularMap.Sample(g_sampler, psIn.uv); //スペキュラ強度はとりあえず1.0fで固定。
     

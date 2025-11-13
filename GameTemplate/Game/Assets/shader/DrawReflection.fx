@@ -239,9 +239,13 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
 	//“àÏ‚ÌŒ‹‰Ê‚Ì-1‚ğ‚©‚¯‚é
     t *= -1.0f;
 	//“àÏ‚ÌŒ‹‰Ê‚ª0ˆÈ‰º‚È‚ç0‚É‚·‚é
-    if (t < 0.0f)
+    if (t <= 0.0f)
     {
         t = 0.0f;
+    }
+    if (t >= 1.0f)
+    {
+        t = 1.0f;
     }
 	//ƒ‰ƒCƒg‚Ì‰e‹¿“x‚ğ•Ô‚·
     return lightColor * t;
