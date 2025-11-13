@@ -5,7 +5,6 @@
 namespace
 {
 	constexpr float MAX_THROTLEINPUT = 1.0f; // 最大推力
-	const Vector3 INIT_POSITION = Vector3(0.0f, 0.0f, 100.0f); // 初期位置
 	constexpr float CAPSELLE_RADIUS = 100.0f; // カプセルコライダーの半径
 	constexpr float CAPSELLE_HEIGHT = 10.0f; // カプセルコライダーの高さ
 
@@ -24,15 +23,17 @@ namespace
 
 Aircraft::Aircraft()
 {
-	m_position = INIT_POSITION;
+	
 }
 bool Aircraft::Start()
 {
 	m_engine = std::make_unique<Engine>();
 	return true;
 }
-void Aircraft::Init(const char* filePath)
+void Aircraft::Init(const char* filePath, Vector3 initPos)
 {
+	m_position = initPos;
+
 	// モデルの初期化
 	m_model.Init(filePath, nullptr, 0, enModelUpAxisZ, false);
 
@@ -43,6 +44,7 @@ void Aircraft::Init(const char* filePath)
 	InitWingPositionOffset();
 
 	InitAllLiftingSurfaces();
+
 }
 
 void Aircraft::Update()
@@ -119,7 +121,7 @@ void Aircraft::InitWingPositionOffset()
 	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(-3.5f, 0.0f, 0.20f);
 	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(3.5f, 0.0f, 0.20f);
 	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 3.00f);
-	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f,0.0f,3.00f);
+	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f, 3.00f);
 }
 
 void Aircraft::InitAllLiftingSurfaces()
@@ -195,8 +197,8 @@ Vector3 Aircraft::ComputeForce()
 	Vector3 wingsForce = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
 		//if (i == 0 || i == 1 || i == 3) {
-			m_wings[i]->ComputeForces(m_state);
-			wingsForce += m_wings[i]->GetForce();
+		m_wings[i]->ComputeForces(m_state);
+		wingsForce += m_wings[i]->GetForce();
 		//}
 	}
 
@@ -268,9 +270,9 @@ Vector3 Aircraft::ComputeTotalMomentWorld()
 	Vector3 totalMomentWorld = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
 		//if (i == 0 || i == 1||i==3) {
-			if (m_wings[i]) {
-				totalMomentWorld += m_wings[i]->ComputeMoment(m_state);
-			}
+		if (m_wings[i]) {
+			totalMomentWorld += m_wings[i]->ComputeMoment(m_state);
+		}
 		//}
 	}
 	return totalMomentWorld;

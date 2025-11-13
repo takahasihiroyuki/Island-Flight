@@ -31,7 +31,7 @@ bool PlacementObject::Start()
 		m_modelRender.SetScale(m_scale);
 		m_modelRender.Update();
 	}
-
+	CreatePhysicsObject();
 	OnStart();
 	return true;
 }
@@ -61,21 +61,22 @@ void PlacementObject::DecideInstancingUsage(const char* modelName)
 	else m_isInstancingTable[modelName] = false;
 }
 
-void PlacementObject::Initialize(
+void PlacementObject::Init(
 	const char* filePath,
 	Vector3 position,
 	Quaternion rotation, 
 	Vector3 scale,
 	const char* modelName)
 {
+
 	m_position=position;
 	m_rotation=rotation;
 	m_scale=scale;
 
+	//今の段階でのマックスインスタンスをインスタンス番号にする。
+	//0から始めたいので最大値に1を足す前に番号を決める。
 	m_InstanceNumber = m_maxInstance[std::string(modelName)];
 
-	//インスタンシング描画する場合ここではモデルレンダーは作らない。
-	//一種類ひとつのモデルレンダーを作りたいから。
 	m_maxInstance[std::string(modelName)]++;
 	SetModelName(modelName);
 

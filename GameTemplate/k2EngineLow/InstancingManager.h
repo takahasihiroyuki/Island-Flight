@@ -47,6 +47,14 @@ namespace nsK2EngineLow {
 			}
 		}
 
+		const ModelRender& GetModel(std::string modelName)const
+		{
+			return m_modelRenders.at(modelName);
+		}
+		ModelRender& GetModel(std::string modelName)
+		{
+			return m_modelRenders.at(modelName);
+		}
 
 	public:
 

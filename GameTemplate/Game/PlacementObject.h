@@ -11,7 +11,7 @@ public:
 public:
 	using TransformTuple = std::tuple<Vector3, Quaternion, Vector3>;
 
-	virtual void Initialize	(
+	virtual void Init(
 		const char* filePath,
 		Vector3 position,
 		Quaternion rotation,
@@ -34,13 +34,40 @@ public:
 		return m_maxInstance[std::string(name)];
 	}
 
-	static bool GetIsInstancing(const char* modelName) 
+	static bool GetIsInstancing(const char* modelName)
 	{
 		DecideInstancingUsage(modelName);
 		return m_isInstancingTable[modelName];
 	}
 
+	Matrix GetModelMatrix()
+	{
+		if (m_isInstancingTable[m_modelName])
+		{
+			return m_instancingManager->GetModel(m_modelName).GetWorldMatrixArray(m_InstanceNumber);
+		}
+		return m_modelRender.GetWorldMatrix();
+	}
 
+	/// <summary>
+	/// 当たり判定オブジェクトを作成
+	/// インスタンシングに登録した後で呼び出す。
+	/// 
+	/// モデルの情報はインスタンシングmanagerが持っているので
+	/// インスタンシングに登録した後からしか作れない。
+	/// </summary>
+	void CreatePhysicsObject()
+	{
+		if (m_isInstancingTable[m_modelName])
+		{
+			m_physicsStaticObject.CreateFromModel(
+				m_instancingManager->GetModel(m_modelName).GetRenderToGBufferModel(),
+				GetModelMatrix());
+			return;
+		}
+		m_physicsStaticObject.CreateFromModel(m_modelRender.GetRenderToGBufferModel(), m_modelRender.GetRenderToGBufferModel().GetWorldMatrix());
+
+	}
 protected:
 	/// <summary>
 	/// インスタンシング描画をするかどうかを決める。
@@ -65,6 +92,8 @@ protected:
 	static std::unordered_map<std::string, size_t> m_maxInstance;
 	size_t m_InstanceNumber = 0;// インスタンスナンバー
 	std::string m_modelPath;
+	Model m_phisycsModel;						//当たり判定を作るためのもでる
+	PhysicsStaticObject m_physicsStaticObject;	//当たり判定
 
 };
 

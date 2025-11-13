@@ -7,7 +7,7 @@ class Engine :public IGameObject
 public:
 	Engine() {}
 	~Engine() {}
-	void Update() override{}
+	void Update() override {}
 
 	/// <summary>
 	/// 推力の更新
@@ -62,7 +62,7 @@ public:
 	~Aircraft() {};
 	bool Start() override;
 	void fly();
-	void Init(const char* filePath);
+	void Init(const char* filePath, Vector3 initPos);
 	void Update() override;
 	void Render(RenderContext& rc) override;
 
@@ -86,7 +86,7 @@ private:
 		float maxWingDeflectionAngle,
 		bool isMirroed = false,
 		bool isVertical = false
-		);
+	);
 
 	void InitOrientation();
 	void InitWingPositionOffset();
@@ -160,7 +160,7 @@ private:
 			Iz * m_angularVelocity.z);
 
 		// ジャイロ項
-		Vector3 gyro = Cross(m_angularVelocity,Iw);
+		Vector3 gyro = Cross(m_angularVelocity, Iw);
 
 		Vector3 rhs = momentObj - gyro;
 
