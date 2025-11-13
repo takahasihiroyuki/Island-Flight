@@ -51,6 +51,8 @@ bool InGameScene::Start()
 	m_inGameStateManeger = NewGO<InGameStateManager>(0);
 	m_inGameStateManeger->SetContext(m_context);
 
+	test.Init("Assets/modelData/gray.DDS", 10, 10);
+	test.Update();
 	return true;
 }
 
@@ -68,6 +70,7 @@ void InGameScene::Update()
 void InGameScene::Render(RenderContext& rc)
 {
 	m_skyCube->Render(rc);
+	test.Draw(rc);
 	m_bg.Draw(rc);
 }
 

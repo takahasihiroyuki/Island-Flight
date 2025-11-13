@@ -1,5 +1,6 @@
 #include "k2EngineLowPreCompile.h"
 #include "RenderingEngine.h"
+#include "SpriteRender.h"
 
 namespace nsK2EngineLow
 {
@@ -273,6 +274,8 @@ namespace nsK2EngineLow
 		//ボケ画像をメインレンダリングターゲットに加算合成
 		PostEffecting(rc);
 
+		SpriteRendering(rc);
+
 		//メインレンダリングターゲットの絵をフレームバッファにコピー
 		CopyMainRenderTargetToFrameBuffer(rc);
 
@@ -286,6 +289,13 @@ namespace nsK2EngineLow
 		//	// 画面左下などに出す（Spriteに位置APIがなければフルスクリーンでも可）
 		//	m_debugReflectionSprite.Draw(rc);
 		//}
+	}
+
+	void RenderingEngine::SpriteRendering(RenderContext& rc)
+	{
+		for (auto& renderObj : m_spriteRenderList) {
+			renderObj->OnDraw(rc);
+		}
 	}
 
 	void RenderingEngine::PostEffecting(RenderContext& rc)

@@ -43,5 +43,6 @@ private:
 	InGameStateManager* m_inGameStateManeger = nullptr;
 	InGameContext m_context;
 	Timer m_timer;
+	SpriteRender test;
 };
 

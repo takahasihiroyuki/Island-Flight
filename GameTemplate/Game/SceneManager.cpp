@@ -16,6 +16,7 @@ SceneManager::~SceneManager()
 bool SceneManager::Start()
 {
 	ChangeScene(INIT_SCENE);
+
 	return true;
 }
 

@@ -53,10 +53,6 @@ namespace nsK2EngineLow {
 
 		void PlaneDraw();
 
-		/// <summary>
-		/// ディファード用のモデルの描画
-		/// </summary>
-		/// <param name="rc"></param>
 		void OnDraw(RenderContext& rc)
 		{
 			if (m_isFowardRender) {

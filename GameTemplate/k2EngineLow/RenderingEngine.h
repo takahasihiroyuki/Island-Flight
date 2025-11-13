@@ -9,7 +9,7 @@
 namespace nsK2EngineLow {
 	class ModelRender;
 	class RenderContext;
-
+	class SpriteRender;
 	class RenderingEngine
 	{
 	public:
@@ -155,6 +155,11 @@ namespace nsK2EngineLow {
 			}
 		}
 
+		void AddSpriteRenderList(SpriteRender* sprite) 
+		{
+			m_spriteRenderList.push_back(sprite);
+		}
+
 		/// <summary>
 		/// ライトカメラの取得
 		/// </summary>
@@ -200,6 +205,8 @@ namespace nsK2EngineLow {
 			return m_shadow.GetShadowTarget().GetRenderTargetTexture();
 		}
 
+		void SpriteRendering(RenderContext& rc);
+
 
 	private:
 
@@ -234,6 +241,7 @@ namespace nsK2EngineLow {
 
 		std::vector<ModelRender*>							m_deferredModelList;	   //ディファードモデルリスト
 		std::vector<ModelRender*>							m_forwardModelList;		   //フォワードモデルリスト
+		std::vector<SpriteRender*>							m_spriteRenderList;		   //スプライトレンダーリスト
 		SceneLight											m_sceneLight;	           //シーンライト
 		PostEffect											m_postEffect;	           //ポストエフェクト
 		RenderTarget										m_shadowMapRenderTarget;   //シャドウマップ用レンダリングターゲット

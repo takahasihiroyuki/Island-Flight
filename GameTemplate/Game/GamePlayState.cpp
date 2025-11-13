@@ -18,7 +18,6 @@ GamePlayState::~GamePlayState()
 
 void GamePlayState::OnEnter()
 {
-
 	TargetSnapshot targetSnapshot;
 	targetSnapshot.SetPosition(m_Context->aircraft->GetPosition());
 	targetSnapshot.SetVelocity(m_Context->aircraft->GetLinearVelocity());
