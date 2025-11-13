@@ -11,6 +11,7 @@ public:
 	void Update() override;
 	void Render(RenderContext& rc) override;
 	bool RequestChangeScene(SceneType& type) override;
-	void Init()override;
+	void Enter() {};
+	void Exit() {};
 };
 

@@ -39,11 +39,9 @@ void SceneManager::ChangeScene(SceneType type)
 	switch (type) {
 	case SceneType::Title:
 		 m_currentScene = NewGO<TitleScene>(0);
-		 m_currentScene->Init();
 		break;
 	case SceneType::InGame:
 		 m_currentScene = NewGO<InGameScene>(0);
-		 m_currentScene->Init();
 		break;
 	case SceneType::GameResolt:
 		// m_currentScene = NewGO<GameResoltScene>();

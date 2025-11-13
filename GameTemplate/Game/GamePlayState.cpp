@@ -3,9 +3,9 @@
 #include "Aircraft.h"
 #include "Timer.h"
 
-namespace 
+namespace
 {
-	float TIMELIMIT = 100;
+	constexpr float TIMELIMIT = 5;
 }
 
 GamePlayState::GamePlayState()
@@ -18,6 +18,7 @@ GamePlayState::~GamePlayState()
 
 void GamePlayState::OnEnter()
 {
+
 	TargetSnapshot targetSnapshot;
 	targetSnapshot.SetPosition(m_Context->aircraft->GetPosition());
 	targetSnapshot.SetVelocity(m_Context->aircraft->GetLinearVelocity());
@@ -28,6 +29,7 @@ void GamePlayState::OnEnter()
 
 	m_timer = NewGO<Timer>(0);
 	m_timer->Init(TIMELIMIT);
+	m_timer->SetRunning(true);
 }
 
 void GamePlayState::Update()
@@ -44,11 +46,12 @@ void GamePlayState::Exit()
 {
 }
 
-void GamePlayState::Init()
-{
-}
-
 bool GamePlayState::RequestChangeState(InGameStateType& type)
 {
+	if (m_timer->IsTimeUp())
+	{
+		type = InGameStateType::enResolt;
+		return true;
+	}
 	return false;
 }

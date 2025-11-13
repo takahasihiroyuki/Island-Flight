@@ -11,7 +11,7 @@ public:
 
 	void Update()
 	{
-		if (m_stop)return;
+		if (!m_isRunning)return;
 		m_elapsedTime += g_gameTime->GetFrameDeltaTime();
 	}
 
@@ -30,14 +30,14 @@ public:
 		m_elapsedTime = 0;
 	}
 
-	void SetIsStop(bool isStop) 
+	void SetRunning(bool isRunning)
 	{
-		m_stop = isStop;
+		m_isRunning = isRunning;
 	}
 
 private:
 	float m_limitTime = 0;
 	float m_elapsedTime = 0;
-	bool m_stop = false;
+	bool m_isRunning = false;
 };
 

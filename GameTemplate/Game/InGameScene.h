@@ -2,6 +2,9 @@
 #include"IScene.h"
 #include "SkyCube.h"
 #include"SceneStateContext.h"
+#include"Timer.h"
+
+
 
 class CoinManager;
 class PlacementObject;
@@ -14,11 +17,12 @@ class InGameScene : public IScene
 public:
 	InGameScene();
 	~InGameScene();
-	void Init()override {}
 	bool Start() override;
 	void Update() override;
 	void Render(RenderContext& rc) override;
 	bool RequestChangeScene(SceneType& type)override;
+	void Enter() {};
+	void Exit() {};
 
 private:
 	void InitInGameContext();
@@ -38,5 +42,6 @@ private:
 	Stage* m_stage = nullptr;
 	InGameStateManager* m_inGameStateManeger = nullptr;
 	InGameContext m_context;
+	Timer m_timer;
 };
 

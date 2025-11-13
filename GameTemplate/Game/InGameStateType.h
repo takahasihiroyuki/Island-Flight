@@ -3,4 +3,5 @@
 enum class InGameStateType
 {
 	enPlay,
+	enResolt
 };

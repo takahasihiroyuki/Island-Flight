@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "InGameStateManager.h"
+#include "ResoltState.h"
 #include "IInGameState.h"
 #include "GamePlayState.h"
 
@@ -9,7 +10,7 @@ namespace {
 
 InGameStateManager::InGameStateManager()
 {
-	int debug=0;
+	int debug = 0;
 
 }
 
@@ -26,7 +27,7 @@ bool InGameStateManager::Start()
 void InGameStateManager::Update()
 {
 	m_currentState->Update();
-	if(m_currentState->RequestChangeState(m_nextStateType))
+	if (m_currentState->RequestChangeState(m_nextStateType))
 	{
 		Change(m_nextStateType);
 	}
@@ -41,8 +42,10 @@ void InGameStateManager::Change(InGameStateType type)
 
 	switch (type) {
 	case InGameStateType::enPlay:
-		m_currentState =new GamePlayState();
-		m_currentState->Init();
+		m_currentState = new GamePlayState();
+		break;
+	case InGameStateType::enResolt:
+		m_currentState = new ResoltState();
 		break;
 	}
 

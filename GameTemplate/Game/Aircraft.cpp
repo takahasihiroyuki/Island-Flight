@@ -174,6 +174,7 @@ void Aircraft::ApplyControlInputs()
 
 void Aircraft::Move()
 {
+	//力を計算
 	Vector3 force = ComputeForce();
 
 	AddLinearVelocity(((force / m_mass)) * g_gameTime->GetFrameDeltaTime());

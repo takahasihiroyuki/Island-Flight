@@ -9,24 +9,12 @@ public:
 	virtual bool Start() override = 0;
 	virtual void Update()=0;
 	virtual void Render(RenderContext& rc) override = 0;
-	virtual void Init()=0;
 
 
 public:
 
-	/// <summary>
-	/// このシーンに入ったときに呼ばれる
-	/// 子で何も書くことがないことがあるかもしれないので
-	/// デフォルト実装を用意しておく
-	/// </summary>
-	void Enter() {};
-
-	/// <summary>
-	/// このシーンから出るときに呼ばれる
-	/// 子で何も書くことがないことがあるかもしれないので
-	/// デフォルト実装を用意しておく
-	/// </summary>
-	void Exit() {};
+	virtual void Enter() =0;
+	virtual void Exit() =0;
 
 	/// <summary>
 	/// 次のシーンをリクエスト

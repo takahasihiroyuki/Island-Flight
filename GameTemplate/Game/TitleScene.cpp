@@ -29,7 +29,3 @@ bool TitleScene::RequestChangeScene(SceneType& type)
 
 	return false;
 }
-
-void TitleScene::Init()
-{
-}

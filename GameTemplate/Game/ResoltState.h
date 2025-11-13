@@ -1,18 +1,13 @@
 #pragma once
 #include"IInGameState.h"
-class Timer;
-class GamePlayState :public IInGameState
+class ResoltState :public IInGameState
 {
 public:
-	GamePlayState();
-	~GamePlayState();
+	ResoltState();
+	~ResoltState();
 	void OnEnter()override;
 	void Update()override;
 	void Exit()override;
 	bool RequestChangeState(InGameStateType& type)override;
-
-
-private:
-	Timer* m_timer=nullptr;
 };
 

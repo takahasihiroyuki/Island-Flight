@@ -4,11 +4,14 @@
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="InGame">
-      <UniqueIdentifier>{a3a26481-705e-462c-bc39-da83aaf30677}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{0d78848c-98da-41fd-aa62-c00231c65f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InGameState">
+      <UniqueIdentifier>{a3dd146d-1a31-422b-8fef-bbc965e12ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{8099db67-bc97-4fa0-ae0e-11cad0092518}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -28,22 +31,8 @@
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="SceneLoader\TransformHelper.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="IScene.cpp" />
     <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="IInGameState.cpp">
-      <Filter>InGame</Filter>
-    </ClCompile>
-    <ClCompile Include="InGameStateManager.cpp">
-      <Filter>InGame</Filter>
-    </ClCompile>
-    <ClCompile Include="GamePlayState.cpp">
-      <Filter>InGame</Filter>
-    </ClCompile>
-    <ClCompile Include="InGameScene.cpp">
-      <Filter>InGame</Filter>
-    </ClCompile>
     <ClCompile Include="CameraManager.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
@@ -57,6 +46,27 @@
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="InGameStateManager.cpp">
+      <Filter>InGameState</Filter>
+    </ClCompile>
+    <ClCompile Include="IInGameState.cpp">
+      <Filter>InGameState</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayState.cpp">
+      <Filter>InGameState</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ResoltState.cpp">
+      <Filter>InGameState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -75,23 +85,8 @@
     <ClInclude Include="Stage.h" />
     <ClInclude Include="SceneLoader\SceneLoader.h" />
     <ClInclude Include="SceneLoader\TransformHelper.h" />
-    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="IScene.h" />
     <ClInclude Include="GameManager.h" />
-    <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="SceneStateContext.h" />
-    <ClInclude Include="IInGameState.h">
-      <Filter>InGame</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameStateManager.h">
-      <Filter>InGame</Filter>
-    </ClInclude>
-    <ClInclude Include="GamePlayState.h">
-      <Filter>InGame</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameScene.h">
-      <Filter>InGame</Filter>
-    </ClInclude>
     <ClInclude Include="CameraManager.h">
       <Filter>Camera</Filter>
     </ClInclude>
@@ -108,9 +103,35 @@
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="SceneType.h" />
+    <ClInclude Include="InGameStateManager.h">
+      <Filter>InGameState</Filter>
+    </ClInclude>
+    <ClInclude Include="IInGameState.h">
+      <Filter>InGameState</Filter>
+    </ClInclude>
     <ClInclude Include="InGameStateType.h">
-      <Filter>InGame</Filter>
+      <Filter>InGameState</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayState.h">
+      <Filter>InGameState</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneStateContext.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneType.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ResoltState.h">
+      <Filter>InGameState</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

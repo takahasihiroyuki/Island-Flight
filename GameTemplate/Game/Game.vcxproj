@@ -239,6 +239,7 @@
     <ClCompile Include="LiftingSurface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlacementObject.cpp" />
+    <ClCompile Include="ResoltState.cpp" />
     <ClCompile Include="SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="SceneLoader\TransformHelper.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="IScene.h" />
     <ClInclude Include="LiftingSurface.h" />
     <ClInclude Include="PlacementObject.h" />
+    <ClInclude Include="ResoltState.h" />
     <ClInclude Include="SceneLoader\SceneLoader.h" />
     <ClInclude Include="SceneLoader\TransformHelper.h" />
     <ClInclude Include="SceneManager.h" />
