@@ -37,7 +37,7 @@ void CoinManager::Spawn(
 	Vector3 scale)
 {
 	Coin* coin = NewGO<Coin>(0, "coin");
-	coin->Initialize(COIN_FILEPATH,position, rotation, scale,"Coin");
+	coin->Init(COIN_FILEPATH,position, rotation, scale,"Coin");
 	m_coins.push_back(coin);
 }
 
@@ -47,7 +47,7 @@ void CoinManager::RequestSpawn(
 	Vector3 scale)
 {
 	Coin* coin = NewGO<Coin>(0, "coin");
-	coin->Initialize(COIN_FILEPATH, position, rotation, scale, "Coin");
+	coin->Init(COIN_FILEPATH, position, rotation, scale, "Coin");
 	m_pendingCoins.push_back(coin);
 }
 

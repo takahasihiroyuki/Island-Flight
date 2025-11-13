@@ -1,4 +1,5 @@
 #pragma once
+#include "SceneType.h"
 class SceneManager;
 class IScene :public IGameObject
 {
@@ -6,9 +7,9 @@ public:
 	IScene();
 	virtual ~IScene();
 	virtual bool Start() override = 0;
-	virtual void Update() final;
+	virtual void Update()=0;
 	virtual void Render(RenderContext& rc) override = 0;
-	virtual void Init(SceneManager* sceneManager) final;
+	virtual void Init()=0;
 
 
 public:
@@ -18,40 +19,21 @@ public:
 	/// 子で何も書くことがないことがあるかもしれないので
 	/// デフォルト実装を用意しておく
 	/// </summary>
-	void OnEnter() {};
+	void Enter() {};
 
 	/// <summary>
 	/// このシーンから出るときに呼ばれる
 	/// 子で何も書くことがないことがあるかもしれないので
 	/// デフォルト実装を用意しておく
 	/// </summary>
-	void OnExit() {};
+	void Exit() {};
 
 	/// <summary>
-	/// シーンマネージャーの依存注入
+	/// 次のシーンをリクエスト
+	/// 中で引数に次のシーンを渡す
 	/// </summary>
-	/// <param name="sceneManager"></param>
-	void SetSceneManager(SceneManager* sceneManager) {
-		m_sceneManager = sceneManager;
-	}
-
-private:
-
-	virtual void OnInit() {};
-
-	/// <summary>
-	/// 更新処理
-	/// 派生クラスではこっちを使う。
-	/// </summary>
-	virtual void OnUpdate() = 0;
-
-	/// <summary>
-	/// sceneを遷移するかチェックする
-	/// </summary>
-	virtual void CheckChangeScene() = 0;
-
-
-protected:
-	SceneManager* m_sceneManager = nullptr;
+	/// <param name="type"></param>
+	/// <returns>sceneを変えたい瞬間にtrueにする</returns>
+	virtual bool RequestChangeScene(SceneType& type) = 0;
 };
 

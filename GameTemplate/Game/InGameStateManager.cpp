@@ -26,6 +26,10 @@ bool InGameStateManager::Start()
 void InGameStateManager::Update()
 {
 	m_currentState->Update();
+	if(m_currentState->RequestChangeState(m_nextStateType))
+	{
+		Change(m_nextStateType);
+	}
 }
 
 void InGameStateManager::Change(InGameStateType type)

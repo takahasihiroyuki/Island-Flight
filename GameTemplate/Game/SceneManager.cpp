@@ -21,27 +21,29 @@ bool SceneManager::Start()
 
 void SceneManager::Update()
 {
-	if (m_requestPending) {
+
+	if(m_currentScene->RequestChangeScene(m_nextSceneType))
+	{
 		ChangeScene(m_nextSceneType);
-		m_requestPending = false;
 	}
+	
 }
 
 void SceneManager::ChangeScene(SceneType type)
 {
 	if (m_currentScene) {
-		m_currentScene->OnExit();
+		m_currentScene->Exit();
 		DeleteGO(m_currentScene);
 	}
 
 	switch (type) {
 	case SceneType::Title:
 		 m_currentScene = NewGO<TitleScene>(0);
-		 m_currentScene->Init(this);
+		 m_currentScene->Init();
 		break;
 	case SceneType::InGame:
 		 m_currentScene = NewGO<InGameScene>(0);
-		 m_currentScene->Init(this);
+		 m_currentScene->Init();
 		break;
 	case SceneType::GameResolt:
 		// m_currentScene = NewGO<GameResoltScene>();
@@ -50,6 +52,6 @@ void SceneManager::ChangeScene(SceneType type)
 	}
 
 	if (m_currentScene) {
-		m_currentScene->OnEnter();
+		m_currentScene->Enter();
 	}
 }

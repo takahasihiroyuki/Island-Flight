@@ -8,8 +8,9 @@ public:
 	~TitleScene() {};
 
 	bool Start() override;
-	void OnUpdate() override;
+	void Update() override;
 	void Render(RenderContext& rc) override;
-	void CheckChangeScene() override;
+	bool RequestChangeScene(SceneType& type) override;
+	void Init()override;
 };
 

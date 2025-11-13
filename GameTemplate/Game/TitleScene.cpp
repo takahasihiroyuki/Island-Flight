@@ -12,7 +12,7 @@ bool TitleScene::Start()
 	return true;
 }
 
-void TitleScene::OnUpdate()
+void TitleScene::Update()
 {
 }
 
@@ -20,9 +20,16 @@ void TitleScene::Render(RenderContext& rc)
 {
 }
 
-void TitleScene::CheckChangeScene()
+bool TitleScene::RequestChangeScene(SceneType& type)
 {
 	if (g_pad[0]->IsPress(enButtonA)) {
-		m_sceneManager->RequestChange(NEXT_SCENE);
+		type = NEXT_SCENE;
+		return true;
 	}
+
+	return false;
+}
+
+void TitleScene::Init()
+{
 }

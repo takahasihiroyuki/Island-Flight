@@ -1,18 +1,12 @@
 #pragma once
-enum class SceneType
-{
-	Title,
-	InGame,
-	GameResolt
-};
-
+#include "SceneType.h"
 namespace {
 	const SceneType INIT_SCENE = SceneType::Title;
 }
 
 
 class IScene;
-class SceneManager:public IGameObject
+class SceneManager :public IGameObject
 {
 public:
 
@@ -20,16 +14,6 @@ public:
 	~SceneManager();
 	bool Start() override;
 	void Update() override;
-
-
-public:
-
-	void RequestChange(SceneType type)
-	{
-		m_nextSceneType = type;
-		m_requestPending = true;
-	}
-
 
 private:
 
@@ -43,8 +27,8 @@ private:
 private:
 
 	bool m_requestPending = false;
-	SceneType m_nextSceneType= INIT_SCENE;
-	IScene* m_currentScene=nullptr;
+	SceneType m_nextSceneType = INIT_SCENE;
+	IScene* m_currentScene = nullptr;
 
 };
 

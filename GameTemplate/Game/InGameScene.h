@@ -14,10 +14,11 @@ class InGameScene : public IScene
 public:
 	InGameScene();
 	~InGameScene();
-	virtual bool Start() override;
-	virtual void OnUpdate() override;
-	virtual void Render(RenderContext& rc) override;
-	virtual void CheckChangeScene() override;
+	void Init()override {}
+	bool Start() override;
+	void Update() override;
+	void Render(RenderContext& rc) override;
+	bool RequestChangeScene(SceneType& type)override;
 
 private:
 	void InitInGameContext();

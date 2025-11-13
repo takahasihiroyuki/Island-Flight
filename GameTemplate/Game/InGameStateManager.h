@@ -1,10 +1,6 @@
 #pragma once
 #include"SceneStateContext.h"
-
-enum class InGameStateType
-{
-	enPlay,
-}; 
+#include"InGameStateType.h"
 
 class IInGameState;
 class InGameStateManager:public IGameObject
@@ -24,5 +20,7 @@ public:
 private:
 	IInGameState* m_currentState = nullptr;
 	InGameContext m_inGameContext;
+	InGameStateType m_nextStateType;
+
 };
 

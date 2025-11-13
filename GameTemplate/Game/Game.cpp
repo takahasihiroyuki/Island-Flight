@@ -72,7 +72,7 @@ bool Game::Start()
 
 	m_ocean = NewGO<Ocean>(0);
 	m_aircraft = NewGO<Aircraft>(0, "aircraft");
-	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm");
+	//m_aircraft->Init("Assets/modelData/Plane/Plane.tkm",);
 	m_coinManager = NewGO<CoinManager>(0, "coinManager");
 	m_scoreManager = NewGO<ScoreManager>(0, "ScoreManager");
 
