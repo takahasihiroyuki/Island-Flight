@@ -1,6 +1,7 @@
 #pragma once
 #include"IInGameState.h"
 class Timer;
+class TimerUI;
 class GamePlayState :public IInGameState
 {
 public:
@@ -13,6 +14,7 @@ public:
 
 
 private:
-	Timer* m_timer=nullptr;
+	Timer* m_timer = nullptr;
+	std::unique_ptr<TimerUI> m_timeUI;
 };
 

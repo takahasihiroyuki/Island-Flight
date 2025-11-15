@@ -2,10 +2,12 @@
 #include "GamePlayState.h"
 #include "Aircraft.h"
 #include "Timer.h"
+#include "TimerUI.h"
+#include "UIManager.h"
 
 namespace
 {
-	constexpr float TIMELIMIT = 5;
+	constexpr float TIMELIMIT = 10000;
 }
 
 GamePlayState::GamePlayState()
@@ -29,6 +31,12 @@ void GamePlayState::OnEnter()
 	m_timer = NewGO<Timer>(0);
 	m_timer->Init(TIMELIMIT);
 	m_timer->SetRunning(true);
+
+	//タイマーUIをUImanagerに登録
+	m_timeUI = std::make_unique<TimerUI>();
+	m_timeUI->Init(m_timer);
+	UIManager::GetInstance().RegisterScreen("timerUI", std::move(m_timeUI));
+
 }
 
 void GamePlayState::Update()
@@ -39,6 +47,7 @@ void GamePlayState::Update()
 	targetSnapshot.SetRotation(m_Context->aircraft->GetOrientation());
 
 	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
+
 }
 
 void GamePlayState::Exit()

@@ -31,7 +31,7 @@ namespace nsK2EngineLow {
 			);
 		}
 
-		void Draw();
+		void Draw(RenderContext& rc);
 		void OnDraw(RenderContext& rc)
 		{
 			m_sprite.Draw(rc);

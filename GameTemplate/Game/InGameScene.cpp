@@ -10,7 +10,7 @@
 
 namespace
 {
-	Vector3 INIT_AIRCRAFT = Vector3(0.0f, 0.0f, -5000.0f);
+	Vector3 INIT_AIRCRAFT = Vector3(0.0f, 0.0f, -15000.0f);
 }
 
 InGameScene::InGameScene()
@@ -70,7 +70,7 @@ void InGameScene::Update()
 void InGameScene::Render(RenderContext& rc)
 {
 	m_skyCube->Render(rc);
-	test.Draw(rc);
+	//test.Draw(rc);
 	m_bg.Draw(rc);
 }
 

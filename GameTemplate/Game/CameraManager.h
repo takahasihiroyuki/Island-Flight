@@ -14,7 +14,6 @@ public:
 	bool Start();
 	void Update();
 
-
 public:
 
 	void Inint() {}
