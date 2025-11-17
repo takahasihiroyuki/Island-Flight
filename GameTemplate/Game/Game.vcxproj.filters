@@ -82,6 +82,9 @@
     <ClCompile Include="TimerUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="ResultUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -158,6 +161,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="TimerUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultUI.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

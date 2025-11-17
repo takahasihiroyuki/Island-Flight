@@ -4,9 +4,16 @@ class Timer :public IGameObject
 public:
 	Timer() {}
 	~Timer() {}
-	void Init(float limitTime)
+
+	/// <summary>
+	/// 制限時間を設定。
+	/// 呼ばないならカウントダウン、カウントアップをしない。
+	/// </summary>
+	/// <param name="limitTime"></param>
+	void SetLimitTime(float limitTime)
 	{
 		m_limitTime = limitTime;
+		m_isCountingDown = true;
 	}
 
 	void Update()
@@ -35,9 +42,23 @@ public:
 		m_isRunning = isRunning;
 	}
 
+	/// <summary>
+	/// 残り時間を返す
+	/// カウントダウンをしないなら0を返す。
+	/// </summary>
+	float GetRemainingTime()
+	{
+		if (m_isCountingDown) {
+			return m_limitTime - m_elapsedTime;
+		}
+
+		return 0.0f;
+	}
+
 private:
 	float m_limitTime = 0;
 	float m_elapsedTime = 0;
 	bool m_isRunning = false;
+	bool m_isCountingDown = false;
 };
 
