@@ -4,7 +4,7 @@ class Aircraft;
 class Coin;
 class CoinDesc;
 class ScoreManager;
-class CoinManager:public IGameObject
+class CoinManager :public IGameObject
 {
 public:
 	CoinManager();
@@ -15,7 +15,7 @@ public:
 public:
 	void SetScoreManager(ScoreManager* scoreManager) {
 		assert(scoreManager != nullptr);
-		m_coreManager=scoreManager;
+		m_scoreManager = scoreManager;
 	}
 
 	/// <summary>
@@ -36,7 +36,7 @@ public:
 		Quaternion rotation,
 		Vector3 scale);
 
-	void SetInstancingManager(InstancingManager* instancingManager) 
+	void SetInstancingManager(InstancingManager* instancingManager)
 	{
 		m_instancingManager = instancingManager;
 	}
@@ -57,9 +57,10 @@ private:
 	void ProcessCollectedCoins(const Aircraft& player);
 
 private:
-	float m_pickupRadius = 10;		//コインの取得範囲
+	float m_pickupRadius = 100.0f;		//コインの取得範囲
 	std::vector<Coin*> m_coins;
 	std::vector<Coin*> m_pendingCoins;	//
-	ScoreManager* m_coreManager;
-	InstancingManager* m_instancingManager=nullptr;
+	ScoreManager* m_scoreManager;
+	InstancingManager* m_instancingManager = nullptr;
+	float m_score = 100.0f;
 };

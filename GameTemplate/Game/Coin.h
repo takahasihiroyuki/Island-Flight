@@ -9,7 +9,7 @@ struct CoinDesc {
 };
 
 struct CoinDesc;
-class Coin : public PlacementObject
+class Coin : public ItemMeshObject
 {
 public:
 	Coin();

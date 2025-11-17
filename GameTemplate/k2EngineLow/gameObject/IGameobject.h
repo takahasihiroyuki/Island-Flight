@@ -70,7 +70,7 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// ゲームオブジェクトを非アクティブにする。
 		/// </summary>
-		void Deactivate()
+		virtual void Deactivate()
 		{
 			m_isActive = false;
 		}
