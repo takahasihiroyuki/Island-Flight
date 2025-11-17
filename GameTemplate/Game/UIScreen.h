@@ -19,22 +19,26 @@ public:
 	/// <summary>
 	/// ‰f‚·‚©‚Ç‚¤‚©
 	/// </summary>
-	/// <param name="visible"></param>
-	virtual void SetVisible(bool visible)
+	/// <param name="displayed"></param>
+	virtual void SetDisplayed(bool displayed)
 	{
-		if (m_visible == visible)return;
-		m_visible = visible;
+		if (m_displayed == displayed)return;
+		m_displayed = displayed;
 
-		if (m_visible)Open();
+		if (m_displayed)Open();
 		else Close();
 	}
 
-	bool IsVisible() const
+	/// <summary>
+	/// •\Ž¦‚·‚é‚©‚Ç‚¤‚©
+	/// </summary>
+	/// <returns></returns>
+	virtual bool IsDisplayed()
 	{
-		return m_visible;
+		return m_displayed;
 	}
 
 protected:
-	bool m_visible = false;
+	bool m_displayed = true;//•\Ž¦‚·‚é‚©‚Ç‚¤‚©
 };
 

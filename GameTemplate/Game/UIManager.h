@@ -19,6 +19,17 @@ public:
 		m_screens[name] = std::move(screen);
 	};
 
+	//“o˜^‰ğœ
+	void UnregisterScreen(const std::string& name)
+	{
+		auto it = m_screens.find(name);
+		//“ü‚Á‚Ä‚¢‚½‚çÁ‚·B
+		if (it != m_screens.end()) {
+			m_screens.erase(it);
+		}
+
+	}
+
 	void ShowScreen(const std::string& name);
 	void HideScreen(const std::string& name);
 

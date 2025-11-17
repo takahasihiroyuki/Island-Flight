@@ -7,14 +7,17 @@ void UIManager::Update()
 	{
 		screen.second->Update();
 	}
-	
+
 }
 
 void UIManager::Render(RenderContext& rc)
 {
 	for (auto& screen : m_screens)
 	{
-		screen.second->Render(rc);
+		if (screen.second->IsDisplayed())
+		{
+			screen.second->Render(rc);
+		}
 	}
 }
 
@@ -23,7 +26,7 @@ void UIManager::ShowScreen(const std::string& name)
 	auto it = m_screens.find(name);
 	if (it != m_screens.end())
 	{
-		it->second->SetVisible(true);
+		it->second->SetDisplayed(true);
 	}
 }
 
@@ -32,6 +35,6 @@ void UIManager::HideScreen(const std::string& name)
 	auto it = m_screens.find(name);
 	if (it != m_screens.end())
 	{
-		it->second->SetVisible(false);
+		it->second->SetDisplayed(false);
 	}
 }

@@ -8,6 +8,8 @@ public:
 	void Update()override;
 	void Render(RenderContext& rc)override;
 	void Init(Timer* timer);
+	void Open();
+	void Close();
 
 
 public:
@@ -22,20 +24,14 @@ public:
 
 private:
 	int m_displayNumber = 0;//•\¦‚·‚é”š
-	Vector3 m_size;
 	float m_t;				//•âŠ®—¦
-	float m_colorAlpha;
-	SpriteRender OnesSprite;
-	SpriteRender TensSprite;
-	SpriteRender HundredsSprite;
+	std::array< SpriteRender, 10> OnesSprite;
+	std::array< SpriteRender, 10> TensSprite;
+	std::array< SpriteRender, 10> HundredsSprite;
 	int m_displayOnesNum = 0;
 	int m_displayTensNum = 0;
 	int m_displayHundredsNum = 0;
-	int m_prevDisplayOnesNum = 0;
-	int m_prevDisplayTensNum = 0;
-	int m_prevDisplayHundredsNum = 0;
 	std::array<const char*, 10> m_spritePaths;
 	Timer* m_timer;
-
 };
 

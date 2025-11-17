@@ -1,69 +1,81 @@
 #include "stdafx.h"
 #include "TimerUI.h"
 #include "Timer.h"
+#include "UIManager.h"
 
 namespace
 {
-	const Vector2 SPRITE_BASE_POS = Vector2(10.0f, 10.0f);
-	constexpr float SPACING_X = 5;//数字の隙間の長さ（ｘ）
-	const Vector2 ONES_SPLITE_POS = Vector2(SPRITE_BASE_POS.x, SPRITE_BASE_POS.y);
-	const Vector2 TENS_SPLITE_POS = Vector2(SPRITE_BASE_POS.x - SPACING_X, SPRITE_BASE_POS.y);
-	const Vector2 HUNDREDS_SPLITE_POS = Vector2(SPRITE_BASE_POS.x - SPACING_X * 2, SPRITE_BASE_POS.y);
+	const Vector3 SPRITE_BASE_POS = Vector3(650.0f, 360.0f, 0.0f);
+	constexpr float SPACING_X = 75;//数字の隙間の長さ（ｘ）
+	const Vector3 ONES_SPLITE_POS = Vector3(SPRITE_BASE_POS.x, SPRITE_BASE_POS.y, 0.0f);
+	const Vector3 TENS_SPLITE_POS = Vector3(SPRITE_BASE_POS.x - SPACING_X, SPRITE_BASE_POS.y, 0.0f);
+	const Vector3 HUNDREDS_SPLITE_POS = Vector3(SPRITE_BASE_POS.x - SPACING_X * 2, SPRITE_BASE_POS.y, 0.0f);
 
 }
 
 void TimerUI::Update()
 {
 	//時間を適用させる。
-	ApplyTime(m_timer->GetElapsedTime());
-
-	//前フレームと数字が違ったらスプライトを変える。
-	if (m_displayOnesNum != m_prevDisplayOnesNum) {
-		OnesSprite.Init(m_spritePaths[m_displayOnesNum], ONES_SPLITE_POS.x, ONES_SPLITE_POS.y);
-	}
-	if (m_displayOnesNum != m_prevDisplayTensNum) {
-		TensSprite.Init(m_spritePaths[m_displayTensNum], TENS_SPLITE_POS.x, TENS_SPLITE_POS.y);
-	}
-	if (m_displayOnesNum != m_prevDisplayTensNum) {
-		HundredsSprite.Init(m_spritePaths[m_displayHundredsNum], HUNDREDS_SPLITE_POS.x, HUNDREDS_SPLITE_POS.y);
-	}
+	ApplyTime(m_timer->GetRemainingTime());
 }
 
 void TimerUI::Render(RenderContext& rc)
 {
-	OnesSprite.Draw(rc);
-	TensSprite.Draw(rc);
-	HundredsSprite.Draw(rc);
+	OnesSprite[m_displayOnesNum].Draw(rc);
+	TensSprite[m_displayTensNum].Draw(rc);
+	HundredsSprite[m_displayHundredsNum].Draw(rc);
 }
 
 void TimerUI::Init(Timer* timer)
 {
 	SetTimer(timer);
 
-	//後で10まで初期化する
-	m_spritePaths[0] = "Assets/UI/Numbers/timelimit_ zero.DDS";
-	m_spritePaths[1] = "Assets/UI/Numbers/timelimit_ one.DDS";
-	m_spritePaths[2] = "Assets/UI/Numbers/timelimit_ two.DDS";
-	m_spritePaths[3] = "Assets/UI/Numbers/timelimit_ three.DDS";
-	m_spritePaths[4] = "Assets/UI/Numbers/timelimit_ four.DDS";
-	m_spritePaths[5] = "Assets/UI/Numbers/timelimit_ five.DDS";
-	m_spritePaths[6] = "Assets/UI/Numbers/timelimit_ six.DDS";
-	m_spritePaths[7] = "Assets/UI/Numbers/timelimit_ seven.DDS";
-	m_spritePaths[8] = "Assets/UI/Numbers/timelimit_ eight.DDS";
-	m_spritePaths[9] = "Assets/UI/Numbers/timelimit_ nine.DDS";
+	m_spritePaths[0] = "Assets/UI/Numbers/timelimit_zero.DDS";
+	m_spritePaths[1] = "Assets/UI/Numbers/timelimit_one.DDS";
+	m_spritePaths[2] = "Assets/UI/Numbers/timelimit_two.DDS";
+	m_spritePaths[3] = "Assets/UI/Numbers/timelimit_three.DDS";
+	m_spritePaths[4] = "Assets/UI/Numbers/timelimit_four.DDS";
+	m_spritePaths[5] = "Assets/UI/Numbers/timelimit_five.DDS";
+	m_spritePaths[6] = "Assets/UI/Numbers/timelimit_six.DDS";
+	m_spritePaths[7] = "Assets/UI/Numbers/timelimit_seven.DDS";
+	m_spritePaths[8] = "Assets/UI/Numbers/timelimit_eight.DDS";
+	m_spritePaths[9] = "Assets/UI/Numbers/timelimit_nine.DDS";
 
+	for (int i = 0; i < 10; i++)
+	{
+		OnesSprite[i].Init(m_spritePaths[i], 100, 100);
+		OnesSprite[i].SetPosition(ONES_SPLITE_POS);
+		OnesSprite[i].Update();
+	}
 
-	OnesSprite.Init(m_spritePaths[0], ONES_SPLITE_POS.x, ONES_SPLITE_POS.y);
-	TensSprite.Init(m_spritePaths[0], TENS_SPLITE_POS.x, TENS_SPLITE_POS.y);
-	HundredsSprite.Init(m_spritePaths[0], HUNDREDS_SPLITE_POS.x, HUNDREDS_SPLITE_POS.y);
+	for (int i = 0; i < 10; i++)
+	{
+		TensSprite[i].Init(m_spritePaths[i], 100, 100);
+		TensSprite[i].SetPosition(TENS_SPLITE_POS);
+		TensSprite[i].Update();
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		HundredsSprite[i].Init(m_spritePaths[i], 100, 100);
+		HundredsSprite[i].SetPosition(HUNDREDS_SPLITE_POS);
+		HundredsSprite[i].Update();
+
+	}
+}
+
+void TimerUI::Open()
+{
+}
+
+void TimerUI::Close()
+{
+	float test = 0;
+	//UIManager::GetInstance().UnregisterScreen("timerUI");
 }
 
 void TimerUI::ApplyTime(float elapsedTime)
 {
-	m_prevDisplayOnesNum = m_displayOnesNum;
-	m_prevDisplayTensNum = m_displayTensNum;
-	m_prevDisplayHundredsNum = m_displayHundredsNum;
-
 	//小数部分切り上げ
 	m_displayNumber = static_cast<int>(ceilf(elapsedTime));
 
