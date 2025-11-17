@@ -6,6 +6,25 @@ public:
 	virtual bool Start() override final;
 	virtual void Update() override;
 	virtual void Render(RenderContext& rc) override;
+	/// <summary>
+	/// インスタンシングする場合
+	/// モデルのポジションを見えない場所に置く
+	/// </summary>
+	void Deactivate()override
+	{
+		IGameObject::Deactivate();
+		if (m_isInstancingTable[m_modelName])
+		{
+			m_instancingManager->UpdateInstancingData(
+				m_InstanceNumber,
+				m_modelName,
+				Vector3(1000000.0f, -1000000.0f, 0),
+				m_rotation,
+				Vector3::One * 0.0000001f
+			);
+		}
+
+	};
 
 
 public:
@@ -122,6 +141,7 @@ private:
 	using SuperClass = PlacementObject;
 
 public:
+
 	virtual void OnStart() override
 	{
 	}

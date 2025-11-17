@@ -7,7 +7,7 @@
 
 namespace
 {
-	constexpr float TIMELIMIT = 10000;
+	constexpr float TIMELIMIT = 10;
 }
 
 GamePlayState::GamePlayState()
@@ -16,20 +16,22 @@ GamePlayState::GamePlayState()
 
 GamePlayState::~GamePlayState()
 {
+	DeleteGO(m_timer);
+	m_timeUI.reset();
 }
 
 void GamePlayState::OnEnter()
 {
 	TargetSnapshot targetSnapshot;
-	targetSnapshot.SetPosition(m_Context->aircraft->GetPosition());
-	targetSnapshot.SetVelocity(m_Context->aircraft->GetLinearVelocity());
-	targetSnapshot.SetRotation(m_Context->aircraft->GetOrientation());
+	targetSnapshot.SetPosition(m_context->aircraft->GetPosition());
+	targetSnapshot.SetVelocity(m_context->aircraft->GetLinearVelocity());
+	targetSnapshot.SetRotation(m_context->aircraft->GetOrientation());
 
 	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
 	CameraManager::GetInstance().ChangeController(CameraControllerType::enSpringFollow);
 
 	m_timer = NewGO<Timer>(0);
-	m_timer->Init(TIMELIMIT);
+	m_timer->SetLimitTime(TIMELIMIT);
 	m_timer->SetRunning(true);
 
 	//ƒ^ƒCƒ}[UI‚ðUImanager‚É“o˜^
@@ -42,9 +44,9 @@ void GamePlayState::OnEnter()
 void GamePlayState::Update()
 {
 	TargetSnapshot targetSnapshot;
-	targetSnapshot.SetPosition(m_Context->aircraft->GetPosition());
-	targetSnapshot.SetVelocity(m_Context->aircraft->GetLinearVelocity());
-	targetSnapshot.SetRotation(m_Context->aircraft->GetOrientation());
+	targetSnapshot.SetPosition(m_context->aircraft->GetPosition());
+	targetSnapshot.SetVelocity(m_context->aircraft->GetLinearVelocity());
+	targetSnapshot.SetRotation(m_context->aircraft->GetOrientation());
 
 	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
 
@@ -52,6 +54,7 @@ void GamePlayState::Update()
 
 void GamePlayState::Exit()
 {
+	UIManager::GetInstance().HideScreen("timerUI");
 }
 
 bool GamePlayState::RequestChangeState(InGameStateType& type)

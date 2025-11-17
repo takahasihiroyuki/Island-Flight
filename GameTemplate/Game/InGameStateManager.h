@@ -3,7 +3,7 @@
 #include"InGameStateType.h"
 
 class IInGameState;
-class InGameStateManager:public IGameObject
+class InGameStateManager :public IGameObject
 {
 public:
 	InGameStateManager();
@@ -11,16 +11,20 @@ public:
 	bool Start();
 	void Update();
 	void Change(InGameStateType type);
-	void SetContext(InGameContext& inGameContext) 
+	void SetContext(InGameContext& inGameContext)
 	{
 		m_inGameContext = inGameContext;
 	}
-
+	bool IsEnd()const
+	{
+		return m_isEnd;
+	}
 
 private:
 	IInGameState* m_currentState = nullptr;
 	InGameContext m_inGameContext;
 	InGameStateType m_nextStateType;
+	bool m_isEnd = false;
 
 };
 

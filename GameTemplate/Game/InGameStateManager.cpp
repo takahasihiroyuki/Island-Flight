@@ -16,6 +16,10 @@ InGameStateManager::InGameStateManager()
 
 InGameStateManager::~InGameStateManager()
 {
+	if (m_currentState) {
+		delete m_currentState;
+		m_currentState = nullptr;
+	}
 }
 
 bool InGameStateManager::Start()
@@ -35,9 +39,18 @@ void InGameStateManager::Update()
 
 void InGameStateManager::Change(InGameStateType type)
 {
+
 	if (m_currentState) {
 		m_currentState->Exit();
 		delete m_currentState;
+		m_currentState = nullptr;
+	}
+
+	//タイプがエンドならこのクラスを終わらせるフラグを立てるだけ
+	if (type == InGameStateType::enEnd)
+	{
+		m_isEnd = true;
+		return;
 	}
 
 	switch (type) {
@@ -48,6 +61,7 @@ void InGameStateManager::Change(InGameStateType type)
 		m_currentState = new ResoltState();
 		break;
 	}
+
 
 	if (m_currentState) {
 		m_currentState->Enter(m_inGameContext);

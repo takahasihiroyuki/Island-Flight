@@ -15,21 +15,23 @@ namespace
 
 InGameScene::InGameScene()
 {
-	m_bg.Init("Assets/modelData/ship(kari).tkm", nullptr, 0, enModelUpAxisZ, true);
-	m_bg.SetScale(Vector3(10.0f, 10.0f, 10.0f));
-	m_bg.Update();
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 }
 
 InGameScene::~InGameScene()
 {
+	DeleteGO(m_stage);
+	DeleteGO(m_ocean);
+	DeleteGO(m_aircraft);
+	DeleteGO(m_scoreManager);
+	DeleteGO(m_inGameStateManeger);
+	DeleteGO(m_coinManager);
+	DeleteGO(m_skyCube);
+
 }
 
 bool InGameScene::Start()
 {
-	m_bg.SetPosition(Vector3::Zero);
-	m_bg.Update();
-
 
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 	m_skyCube->SetLuminance(1.0f);
@@ -51,8 +53,6 @@ bool InGameScene::Start()
 	m_inGameStateManeger = NewGO<InGameStateManager>(0);
 	m_inGameStateManeger->SetContext(m_context);
 
-	test.Init("Assets/modelData/gray.DDS", 10, 10);
-	test.Update();
 	return true;
 }
 
@@ -70,12 +70,16 @@ void InGameScene::Update()
 void InGameScene::Render(RenderContext& rc)
 {
 	m_skyCube->Render(rc);
-	//test.Draw(rc);
-	m_bg.Draw(rc);
 }
 
 bool InGameScene::RequestChangeScene(SceneType& type)
 {
+	if (m_inGameStateManeger->IsEnd())
+	{
+		type = SceneType::Title;
+		DeleteGO(m_inGameStateManeger);
+		return true;
+	}
 	return false;
 }
 

@@ -64,14 +64,14 @@ void PlacementObject::DecideInstancingUsage(const char* modelName)
 void PlacementObject::Init(
 	const char* filePath,
 	Vector3 position,
-	Quaternion rotation, 
+	Quaternion rotation,
 	Vector3 scale,
 	const char* modelName)
 {
 
-	m_position=position;
-	m_rotation=rotation;
-	m_scale=scale;
+	m_position = position;
+	m_rotation = rotation;
+	m_scale = scale;
 
 	//今の段階でのマックスインスタンスをインスタンス番号にする。
 	//0から始めたいので最大値に1を足す前に番号を決める。
@@ -94,5 +94,16 @@ void StageMeshObject::Update()
 
 void ItemMeshObject::Update()
 {
+	//イン単シング描画するなら
+	if (m_isInstancingTable[m_modelName])
+	{
+		m_instancingManager->UpdateInstancingData(
+			m_InstanceNumber,
+			m_modelName,
+			m_position,
+			m_rotation,
+			m_scale
+		);
+	}
 }
 

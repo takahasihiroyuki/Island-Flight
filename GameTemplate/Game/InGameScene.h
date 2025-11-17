@@ -27,7 +27,6 @@ public:
 private:
 	void InitInGameContext();
 private:
-	ModelRender m_bg;				// 背景モデル
 	Vector3 m_position = Vector3{ 0.0,30.0f,100.0f };				// 座標
 	Vector3 m_cameraPosition = Vector3::Zero;		// カメラ座標
 	Vector3 m_cameraTarget;			// カメラ注視点
@@ -43,6 +42,5 @@ private:
 	InGameStateManager* m_inGameStateManeger = nullptr;
 	InGameContext m_context;
 	Timer m_timer;
-	SpriteRender test;
 };
 

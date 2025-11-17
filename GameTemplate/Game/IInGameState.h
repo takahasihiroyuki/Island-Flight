@@ -9,7 +9,7 @@ public:
 	virtual ~IInGameState() {};
 	virtual void Enter(InGameContext& context)final
 	{
-		m_Context = &context;
+		m_context = &context;
 		OnEnter();
 	}
 	virtual void OnEnter() = 0;
@@ -18,6 +18,6 @@ public:
 	virtual bool RequestChangeState(InGameStateType& type)=0;
 
 protected:
-	InGameContext* m_Context = nullptr;
+	InGameContext* m_context = nullptr;
 };
 
