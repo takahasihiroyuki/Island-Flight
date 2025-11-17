@@ -11,8 +11,8 @@ namespace nsK2EngineLow {
 		spriteInitData.m_width = static_cast<UINT>(width);
 		spriteInitData.m_height = static_cast<UINT>(height);
 		spriteInitData.m_alphaBlendMode = alphaBlendMode;
-		spriteInitData.m_expandConstantBuffer = &m_spriteCB;
-		spriteInitData.m_expandConstantBufferSize = sizeof(m_spriteCB);
+		//spriteInitData.m_expandConstantBuffer = &m_spriteCB;
+		//spriteInitData.m_expandConstantBufferSize = sizeof(m_spriteCB);
 
 
 		//sprite初期化オブジェクトを使って、spriteを初期化する

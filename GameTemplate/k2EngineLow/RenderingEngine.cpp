@@ -242,6 +242,7 @@ namespace nsK2EngineLow
 	{
 		m_deferredModelList.clear();
 		m_forwardModelList.clear();
+		m_spriteRenderList.clear();
 		for (auto& kv : m_reflectedModelList) {    // ƒŒƒCƒ„[‚²‚Æ‚É’†g‚¾‚¯Á‚·
 			kv.second.clear();
 		}

@@ -216,6 +216,7 @@ namespace nsK2EngineLow {
 		worldMatrix = CalcWorldMatrix(pos, rot, scale, m_modelUpAxis);
 		// インスタンス番号から行列のインデックスを取得する。
 		int matrixArrayIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
+
 		// ワールド行列の配列にワールド行列を設定する。
 		m_worldMatrixArray[matrixArrayIndex] = worldMatrix;
 

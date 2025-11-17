@@ -38,7 +38,7 @@ namespace nsK2EngineLow {
 		}
 
 	private:
-		SpriteCB	m_spriteCB;
+		//SpriteCB	m_spriteCB;
 		Sprite		m_sprite;								//Spriteクラス
 		Vector2		m_pivot = Sprite::DEFAULT_PIVOT;		//ピボット
 		Vector3		m_position = Vector3::Zero;				//座標
