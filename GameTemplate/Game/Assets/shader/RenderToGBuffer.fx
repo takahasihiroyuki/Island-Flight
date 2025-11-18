@@ -46,10 +46,6 @@ struct SPSOut
     float3 worldPos : SV_Target3; // ワールド座標
 };
 
-///////////////////////////////////////
-// 頂点シェーダーの共通処理をインクルードする。
-///////////////////////////////////////
-
 //シェーダーリソース
 Texture2D<float4> g_albedo : register(t0); //アルベドマップ
 Texture2D<float4> g_normalMap : register(t1); //法線マップにアクセスするための変数。
