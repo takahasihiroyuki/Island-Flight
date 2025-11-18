@@ -97,7 +97,7 @@ namespace nsK2EngineLow
 		initData.m_expandShaderResoruceView[0] = &m_texture[m_type];
 		initData.m_expandConstantBuffer = &m_luminance;
 		initData.m_expandConstantBufferSize = sizeof(m_luminance);
-		m_modelRender.InitSkyCubeModel(initData);
+		m_modelRender.InitSkyCubeModel(initData, initData.m_tkmFilePath);
 		m_modelRender.SetTransform(m_position, m_rot, m_scale);
 		m_modelRender.Update();
 	}

@@ -38,7 +38,7 @@ namespace nsK2EngineLow {
 		initData.m_expandConstantBufferSize = sizeof(m_constantBuffer);
 
 
-		m_modelRender.InitOcean(initData);
+		m_modelRender.InitOcean(initData, initData.m_tkmFilePath);
 		m_modelRender.SetTransform(m_position, g_quatIdentity, m_scale);
 		//m_modelRender.ChangeAlbedoMap("", m_reflectionRenderTarget->GetRenderTargetTexture());
 		m_modelRender.Update();

@@ -121,4 +121,5 @@ static const int MAX_BONE = 512;	// ƒ{[ƒ“‚ÌÅ‘å”B
 #include "SkyCube.h"
 #include "InstancingManager.h"
 #include "SpriteRender.h"
+#include "HexagonalBlur.h"
 

@@ -23,10 +23,10 @@ void nsK2EngineLow::Bloom::OnRender(RenderContext& rc, RenderTarget& mainRenderT
 	rc.WaitUntilFinishDrawingToRenderTarget(m_luminanceRenderTarget);
 
 	//輝度情報に対してガウシアンブラーを複数回実行
-	m_gaussianBlur[0].ExecuteOnGPU(rc, 8);
-	m_gaussianBlur[1].ExecuteOnGPU(rc, 8);
-	m_gaussianBlur[2].ExecuteOnGPU(rc, 8);
-	m_gaussianBlur[3].ExecuteOnGPU(rc, 8);
+	m_gaussianBlur[0].ExecuteOnGPU(rc, 0.1);
+	m_gaussianBlur[1].ExecuteOnGPU(rc, 0.1);
+	m_gaussianBlur[2].ExecuteOnGPU(rc, 0.1);
+	m_gaussianBlur[3].ExecuteOnGPU(rc, 0.1);
 
 	//最終的な合成先としてメインレンダーターゲットを設定
 	rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);

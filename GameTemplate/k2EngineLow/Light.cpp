@@ -3,7 +3,7 @@
 namespace nsK2EngineLow {
 	namespace
 	{
-		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_COLOR = Vector3(0.0f, 1.0f, 0.0f);
+		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_COLOR = Vector3(0.05f, 0.05f, 0.05f);
 		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_DIRECTION = Vector3(1.0f, 0.0f, -1.0f);
 		const Vector3 SCENELIGHT_AMBIENTLIGHT_COLOR = Vector3(0.8f, 0.8f, 0.8f);
 		const Vector3 LIGHTCAMERA_POSITION = Vector3(100.0f, 2000.0f, 500.0f);

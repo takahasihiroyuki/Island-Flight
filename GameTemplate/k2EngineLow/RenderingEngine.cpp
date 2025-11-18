@@ -48,6 +48,8 @@ namespace nsK2EngineLow
 		//シャドウマップの初期化。
 		m_shadow.Init();
 
+		InitZPrepassRenderTarget();
+
 		InitMainRenderTarget();
 
 		InitGBuffer();
@@ -83,6 +85,22 @@ namespace nsK2EngineLow
 			DXGI_FORMAT_D32_FLOAT
 		);
 	}
+
+	void RenderingEngine::InitZPrepassRenderTarget()
+	{
+		float clearColor[] = { 100.0f,100.0f,100.0f,1.0f };
+		m_zprepassRenderTarget.Create(
+			g_graphicsEngine->GetFrameBufferWidth(),
+			g_graphicsEngine->GetFrameBufferHeight(),
+			1,
+			1,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_D32_FLOAT,
+			clearColor
+		);
+	}
+
+
 
 	void RenderingEngine::InitCopyToframeBufferSprite()
 	{
@@ -181,6 +199,27 @@ namespace nsK2EngineLow
 		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
 	}
 
+	void RenderingEngine::ZPrepass(RenderContext& rc)
+	{
+		BeginGPUEvent("ZPrepass");
+
+		// まず、レンダリングターゲットとして設定できるようになるまで待つ
+		rc.WaitUntilToPossibleSetRenderTarget(m_zprepassRenderTarget);
+
+		// レンダリングターゲットを設定
+		rc.SetRenderTargetAndViewport(m_zprepassRenderTarget);
+
+		// レンダリングターゲットをクリア
+		rc.ClearRenderTargetView(m_zprepassRenderTarget);
+
+		for (auto& renderObj : m_zprepassModelList) {
+			renderObj->OnZPrepass(rc);
+		}
+
+		rc.WaitUntilFinishDrawingToRenderTarget(m_zprepassRenderTarget);
+		EndGPUEvent();
+	}
+
 	void RenderingEngine::RenderToGBuffer(RenderContext& rc)
 	{
 		// レンダリングターゲットをG-Bufferに変更して書き込む
@@ -243,6 +282,7 @@ namespace nsK2EngineLow
 		m_deferredModelList.clear();
 		m_forwardModelList.clear();
 		m_spriteRenderList.clear();
+		m_zprepassModelList.clear();
 		for (auto& kv : m_reflectedModelList) {    // レイヤーごとに中身だけ消す
 			kv.second.clear();
 		}
@@ -260,6 +300,8 @@ namespace nsK2EngineLow
 			pass.Execute(rc, objects);
 		}
 
+		ZPrepass(rc);
+
 		//GBufferへのレンダリング
 		RenderToGBuffer(rc);
 
@@ -271,8 +313,6 @@ namespace nsK2EngineLow
 
 		ForwardRendering(rc);
 
-		//輝度抽出とガウシアンブラー実行
-		//ボケ画像をメインレンダリングターゲットに加算合成
 		PostEffecting(rc);
 
 		SpriteRendering(rc);

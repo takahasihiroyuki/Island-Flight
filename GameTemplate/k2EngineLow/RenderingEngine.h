@@ -22,11 +22,12 @@ namespace nsK2EngineLow {
 
 		void InitGBuffer();
 		void InitMainRenderTarget();
+		void InitZPrepassRenderTarget();
 		void InitCopyToframeBufferSprite();
 		void InitDefferedLightingSprite();
 
 		void ForwardRendering(RenderContext& rc);
-
+		void ZPrepass(RenderContext& rc);
 		/// <summary>
 		/// GBufferにレンダリングする。
 		/// </summary>
@@ -147,6 +148,11 @@ namespace nsK2EngineLow {
 			m_forwardModelList.push_back(modelRender);
 		}
 
+		void AddZprepassModelList(ModelRender* modelRender)
+		{
+			m_zprepassModelList.push_back(modelRender);
+		}
+
 		void AddreflectedModelList(ModelRender* modelRender, ReflectLayer reflectLayer)
 		{
 			for (auto it = m_reflectedModelList.begin(); it != m_reflectedModelList.end(); ++it) {
@@ -155,7 +161,7 @@ namespace nsK2EngineLow {
 			}
 		}
 
-		void AddSpriteRenderList(SpriteRender* sprite) 
+		void AddSpriteRenderList(SpriteRender* sprite)
 		{
 			m_spriteRenderList.push_back(sprite);
 		}
@@ -200,13 +206,17 @@ namespace nsK2EngineLow {
 			return it->second.GetEquation();
 		}
 
-		Texture& GetShadowTexture() 
+		Texture& GetShadowTexture()
 		{
 			return m_shadow.GetShadowTarget().GetRenderTargetTexture();
 		}
 
 		void SpriteRendering(RenderContext& rc);
 
+		RenderTarget& GetZprepassRenderTarget()
+		{
+			return m_zprepassRenderTarget;
+		}
 
 	private:
 
@@ -239,16 +249,18 @@ namespace nsK2EngineLow {
 		std::array<RenderTarget, enGBufferNum> m_gBuffer;		//GBuffer用のレンダリングターゲット。
 
 
-		std::vector<ModelRender*>							m_deferredModelList;	   //ディファードモデルリスト
-		std::vector<ModelRender*>							m_forwardModelList;		   //フォワードモデルリスト
-		std::vector<SpriteRender*>							m_spriteRenderList;		   //スプライトレンダーリスト
-		SceneLight											m_sceneLight;	           //シーンライト
-		PostEffect											m_postEffect;	           //ポストエフェクト
-		RenderTarget										m_shadowMapRenderTarget;   //シャドウマップ用レンダリングターゲット
-		Shadow												m_shadow;                  //シャドウ
-		std::map<ReflectLayer, PlaneReflectionPass>			m_planeReflectionPass;     // 平面反射パス
-		std::map<ReflectLayer, std::vector<ModelRender*>>	m_reflectedModelList;	   //平面モデルリスト
-		std::map<ReflectLayer, Plane>						m_reflectPlane;	           // 反射平面
+		std::vector<ModelRender*>							m_deferredModelList;		//ディファードモデルリスト
+		std::vector<ModelRender*>							m_forwardModelList;			//フォワードモデルリスト
+		std::vector<ModelRender*>							m_zprepassModelList;
+		std::vector<SpriteRender*>							m_spriteRenderList;			//スプライトレンダーリスト
+		SceneLight											m_sceneLight;				//シーンライト
+		PostEffect											m_postEffect;				//ポストエフェクト
+		RenderTarget										m_shadowMapRenderTarget;	//シャドウマップ用レンダリングターゲット
+		RenderTarget										m_zprepassRenderTarget;		//Zプレパス用レンダリングターゲット
+		Shadow												m_shadow;					//シャドウ
+		std::map<ReflectLayer, PlaneReflectionPass>			m_planeReflectionPass;		// 平面反射パス
+		std::map<ReflectLayer, std::vector<ModelRender*>>	m_reflectedModelList;		//平面モデルリスト
+		std::map<ReflectLayer, Plane>						m_reflectPlane;				// 反射平面
 
 
 		// デバッグ用

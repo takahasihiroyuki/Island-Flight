@@ -1,5 +1,6 @@
 #pragma once
 #include "Bloom.h"
+#include "HexagonalBlur.h"
 
 
 namespace nsK2EngineLow {
@@ -32,7 +33,10 @@ namespace nsK2EngineLow {
 		/// <param name="mainRenderTarget">メインレンダリングターゲット</param>
 		void OnRenderBloom(RenderContext& rc, RenderTarget& mainRenderTarget);
 
+		void OnRenderHexagonBlur(RenderContext& rc, RenderTarget& mainRenderTarget);
+
 	private:
 		Bloom m_bloom;		//ブルーム
+		HexagonalBlur m_hexagonalBlur;
 	};
 }

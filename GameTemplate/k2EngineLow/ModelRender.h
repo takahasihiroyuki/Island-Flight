@@ -34,13 +34,13 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="initData"></param>
 		/// <param name="tkmFilePath">ファイルパス</param>
-		void InitOcean(ModelInitData& initData);
+		void InitOcean(ModelInitData& initData, const char* tkmFilePath);
 
 		/// <summary>
 		/// スカイキューブを作るときに使用。
 		/// </summary>
 		/// <param name="initData"></param>
-		void InitSkyCubeModel(ModelInitData& initData);
+		void InitSkyCubeModel(ModelInitData& initData, const char* tkmFilePath);
 
 		void InitSkyCubeReflectionModel(ModelInitData& initData);
 
@@ -60,9 +60,14 @@ namespace nsK2EngineLow {
 				return;
 			}
 			else {
-				m_renderToGBufferModel.Draw(rc,m_maxInstance);
+				m_renderToGBufferModel.Draw(rc, m_maxInstance);
 
 			}
+		}
+
+		void OnZPrepass(RenderContext& rc)
+		{
+			m_zprepassModel.Draw(rc, m_maxInstance);
 		}
 
 		/// <summary>
@@ -178,7 +183,7 @@ namespace nsK2EngineLow {
 			return m_renderToGBufferModel.GetWorldMatrix();
 		}
 
-		Model& GetModel() 
+		Model& GetModel()
 		{
 			if (m_isFowardRender) {
 				return m_frowardRenderModel;
@@ -246,7 +251,7 @@ namespace nsK2EngineLow {
 			// インスタンス番号から行列のインデックスを取得する。
 			int matrixArrayIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
 
-			if(m_isEnableInstancingDraw)
+			if (m_isEnableInstancingDraw)
 			{
 				return m_worldMatrixArray[matrixArrayIndex];
 			}
@@ -267,6 +272,11 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
 		void InitSkeleton(const char* filePath);
+
+		void InitModelOnZprepass(
+			const char* tkmFilePath,
+			EnModelUpAxis modelUpAxis
+		);
 
 		/// <summary>
 		/// アニメーションの初期化。
@@ -325,6 +335,7 @@ namespace nsK2EngineLow {
 
 		Model							m_renderToGBufferModel;	                    // RenderToGBufferで描画されるモデル
 		Model							m_shadowModel;							    //影描画用モデル
+		Model							m_zprepassModel;					// ZPrepassで描画されるモデル
 		std::map<ReflectLayer, Model>	m_ReflectionModel;                          //反射マップ描画用モデル
 		bool							m_isSkyCube = false;						// スカイキューブモデルかどうか
 		std::unique_ptr<Matrix[]>		m_worldMatrixArray;							// ワールド行列の配列。

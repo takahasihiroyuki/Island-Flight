@@ -240,6 +240,9 @@
     <ClCompile Include="SkyCube.cpp" />
     <ClCompile Include="InstancingManager.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
+    <ClCompile Include="HexagonalBlur.cpp">
+      <Filter>PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -530,6 +533,9 @@
     <ClInclude Include="SkyCube.h" />
     <ClInclude Include="InstancingManager.h" />
     <ClInclude Include="SpriteRender.h" />
+    <ClInclude Include="HexagonalBlur.h">
+      <Filter>PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

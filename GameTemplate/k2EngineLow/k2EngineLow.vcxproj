@@ -297,6 +297,7 @@
     <ClCompile Include="graphics\StructuredBuffer.cpp" />
     <ClCompile Include="graphics\Texture.cpp" />
     <ClCompile Include="graphics\VertexBuffer.cpp" />
+    <ClCompile Include="HexagonalBlur.cpp" />
     <ClCompile Include="HID\GamePad.cpp" />
     <ClCompile Include="InstancingManager.cpp" />
     <ClCompile Include="k2EngineLow.cpp" />
@@ -400,6 +401,7 @@
     <ClInclude Include="graphics\StructuredBuffer.h" />
     <ClInclude Include="graphics\Texture.h" />
     <ClInclude Include="graphics\VertexBuffer.h" />
+    <ClInclude Include="HexagonalBlur.h" />
     <ClInclude Include="HID\GamePad.h" />
     <ClInclude Include="InstancingManager.h" />
     <ClInclude Include="k2EngineLow.h" />

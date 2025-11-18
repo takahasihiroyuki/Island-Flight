@@ -56,6 +56,8 @@ namespace nsK2EngineLow {
 		// GBuffer描画用のモデルを初期化
 		InitModelOnRenderGBuffer(filePath, enModelUpAxis, isShadowReciever);
 
+		InitModelOnZprepass(filePath, enModelUpAxis);
+
 		//反射で映り込まないレイヤーがあるなら。
 		if (disableLayer != ReflectLayer::enNone) {
 			// そのレイヤーの反射モデルをmapから削除。（forで邪魔になるので。）
@@ -76,7 +78,7 @@ namespace nsK2EngineLow {
 		m_isInit = true;
 	}
 
-	void ModelRender::InitOcean(ModelInitData& initData)
+	void ModelRender::InitOcean(ModelInitData& initData, const char* tkmFilePath)
 	{
 		m_isFowardRender = true;
 		m_enableReflection[ReflectLayer::enOcean] = false;
@@ -84,14 +86,16 @@ namespace nsK2EngineLow {
 		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		m_frowardRenderModel.Init(initData);
 		m_frowardRenderModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+		InitModelOnZprepass(tkmFilePath, enModelUpAxisZ);
 		InitInstancingDraw(1);
 
 	}
 
-	void ModelRender::InitSkyCubeModel(ModelInitData& initData)
+	void ModelRender::InitSkyCubeModel(ModelInitData& initData, const char* tkmFilePath)
 	{
 		m_isFowardRender = true;
 		m_frowardRenderModel.Init(initData);
+		InitModelOnZprepass(tkmFilePath, enModelUpAxisZ);
 		InitInstancingDraw(1);
 
 	}
@@ -173,6 +177,10 @@ namespace nsK2EngineLow {
 				g_renderingEngine->AddreflectedModelList(this, layer);
 			}
 		}
+
+		//深度値用のモデルを登録
+		//全てのモデルが登録する。
+		g_renderingEngine->AddZprepassModelList(this);
 	}
 
 	void ModelRender::OnRenderShadowMap(RenderContext& rc, Camera& came)
@@ -252,6 +260,51 @@ namespace nsK2EngineLow {
 		int pos = (int)skeletonFilePath.find(".tkm");
 		skeletonFilePath.replace(pos, 4, ".tks");
 		m_skeleton.Init(skeletonFilePath.c_str());
+	}
+
+	void ModelRender::InitModelOnZprepass(const char* tkmFilePath, EnModelUpAxis modelUpAxis)
+	{
+
+		ModelInitData modelInitData;
+		modelInitData.m_tkmFilePath = tkmFilePath;
+		modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
+		modelInitData.m_modelUpAxis = modelUpAxis;
+
+		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+		modelInitData.m_vsEntryPointFunc = "VSMain";
+
+		//アニメーションがあるならVSSkinMainを指定。
+		if (m_animationClips != nullptr)
+		{
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+
+			if (m_isEnableInstancingDraw) {
+				modelInitData.m_vsSkinEntryPointFunc = "VSSkinInstancingMain";
+			}
+			else {
+				modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			}
+
+		}
+		else
+		{
+			if (m_isEnableInstancingDraw) {
+				modelInitData.m_vsEntryPointFunc = "VSInstancingMain";
+			}
+			else {
+				modelInitData.m_vsEntryPointFunc = "VSMain";
+			}
+		}
+
+		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		if (m_isEnableInstancingDraw) {
+			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+		}
+
+		m_zprepassModel.Init(modelInitData);
+
 	}
 
 	void ModelRender::InitAnimation(AnimationClip* animationClips, int numAnimationClips, EnModelUpAxis enModelUpAxis)
