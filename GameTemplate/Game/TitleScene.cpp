@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "TitleScene.h"
 #include "SceneManager.h"
+#include "TitleUI.h"
+#include "UIManager.h"
 
 namespace
 {
@@ -28,4 +30,18 @@ bool TitleScene::RequestChangeScene(SceneType& type)
 	}
 
 	return false;
+}
+
+void TitleScene::Enter()
+{
+	m_titleUI = std::make_unique<TitleUI>();
+	m_titleUI->Init();
+	m_titleUI->SetDisplayed(true);
+	UIManager::GetInstance().RegisterScreen("TitleUI", std::move(m_titleUI));
+
+}
+
+void TitleScene::Exit()
+{
+	UIManager::GetInstance().HideScreen("TitleUI");
 }

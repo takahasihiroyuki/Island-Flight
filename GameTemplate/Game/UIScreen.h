@@ -39,6 +39,6 @@ public:
 	}
 
 protected:
-	bool m_displayed = true;//•\Ž¦‚·‚é‚©‚Ç‚¤‚©
+	bool m_displayed = false;//•\Ž¦‚·‚é‚©‚Ç‚¤‚©
 };
 

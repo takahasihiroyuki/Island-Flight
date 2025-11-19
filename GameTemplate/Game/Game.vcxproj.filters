@@ -85,6 +85,9 @@
     <ClCompile Include="ResultUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="TitleUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -164,6 +167,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="ResultUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleUI.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,7 +7,7 @@
 
 namespace
 {
-	constexpr float TIMELIMIT = 10;
+	constexpr float TIMELIMIT = 100;
 }
 
 GamePlayState::GamePlayState()
@@ -37,6 +37,7 @@ void GamePlayState::OnEnter()
 	//タイマーUIをUImanagerに登録
 	m_timeUI = std::make_unique<TimerUI>();
 	m_timeUI->Init(m_timer);
+	m_timeUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("timerUI", std::move(m_timeUI));
 
 }
