@@ -21,6 +21,11 @@ namespace nsK2EngineLow {
 			m_position = position;
 		}
 
+		void SetScale(const Vector3& scale)
+		{
+			m_scale = scale;
+		}
+
 		void Update()
 		{
 			m_sprite.Update(
