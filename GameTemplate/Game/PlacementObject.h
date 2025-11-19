@@ -45,7 +45,7 @@ public:
 
 	Vector3 GetPosition()
 	{
-		return m_modelRender.GetPosition();
+		return m_position;
 	}
 
 	static size_t GetMaxInstanceCount(const char* name)

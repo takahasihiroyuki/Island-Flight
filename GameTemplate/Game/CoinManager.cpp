@@ -29,7 +29,9 @@ CoinManager::~CoinManager()
 
 void CoinManager::Update(const Aircraft& player)
 {
+	//コインが取られたかチェックする
 	CheckCoinPickup(player);
+	//コイン
 	ProcessCollectedCoins(player);
 }
 
@@ -90,32 +92,30 @@ void CoinManager::RegisterCoinInstancingModel()
 
 }
 
-std::vector<size_t> CoinManager::CheckCoinPickup(const Aircraft& player)
+bool CoinManager::CheckCoinPickup(const Aircraft& player)
 {
-	//ヒットしたコインのインデックスを格納する配列
-	std::vector<size_t> hitIndices;
-	hitIndices.reserve(m_coins.size());
+	bool isGet = false;
+
+	m_hitIndices.reserve(m_coins.size());
 	for (size_t i = 0; i < m_coins.size(); ++i) {
 		if (!m_coins[i]->IsActive()) continue;
-
-		Vector3 playerToCoinVector = player.GetPosition() - m_coins[i]->GetPosition();
+		Vector3 coinpos = m_coins[i]->GetPosition();
+		Vector3 playerToCoinVector = player.GetPosition() - coinpos;
 		float coinDist = playerToCoinVector.Length();
 		float radius = m_pickupRadius;
 		if (coinDist <= radius) {
-			hitIndices.push_back(i);
-
+			m_hitIndices.push_back(i);
+			isGet = true;
 		}
 	}
-	return hitIndices;
+
+	return isGet;
 }
 
 void CoinManager::ProcessCollectedCoins(const Aircraft& player)
 {
-	// 取得されたコインのインデックスを取得
-	std::vector<size_t> collectedCoinIndices = CheckCoinPickup(player);
-
 	// 見つかったコインを処理
-	for (size_t index : collectedCoinIndices) {
+	for (size_t index : m_hitIndices) {
 		Coin& coin = *m_coins[index];
 		//TODO:スコアを加算
 		m_scoreManager->AddScore(m_score);

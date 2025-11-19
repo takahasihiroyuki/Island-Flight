@@ -45,10 +45,11 @@ public:
 private:
 	/// <summary>
 	/// プレイヤーが取得したコインを判定する。
+	/// 取られたコインのインデックスを記録する。
 	/// </summary>
-	/// <param name="player">取得判定のためのプレイヤー</param>
-	/// <returns>取得されたコインのインデックス番号。</returns>
-	std::vector<size_t> CheckCoinPickup(const Aircraft& player);
+	/// <param name="player"></param>
+	/// <returns></returns>
+	bool CheckCoinPickup(const Aircraft& player);
 
 	/// <summary>
 	/// コインが取得されたときの処理。
@@ -57,10 +58,11 @@ private:
 	void ProcessCollectedCoins(const Aircraft& player);
 
 private:
-	float m_pickupRadius = 100.0f;		//コインの取得範囲
+	float m_pickupRadius = 2000.0f;		//コインの取得範囲
 	std::vector<Coin*> m_coins;
 	std::vector<Coin*> m_pendingCoins;	//
 	ScoreManager* m_scoreManager;
 	InstancingManager* m_instancingManager = nullptr;
+	std::vector<size_t> m_hitIndices;//取られたコインのインデックス
 	float m_score = 100.0f;
 };

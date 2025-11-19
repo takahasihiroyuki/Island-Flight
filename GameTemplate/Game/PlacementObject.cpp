@@ -7,7 +7,6 @@ std::unordered_map<std::string, bool>   PlacementObject::m_isInstancingTable{};
 
 bool PlacementObject::Start()
 {
-
 	//インスタンシングするか決める。
 	DecideInstancingUsage(m_modelName);
 	if (m_isInstancingTable[m_modelName])
