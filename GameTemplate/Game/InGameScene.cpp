@@ -61,9 +61,11 @@ void InGameScene::Update()
 
 	m_coinManager->Update(*m_aircraft);
 
-	m_skyCube->SetPosition(Vector3(m_position.x, 0.0f, m_position.z));
+	m_skyCube->SetPosition(g_camera3D->GetPosition());
 
 	g_camera3D->SetFar(100000);
+
+
 
 }
 
