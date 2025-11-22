@@ -16,6 +16,7 @@ void ResoltState::OnEnter()
 {
 	m_resultUI = std::make_unique<ResultUI>(m_context->scoreManager);
 	m_resultUI->Init();
+	m_resultUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("ResultUI", std::move(m_resultUI));
 
 }

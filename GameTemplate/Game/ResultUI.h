@@ -1,5 +1,7 @@
 #pragma once
 #include "UIScreen.h"
+
+class Timer;
 class ScoreManager;
 class ResultUI :public UIScreen
 {
@@ -10,7 +12,7 @@ public:
 	void Update()override;
 	void Render(RenderContext& rc)override;
 	void Init();
-	void Open() {};
+	void Open();
 	void Close();
 
 
@@ -21,11 +23,13 @@ private:
 	std::array< SpriteRender, 10> OnesSprite;
 	std::array< SpriteRender, 10> TensSprite;
 	std::array< SpriteRender, 10> HundredsSprite;
+	SpriteRender m_panel;
 	int m_displayOnesNum = 0;
 	int m_displayTensNum = 0;
 	int m_displayHundredsNum = 0;
 	int m_displayNumber = 0;//•\¦‚·‚é”š
 	std::array<const char*, 10> m_spritePaths;
+	Timer* m_timer;
 
 };
 
