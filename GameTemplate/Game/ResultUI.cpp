@@ -99,7 +99,6 @@ void ResultUI::Open()
 void ResultUI::Close()
 {
 	UIManager::GetInstance().UnregisterScreen("ResultUI");
-	DeleteGO(m_timer);
 }
 
 void ResultUI::ApplyScore(float score)

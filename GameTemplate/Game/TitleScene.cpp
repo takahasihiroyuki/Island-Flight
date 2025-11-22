@@ -24,7 +24,7 @@ void TitleScene::Render(RenderContext& rc)
 
 bool TitleScene::RequestChangeScene(SceneType& type)
 {
-	if (g_pad[0]->IsPress(enButtonA)) {
+	if (g_pad[0]->IsTrigger(enButtonA)) {
 		type = NEXT_SCENE;
 		return true;
 	}
