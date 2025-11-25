@@ -63,7 +63,7 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// ゲームオブジェクトをアクティブにする。
 		/// </summary>
-		void Activate()
+		virtual void Activate()
 		{
 			m_isActive = true;
 		}

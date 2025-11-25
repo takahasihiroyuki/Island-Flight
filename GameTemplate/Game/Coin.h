@@ -15,6 +15,7 @@ public:
 	Coin();
 	~Coin();
 	void OnStart() override {}
-	void OnInit()  override{}
+	void OnInit()  override {}
+	void OnUpdate() override;
 };
 

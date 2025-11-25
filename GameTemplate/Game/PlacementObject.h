@@ -23,7 +23,12 @@ public:
 				Vector3::One * 0.0000001f
 			);
 		}
+		m_physicsStaticObject.Release();
+	};
 
+	void Activate()override
+	{
+		CreatePhysicsObject();
 	};
 
 
@@ -145,5 +150,6 @@ public:
 	virtual void OnStart() override
 	{
 	}
-	virtual void Update() override;
+	virtual void Update() override final;
+	virtual void OnUpdate() {};
 };

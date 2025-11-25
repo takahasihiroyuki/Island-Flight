@@ -93,6 +93,7 @@ void StageMeshObject::Update()
 
 void ItemMeshObject::Update()
 {
+	OnUpdate();
 	//イン単シング描画するなら
 	if (m_isInstancingTable[m_modelName])
 	{

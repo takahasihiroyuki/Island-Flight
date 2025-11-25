@@ -42,6 +42,19 @@ public:
 	}
 
 	void RegisterCoinInstancingModel();
+
+	/// <summary>
+	/// プレイヤーから見たコインへのベクトルを取得する。
+	/// </summary>
+	/// <param name="playerPos"></param>
+	/// <param name="maxDistance"></param>
+	/// <param name="maxArrowCount">映す矢印の最大個数</param>
+	/// <returns></returns>
+	std::vector<Vector3> GetPlayerToCoinVecs(
+		const Vector3& playerPos,
+		float maxDistance,
+		size_t maxArrowCount
+	);
 private:
 	/// <summary>
 	/// プレイヤーが取得したコインを判定する。

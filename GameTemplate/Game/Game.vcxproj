@@ -227,6 +227,7 @@
     <ClCompile Include="Aircraft.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="CoinDirectionArrowUI.cpp" />
     <ClCompile Include="CoinManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -269,6 +270,7 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CameraTypes.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="CoinDirectionArrowUI.h" />
     <ClInclude Include="CoinManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameManager.h" />

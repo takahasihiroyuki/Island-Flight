@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <algorithm>
 #include "CoinManager.h"
 #include "Coin.h"
 #include "Aircraft.h"
@@ -90,6 +91,36 @@ void CoinManager::RegisterCoinInstancingModel()
 		);
 	}
 
+}
+
+std::vector<Vector3> CoinManager::GetPlayerToCoinVecs(const Vector3& playerPos, float maxDistance, size_t maxArrowCount)
+{
+	std::vector<Vector3> out;
+	out.reserve(min(m_coins.size(), maxArrowCount));// 再確保を防ぐため最大数分確保
+	float maxDistanceSq = maxDistance * maxDistance; // 距離の二乗で比較するため変換
+
+	for (auto& coin : m_coins)
+	{
+		if (!coin->IsActive()) continue;
+
+		Vector3 playerToCoin = coin->GetPosition() - playerPos;
+		if (playerToCoin.LengthSq() > maxDistanceSq) continue;
+		out.push_back(playerToCoin);
+	}
+
+	// 距離の近い順にソート
+	std::sort(out.begin(), out.end(),
+		[](const Vector3& a, const Vector3& b) {
+			return a.LengthSq() < b.LengthSq();// Lengthは重いので距離の二乗で比較
+		});
+
+	// 最大数を超えていたら遠いものから順に削る
+	if (out.size() > maxArrowCount)
+	{
+		out.resize(maxArrowCount);
+	}
+
+	return out;
 }
 
 bool CoinManager::CheckCoinPickup(const Aircraft& player)

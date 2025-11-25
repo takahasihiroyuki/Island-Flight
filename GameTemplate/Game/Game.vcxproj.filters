@@ -88,6 +88,9 @@
     <ClCompile Include="TitleUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="CoinDirectionArrowUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -170,6 +173,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="TitleUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CoinDirectionArrowUI.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

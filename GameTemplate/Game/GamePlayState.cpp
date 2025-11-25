@@ -4,10 +4,11 @@
 #include "Timer.h"
 #include "TimerUI.h"
 #include "UIManager.h"
+#include "CoinDirectionArrowUI.h"
 
 namespace
 {
-	constexpr float TIMELIMIT = 100;
+	constexpr float TIMELIMIT = 150;
 }
 
 GamePlayState::GamePlayState()
@@ -39,6 +40,11 @@ void GamePlayState::OnEnter()
 	m_timeUI->Init(m_timer);
 	m_timeUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("timerUI", std::move(m_timeUI));
+
+	m_coinArrowUI = std::make_unique<CoinDirectionArrowUI>(m_context->coinManager, m_context->aircraft);
+	m_coinArrowUI->Init();
+	m_coinArrowUI->SetDisplayed(true);
+	UIManager::GetInstance().RegisterScreen("coinArrowUI", std::move(m_coinArrowUI));
 
 }
 

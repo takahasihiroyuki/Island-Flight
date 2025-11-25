@@ -55,6 +55,7 @@ namespace nsK2EngineLow {
 
 		void OnDraw(RenderContext& rc)
 		{
+			if (!m_visible)return;
 			if (m_isFowardRender) {
 				m_frowardRenderModel.Draw(rc, m_maxInstance);
 				return;
@@ -259,6 +260,11 @@ namespace nsK2EngineLow {
 			return Matrix::Identity;
 		}
 
+		void SetVisible(bool isVisible)
+		{
+			m_visible = isVisible;
+		}
+
 
 	private:
 		/// <summary>
@@ -344,6 +350,7 @@ namespace nsK2EngineLow {
 		bool							m_isEnableInstancingDraw = false;			// インスタンシング描画が有効か	
 		StructuredBuffer				m_worldMatrixArraySB;						// ワールド行列の配列のストラクチャードバッファ。
 		std::unique_ptr<int[]>			m_instanceNoToWorldMatrixArrayIndexTable;	// インスタンス番号からワールド行列の配列のインデックスに変換するテーブル。
+		bool							m_visible = true;							// 表示・非表示
 	};
 }
 

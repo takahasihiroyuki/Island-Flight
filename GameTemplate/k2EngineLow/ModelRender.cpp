@@ -157,6 +157,8 @@ namespace nsK2EngineLow {
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
+		if (!m_visible)return;
+
 		if (m_isEnableInstancingDraw) {
 			m_worldMatrixArraySB.Update(m_worldMatrixArray.get());
 		}

@@ -1,4 +1,8 @@
 #pragma once
+/// <summary>
+/// UI‚Ì‰æ–Ê‚ÌŠî’êƒNƒ‰ƒX
+/// UI‚Í3Dƒ‚ƒfƒ‹‚Å‚àOK
+/// </summary>
 class UIScreen
 {
 public:

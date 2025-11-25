@@ -2,6 +2,7 @@
 #include"IInGameState.h"
 class Timer;
 class TimerUI;
+class CoinDirectionArrowUI;
 class GamePlayState :public IInGameState
 {
 public:
@@ -16,5 +17,6 @@ public:
 private:
 	Timer* m_timer = nullptr;
 	std::unique_ptr<TimerUI> m_timeUI;
+	std::unique_ptr<CoinDirectionArrowUI> m_coinArrowUI = nullptr;
 };
 

@@ -24,6 +24,7 @@ namespace nsK2EngineLow {
 
 	void SpriteRender::Draw(RenderContext& rc)
 	{
+		if (!m_isInit)return;
 		g_renderingEngine->AddSpriteRenderList(this);
 
 	}

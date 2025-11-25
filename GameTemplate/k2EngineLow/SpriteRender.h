@@ -9,6 +9,7 @@ namespace nsK2EngineLow {
 	class SpriteRender
 	{
 	public:
+
 		void Init(
 			const char* filePath,
 			const float width,
@@ -39,7 +40,13 @@ namespace nsK2EngineLow {
 		void Draw(RenderContext& rc);
 		void OnDraw(RenderContext& rc)
 		{
+			if (!m_isInit)return;
 			m_sprite.Draw(rc);
+		}
+
+		void SetVisible(bool isVisible)
+		{
+			m_isVisible = isVisible;
 		}
 
 	private:
@@ -50,6 +57,7 @@ namespace nsK2EngineLow {
 		Vector3		m_scale = Vector3::One;					//‘å‚«‚³
 		Quaternion	m_rotation = Quaternion::Identity;	//‰ñ“]
 		bool		m_isInit = false;
+		bool 		m_isVisible = true;
 
 	};
 }
