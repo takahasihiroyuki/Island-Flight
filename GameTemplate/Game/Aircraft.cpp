@@ -14,7 +14,6 @@ namespace
 	constexpr float MAX_ELEVATOR_ANGLE = 3.0f;
 	constexpr float MAX_RUDDER_ANGLE = 6.0f;
 
-
 	float DegToRad(float deg)
 	{
 		return deg * (3.1415f / 180.0f);

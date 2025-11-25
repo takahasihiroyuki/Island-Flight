@@ -191,6 +191,8 @@ bool Stage::Start()
 			//nameに対応する文字列を取得する。
 			std::string name = json["name"];
 
+			float scaleOffset = 15.0f;
+			Vector3 posOffset = Vector3::One*9;
 
 			//nameとtargetNameが等しいか調べる。
 			//findはO(1)で済む。
@@ -200,13 +202,13 @@ bool Stage::Start()
 				auto transform = ParseTransformComponents(json["Transform"]);
 
 				if (name == "Coin") {
-					Vector3 pos;
+					Vector3 pos = Vector3::Zero;
 					Quaternion rot;
 					Vector3 scale;
 					std::tie(pos, rot, scale) = transform;
-					pos.y *= 39 * 10; // ポジション
-					pos.x *= 39 * 10;
-					pos.z *= 39 * 10.0f;
+					pos.x = posOffset.x * 39; // ポジション
+					pos.y *= posOffset.y * 39;
+					pos.z = posOffset.z * 39;
 					scale *= 1 * 10; // スケール
 
 					m_coinManager->Spawn(pos, rot, scale);
@@ -222,10 +224,10 @@ bool Stage::Start()
 				Vector3 pos = std::get<0>(transform);
 				Quaternion rot = std::get<1>(transform);
 				Vector3 scale = std::get<2>(transform);
-				pos .y*= 39 *10; // ポジション
-				pos.x *= 39 * 10;
-				pos.z *= 39 * 10.0f;
-				scale *= 1*10; // スケール
+				pos.x *= posOffset.x * 39; // ポジション
+				pos.y *= posOffset.y * 39;
+				pos.z *= posOffset.z * 39;
+				scale *= 1 * 10; // スケール
 				object->Init(paths[name].c_str(), pos, rot, scale, name.c_str());
 
 				return true;

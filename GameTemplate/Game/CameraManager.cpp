@@ -41,6 +41,30 @@ void CameraManager::Update()
 	g_camera3D->SetPosition(m_currentState.pos);
 	g_camera3D->SetTarget(m_currentState.targetPos);
 
+	//m_rotation.AddRotationY(g_pad[0]->GetRStickXF() * 0.05f);
+	//m_targetRotationX.AddRotationX(g_pad[0]->IsPress(enButtonA) * 0.05f);
+	//m_targetRotationX.AddRotationX(-g_pad[0]->IsPress(enButtonB) * 0.05f);
+	////m_rotation.AddRotationX(g_pad[0]->GetRStickYF() * 0.05f);
+
+	//float posoffsetX = g_pad[0]->GetLStickYF() * 10.0f;
+	//float posoffsetZ = -g_pad[0]->GetLStickXF() * 10.0f;
+	//float posoffsetY = g_pad[0]->GetRStickYF() * 10.0f;
+
+	//Vector3 moveXZ = { posoffsetX ,posoffsetY,posoffsetZ };
+	//m_rotation.Apply(moveXZ);
+
+
+	//m_cameraPosition += moveXZ;
+
+	//Vector3 target{ 100.0f,0.0f,0.0f };
+
+	//m_rotation.Apply(target);
+	////m_targetRotationX.Apply(target);
+
+	//g_camera3D->SetPosition(m_cameraPosition * 100.0f);
+	//g_camera3D->SetTarget(m_cameraPosition * 100.f + target);
+
+
 }
 
 void CameraManager::SetTargetInfo(const TargetSnapshot& info)

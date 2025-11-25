@@ -109,6 +109,17 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstanci
 
     psIn.uv = vsIn.uv;
     
+    // 法線や接ベクトル、従ベクトルがNaNになっていたら0ベクトルにする。
+    if (any(isnan(psIn.tangent)))
+    {
+        psIn.tangent.xyz = 0;
+    }
+    
+    if (any(isnan(psIn.biNormal)))
+    {
+        psIn.biNormal.xyz = 0;
+    }
+    
     return psIn;
 }
 
@@ -146,7 +157,7 @@ SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
 
         
     psOut.normal.xyz = CalcNormal(psIn);
-    normalize(psIn.normal);
+    normalize(psOut.normal);
 
     
     
@@ -186,13 +197,13 @@ SPSOut PSNormalMain(SPSIn psIn) : SV_Target0
 float3 CalcNormal(SPSIn psIn)
 {
     // 法線マップからタンジェントスペースの法線をサンプリングする
-    float3 localNormal = g_normalMap.Sample(g_sampler, psIn.uv).xyz;
-    localNormal = (localNormal - 0.5f) * 2.0f;
+    float3 normalMap = g_normalMap.Sample(g_sampler, psIn.uv).xyz;
+    normalMap = (normalMap - 0.5f) * 2.0f;
     
     // タンジェントスペースの法線をワールドスペースに変換する
-    float3 normal = psIn.tangent * localNormal.x + psIn.biNormal * localNormal.y + psIn.normal * localNormal.z;
+    float3 normal = (psIn.tangent * normalMap.x * 0) + (psIn.biNormal * normalMap.y * 0) + (psIn.normal * normalMap.z);
     
-    // 出力は0～1に丸められてしまいマイナスの値が失われてしまうので-1～1を0～1に変換する
+    //// 出力は0～1に丸められてしまいマイナスの値が失われてしまうので-1～1を0～1に変換する
     normal = (normal / 2.0f) + 0.5f;
    
     normal = normalize(normal);

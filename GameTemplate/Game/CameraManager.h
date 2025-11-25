@@ -39,5 +39,10 @@ private:
 	CameraState m_currentState;
 	CameraState m_prevState;			// ブレンド用
 	ICameraController* m_activeController;
+
+	Vector3 m_cameraTarget;			// カメラ注視点
+	Quaternion m_rotation;			// 回転
+	Quaternion m_targetRotationX;	// 目標回転
+	Vector3 m_cameraPosition = Vector3::Zero;		// カメラ座標
 };
 

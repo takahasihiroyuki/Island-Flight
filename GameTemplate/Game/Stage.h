@@ -5,7 +5,9 @@ class CoinManager;
 class Stage :public IGameObject
 {
 public:
-	Stage() {};
+	Stage() {
+		float debug = 0;
+	};
 	~Stage() {
 		DeleteGO(m_instancingManager);
 

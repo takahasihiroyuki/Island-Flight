@@ -22,11 +22,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
+	// デバッグワイヤーフレーム描画を有効にする。
+	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+
 	GameManager* gameManager = NewGO<GameManager>(0);
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 

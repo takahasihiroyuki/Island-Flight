@@ -161,6 +161,7 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::InitDefferedLightingSprite()
 	{
+		BeginGPUEvent("DefferedLightingSprite");
 		//ディファードライティングを行うためのスプライトを初期化
 		SpriteInitData spriteInitData;
 		spriteInitData.m_width = FRAME_BUFFER_W;
@@ -222,6 +223,7 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::RenderToGBuffer(RenderContext& rc)
 	{
+		BeginGPUEvent("RenderToGBuffer");
 		// レンダリングターゲットをG-Bufferに変更して書き込む
 		RenderTarget* rts[] = {
 			&m_gBuffer[enGBufferAlbedoDepth]   // 0番目のレンダリングターゲット

@@ -15,7 +15,6 @@ namespace
 
 InGameScene::InGameScene()
 {
-	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 }
 
 InGameScene::~InGameScene()
