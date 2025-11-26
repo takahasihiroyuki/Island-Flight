@@ -64,8 +64,6 @@ void InGameScene::Update()
 
 	g_camera3D->SetFar(100000);
 
-
-
 }
 
 void InGameScene::Render(RenderContext& rc)

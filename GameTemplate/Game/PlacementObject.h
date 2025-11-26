@@ -18,17 +18,12 @@ public:
 			m_instancingManager->UpdateInstancingData(
 				m_InstanceNumber,
 				m_modelName,
-				Vector3(1000000.0f, -1000000.0f, 0),
+				Vector3(10000.0f, -10000.0f, 0),
 				m_rotation,
 				Vector3::One * 0.0000001f
 			);
 		}
 		m_physicsStaticObject.Release();
-	};
-
-	void Activate()override
-	{
-		CreatePhysicsObject();
 	};
 
 
@@ -48,7 +43,7 @@ public:
 		float debug = 0;
 	}
 
-	Vector3 GetPosition()
+	Vector3 GetPosition() const
 	{
 		return m_position;
 	}

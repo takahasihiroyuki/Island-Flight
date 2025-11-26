@@ -23,7 +23,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
 	// デバッグワイヤーフレーム描画を有効にする。
-	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 	GameManager* gameManager = NewGO<GameManager>(0);
 

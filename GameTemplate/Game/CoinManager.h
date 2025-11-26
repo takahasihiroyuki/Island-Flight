@@ -55,6 +55,13 @@ public:
 		float maxDistance,
 		size_t maxArrowCount
 	);
+
+	/// <summary>
+	/// 最初のコインをアクティブにする。
+	/// コインを配置したら呼び出す。
+	/// </summary>
+	void ActivateInitialCoins();
+
 private:
 	/// <summary>
 	/// プレイヤーが取得したコインを判定する。
@@ -69,6 +76,8 @@ private:
 	/// </summary>
 	/// <param name="player"></param>
 	void ProcessCollectedCoins(const Aircraft& player);
+
+	void SelectActive(const Vector3& playerPos, const Vector3& playerForward);
 
 private:
 	float m_pickupRadius = 2000.0f;		//コインの取得範囲
