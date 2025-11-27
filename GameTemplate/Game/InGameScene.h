@@ -26,6 +26,7 @@ public:
 
 private:
 	void InitInGameContext();
+	void PlayerInput();
 private:
 	Vector3 m_position = Vector3{ 0.0,30.0f,100.0f };				// À•W
 	Vector3 m_cameraPosition = Vector3::Zero;		// ƒJƒƒ‰À•W

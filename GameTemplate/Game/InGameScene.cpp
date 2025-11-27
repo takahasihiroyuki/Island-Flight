@@ -21,7 +21,6 @@ InGameScene::~InGameScene()
 {
 	DeleteGO(m_stage);
 	DeleteGO(m_ocean);
-	DeleteGO(m_aircraft);
 	DeleteGO(m_scoreManager);
 	DeleteGO(m_inGameStateManeger);
 	DeleteGO(m_coinManager);
@@ -39,7 +38,7 @@ bool InGameScene::Start()
 	m_skyCube->SetType((EnSkyCubeType)enSkyCubeType_Day);
 
 	m_ocean = NewGO<Ocean>(0);
-	m_aircraft = NewGO<Aircraft>(0, "aircraft");
+	m_aircraft = new Aircraft();
 	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", INIT_AIRCRAFT);
 	m_coinManager = NewGO<CoinManager>(0, "coinManager");
 	m_scoreManager = NewGO<ScoreManager>(0, "ScoreManager");
@@ -52,11 +51,15 @@ bool InGameScene::Start()
 	m_inGameStateManeger = NewGO<InGameStateManager>(0);
 	m_inGameStateManeger->SetContext(m_context);
 
+	m_aircraft->Start();
 	return true;
 }
 
 void InGameScene::Update()
 {
+	PlayerInput();
+
+	m_aircraft->Update();
 
 	m_coinManager->Update(*m_aircraft);
 
@@ -69,6 +72,7 @@ void InGameScene::Update()
 void InGameScene::Render(RenderContext& rc)
 {
 	m_skyCube->Render(rc);
+	m_aircraft->Render(rc);
 }
 
 bool InGameScene::RequestChangeScene(SceneType& type)
@@ -87,4 +91,23 @@ void InGameScene::InitInGameContext()
 	m_context.aircraft = m_aircraft;
 	m_context.coinManager = m_coinManager;
 	m_context.scoreManager = m_scoreManager;
+}
+
+void InGameScene::PlayerInput()
+{
+	bool mainLeftInput = -g_pad[0]->IsPress(enButtonLB1);
+	bool mainRightInput = g_pad[0]->IsPress(enButtonRB1);
+	bool tailInput = g_pad[0]->GetLStickYF();
+	bool verticalInput = g_pad[0]->GetLStickXF();
+	bool isBoostOn = g_pad[0]->IsPress(enButtonA);
+	bool isThrottleCut = g_pad[0]->IsPress(enButtonB);
+
+	m_aircraft->SetControlInputs(
+		mainLeftInput,
+		mainRightInput,
+		tailInput,
+		verticalInput,
+		isBoostOn,
+		isThrottleCut
+	);
 }

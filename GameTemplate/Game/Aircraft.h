@@ -12,16 +12,7 @@ public:
 	/// <summary>
 	/// 推力の更新
 	/// </summary>
-	void UpdateThrustForce()
-	{
-		//入力値を非線形にして推力に反映。
-		m_thrust = std::pow(m_throttleInput, 2) * m_maxThrust;
-
-		// 推力ベクトルを計算（機体の前方方向に推力をかける）
-		m_thrustForce = m_WoldeThrustDir * m_thrust;
-	}
-
-	void SetThrottleInput(bool input);
+	void UpdateThrustForce();
 
 	/// <summary>
 	/// 推力の方向を更新
@@ -35,16 +26,30 @@ public:
 
 	};
 
+	/// <summary>
+	/// 加速ブースト入力設定
+	/// </summary>
+	/// <param name="isPressed"></param>
+	void SetBoostInput(bool isPressed) { m_isBoostOn = isPressed; }
+
+	/// <summary>
+	/// エンジンを止めるスロットルカット入力設定
+	/// </summary>
+	/// <param name="isPressed"></param>
+	void SetThrottleCut(bool isPressed) { m_isThrottleCut = isPressed; }
+
 	const Vector3& GetThrustForce() const { return m_thrustForce; }
 
 private:
-	float m_thrust = 0.0f;						// 現在の推力
-	float m_maxThrust = 5000.0f;				// 最大推力
-	float m_throttleInput = 0.0f;				// スロットル入力
-	float m_holdTime = 0.0f;					// 時間保持
+	float m_maxThrust = 2000.0f;				// 最大推力
+	float m_throttleRatio = 0.0f;				// スロットル割合
+	float m_throttleSmoothValue = 0.0f;			// 推力を滑らかにするための値
+	float m_boostMultiplier = 2.0f;				// ブースト時の推力倍率
 	Vector3 m_thrustForce = Vector3::Zero;		// 推力ベクトル
 	Vector3 m_localThrustDir = Vector3::AxisZ;	// 機体前方方向（初期値）
 	Vector3 m_WoldeThrustDir = m_localThrustDir;// ワールド座標での推力方向
+	bool m_isBoostOn = false;					// ブーストがかかっているか
+	bool m_isThrottleCut = false;				// スロットルカットがかかっているか
 };
 
 enum class WingType {
@@ -55,16 +60,16 @@ enum class WingType {
 	Count
 };
 
-class Aircraft : public IGameObject
+class Aircraft
 {
 public:
 	Aircraft();
 	~Aircraft() {};
-	bool Start() override;
+	bool Start();
 	void fly();
 	void Init(const char* filePath, Vector3 initPos);
-	void Update() override;
-	void Render(RenderContext& rc) override;
+	void Update();
+	void Render(RenderContext& rc);
 
 	Vector3 GetPosition() const { return m_position; }
 	Vector3 GetLinearVelocity()const { return m_linearVelocity; }
@@ -76,6 +81,14 @@ public:
 	Quaternion GetOrientation()const {
 		return m_state.orientation;
 	}
+	void SetControlInputs(
+		float aileronInput,
+		float mainRightInput,
+		float tailInput,
+		float verticalInput,
+		bool isBoostOn,
+		bool isThrottleCut
+	);
 
 
 private:
@@ -117,6 +130,8 @@ private:
 	Vector3 ComputeGravity() {
 		const float mass = m_mass;
 		const Vector3 gravity(0.0f, -9.81f, 0.0f);
+		//const Vector3 gravity(0.0f, 0.0f, 0.0f);
+
 		return gravity * mass;
 	}
 	////////////力計算系///////////////////

@@ -4,15 +4,17 @@
 
 namespace
 {
+	const Vector3 MODEL_SCALE = Vector3(0.5f, 0.5f, 0.5f); // モデルのスケール
+
 	constexpr float MAX_THROTLEINPUT = 1.0f; // 最大推力
 	constexpr float CAPSELLE_RADIUS = 100.0f; // カプセルコライダーの半径
 	constexpr float CAPSELLE_HEIGHT = 10.0f; // カプセルコライダーの高さ
 
 	// 各操縦面の最大操舵角度（度数法）
-	constexpr float MAX_LEFT_AILERON_ANGLE = 3.0f;
-	constexpr float MAX_RIGHT_AILERON_ANGLE = 3.0f;
-	constexpr float MAX_ELEVATOR_ANGLE = 3.0f;
-	constexpr float MAX_RUDDER_ANGLE = 6.0f;
+	constexpr float MAX_LEFT_AILERON_ANGLE = 5.0f;
+	constexpr float MAX_RIGHT_AILERON_ANGLE = 5.0f;
+	constexpr float MAX_ELEVATOR_ANGLE = 3.0f;//上下回転
+	constexpr float MAX_RUDDER_ANGLE = 6.0f;// 左右回転
 
 	float DegToRad(float deg)
 	{
@@ -22,7 +24,7 @@ namespace
 
 Aircraft::Aircraft()
 {
-	
+
 }
 bool Aircraft::Start()
 {
@@ -35,6 +37,8 @@ void Aircraft::Init(const char* filePath, Vector3 initPos)
 
 	// モデルの初期化
 	m_model.Init(filePath, nullptr, 0, enModelUpAxisZ, false);
+	m_model.SetScale(MODEL_SCALE);
+	m_model.Update();
 
 	m_characterController.Init(CAPSELLE_RADIUS, CAPSELLE_HEIGHT, m_position);
 
@@ -93,6 +97,16 @@ void Aircraft::Update()
 void Aircraft::Render(RenderContext& rc)
 {
 	m_model.Draw(rc);
+}
+void Aircraft::SetControlInputs(float mainLeftInput, float mainRightInput, float tailInput, float verticalInput, bool isBoostOn, bool isThrottleCut)
+{
+	m_wings[static_cast<int>(WingType::MainLeft)]->SetControlInput(mainLeftInput);
+	m_wings[static_cast<int>(WingType::MainRight)]->SetControlInput(mainRightInput);
+	m_wings[static_cast<int>(WingType::Tail)]->SetControlInput(tailInput);
+	m_wings[static_cast<int>(WingType::Vertical)]->SetControlInput(verticalInput);
+
+	m_engine->SetBoostInput(isBoostOn);
+	m_engine->SetThrottleCut(isThrottleCut);
 }
 void Aircraft::InitLiftingSurface(
 	WingType wingsType,
@@ -165,8 +179,8 @@ void Aircraft::InitAllLiftingSurfaces()
 
 void Aircraft::ApplyControlInputs()
 {
-	m_wings[static_cast<int>(WingType::MainLeft)]->SetControlInput(g_pad[0]->GetRStickXF());
-	m_wings[static_cast<int>(WingType::MainRight)]->SetControlInput(g_pad[0]->GetRStickXF());
+	m_wings[static_cast<int>(WingType::MainLeft)]->SetControlInput(-g_pad[0]->IsPress(enButtonLB1));
+	m_wings[static_cast<int>(WingType::MainRight)]->SetControlInput(g_pad[0]->IsPress(enButtonRB1));
 	m_wings[static_cast<int>(WingType::Tail)]->SetControlInput(g_pad[0]->GetLStickYF());
 	m_wings[static_cast<int>(WingType::Vertical)]->SetControlInput(g_pad[0]->GetLStickXF());
 }
@@ -178,18 +192,16 @@ void Aircraft::Move()
 
 	AddLinearVelocity(((force / m_mass)) * g_gameTime->GetFrameDeltaTime());
 
+	Vector3 debug = Vector3::Zero;
 	m_position = m_characterController
 		.Execute(
 			m_linearVelocity,
 			g_gameTime->GetFrameDeltaTime()
 		);
-
-
 }
 
 Vector3 Aircraft::ComputeForce()
 {
-	m_engine->SetThrottleInput(true/*g_pad[0]->IsPress(enButtonA)*/);
 	m_engine->UpdateThrustForce();
 
 	Vector3 thrust = m_engine->GetThrustForce();
@@ -201,10 +213,6 @@ Vector3 Aircraft::ComputeForce()
 		wingsForce += m_wings[i]->GetForce();
 		//}
 	}
-
-	Vector3 debugWing0 = m_wings[0]->GetForce();
-	Vector3 debugWing1 = m_wings[1]->GetForce();
-	Vector3 debug2 = m_wings[0]->GetForce() + m_wings[1]->GetForce();
 
 	Vector3 force = thrust + wingsForce;
 	force += ComputeGravity();
@@ -278,20 +286,37 @@ Vector3 Aircraft::ComputeTotalMomentWorld()
 	return totalMomentWorld;
 }
 
-void Engine::SetThrottleInput(bool input)
+void Engine::UpdateThrustForce()
 {
+	float deltaTime = g_gameTime->GetFrameDeltaTime();
+	float thrustScale = 0;//推力の大きさ
 
-	float delataTime = g_gameTime->GetFrameDeltaTime();
-
-	if (input)
-		m_holdTime += delataTime;
+	//エンジンがかかっているときにスロットルを上げる。
+	if (!m_isThrottleCut)
+		m_throttleSmoothValue += deltaTime;
 	else
-		m_holdTime -= delataTime;
+		m_throttleSmoothValue -= deltaTime;
 
-	if (m_holdTime <= 0)				m_holdTime = 0;
-	if (m_holdTime >= MAX_THROTLEINPUT)	m_holdTime = MAX_THROTLEINPUT;
+	if (m_throttleSmoothValue <= 0)m_throttleSmoothValue = 0;
+	if (m_throttleSmoothValue >= MAX_THROTLEINPUT)m_throttleSmoothValue = MAX_THROTLEINPUT;
+
+	if (m_isThrottleCut) {
+		thrustScale = 0.0f;
+		m_thrustForce = m_WoldeThrustDir * thrustScale;
+		return;
+	}
+
+	m_throttleRatio = m_throttleSmoothValue / MAX_THROTLEINPUT;
 
 
-	m_throttleInput = m_holdTime / MAX_THROTLEINPUT;
+	//入力値を非線形にして推力に反映。
+	thrustScale = std::pow(m_throttleRatio, 2) * m_maxThrust;
 
+	if (m_isBoostOn)
+	{
+		thrustScale *= m_boostMultiplier;
+	}
+
+	// 推力ベクトルを計算（機体の前方方向に推力をかける）
+	m_thrustForce = m_WoldeThrustDir * thrustScale;
 }
