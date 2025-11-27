@@ -291,6 +291,7 @@
     <ClInclude Include="SceneStateContext.h" />
     <ClInclude Include="SceneType.h" />
     <ClInclude Include="ScoreManager.h" />
+    <ClInclude Include="SoundID.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SpringFollowController.h" />
     <ClInclude Include="Stage.h" />

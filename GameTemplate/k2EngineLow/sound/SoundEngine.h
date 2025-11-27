@@ -86,6 +86,14 @@ namespace nsK2EngineLow {
 			m_listener.OrientTop.z = up.z;
 		}
 		/// <summary>
+		/// 3Dサウンドの距離スケールを設定。
+		/// </summary>
+		/// <param name="scale"></param>
+		void Set3DSoundDistanceScale(float scale)
+		{
+			m_3dSoundDistanceScale = scale;
+		}
+		/// <summary>
 		/// XAudio2のソースボイスを追加。
 		/// </summary>
 		/// <param name="waveFile">波形データ。</param>
@@ -141,6 +149,7 @@ namespace nsK2EngineLow {
 		std::list<SoundSource*>		m_3dSoundSource;					//3Dサウンドのサウンドソース。
 		X3DAUDIO_CONE				m_emitterCone;
 		WaveFileBank				m_waveFileBank;						//波形データのバンク。
+		float						m_3dSoundDistanceScale = 1.0f;		//3Dサウンドの距離スケール。KDS
 	};
 
 	extern SoundEngine* g_soundEngine;	//TKエンジン。

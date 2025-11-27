@@ -133,6 +133,7 @@ namespace nsK2EngineLow {
 				m_sourceVoice->SetFrequencyRatio(ratio);
 			}
 		}
+
 		IXAudio2SourceVoice* GetXAudio2SourceVoice()
 		{
 			return m_sourceVoice;

@@ -187,13 +187,12 @@ void CoinManager::ProcessCollectedCoins(const Aircraft& player)
 	// 見つかったコインを処理
 	for (size_t index : m_hitIndices) {
 		Coin& coin = *m_coins[index];
-		//TODO:スコアを加算
+		//スコアを加算
 		m_scoreManager->AddScore(m_score);
-		//TODO:エフェクト
-		//TODO:効果音
+		//コイン取得時のエフェクト
+		m_coins[index]->PlayCollectEffects();
 
-
-				//アクティブじゃないコインを1つ選んでアクティブにする
+		//アクティブじゃないコインを1つ選んでアクティブにする
 		SelectActive(player.GetPosition(), player.GetLinearVelocity());
 
 		m_coins[index]->Deactivate();

@@ -9,6 +9,11 @@ namespace
 	const SceneType NEXT_SCENE = SceneType::InGame;
 }
 
+TitleScene::~TitleScene()
+{
+	DeleteGO(m_titleBGM);
+}
+
 bool TitleScene::Start()
 {
 	return true;
@@ -39,9 +44,15 @@ void TitleScene::Enter()
 	m_titleUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("TitleUI", std::move(m_titleUI));
 
+	//BGM
+	m_titleBGM = NewGO<SoundSource>(0);
+	m_titleBGM->Init(static_cast<int>(SoundID::enTitleBGM));
+	m_titleBGM->Play(true);
+
 }
 
 void TitleScene::Exit()
 {
 	UIManager::GetInstance().HideScreen("TitleUI");
+	m_titleBGM->Stop();
 }

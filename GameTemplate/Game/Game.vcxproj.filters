@@ -178,5 +178,6 @@
     <ClInclude Include="CoinDirectionArrowUI.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="SoundID.h" />
   </ItemGroup>
 </Project>

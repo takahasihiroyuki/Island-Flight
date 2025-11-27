@@ -8,7 +8,7 @@
 
 namespace
 {
-	constexpr float TIMELIMIT = 150;
+	constexpr float TIMELIMIT = 1;
 }
 
 GamePlayState::GamePlayState()
@@ -19,6 +19,7 @@ GamePlayState::~GamePlayState()
 {
 	DeleteGO(m_timer);
 	m_timeUI.reset();
+	DeleteGO(m_gamePlayBGM);
 }
 
 void GamePlayState::OnEnter()
@@ -46,6 +47,10 @@ void GamePlayState::OnEnter()
 	m_coinArrowUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("coinArrowUI", std::move(m_coinArrowUI));
 
+	//BGM
+	m_gamePlayBGM = NewGO<SoundSource>(0);
+	m_gamePlayBGM->Init(static_cast<int>(SoundID::enGamePlayBGM));
+	m_gamePlayBGM->Play(true);
 }
 
 void GamePlayState::Update()
@@ -63,6 +68,7 @@ void GamePlayState::Exit()
 {
 	UIManager::GetInstance().HideScreen("timerUI");
 	UIManager::GetInstance().HideScreen("coinArrowUI");
+	m_gamePlayBGM->Stop();
 }
 
 bool GamePlayState::RequestChangeState(InGameStateType& type)

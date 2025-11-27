@@ -14,4 +14,5 @@ public:
 
 private:
 	std::unique_ptr<ResultUI> m_resultUI;
+	SoundSource* m_resultEnterSE = nullptr;
 };

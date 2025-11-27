@@ -6,7 +6,7 @@ class TitleScene :public IScene
 {
 public:
 	TitleScene() {};
-	~TitleScene() {};
+	~TitleScene();
 
 	bool Start() override;
 	void Update() override;
@@ -18,5 +18,6 @@ public:
 
 private:
 	std::unique_ptr<TitleUI> m_titleUI;
+	SoundSource* m_titleBGM = nullptr;
 };
 

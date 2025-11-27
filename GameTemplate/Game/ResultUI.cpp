@@ -29,18 +29,33 @@ namespace
 
 ResultUI::~ResultUI()
 {
-	if (!m_timer->IsDead())	DeleteGO(m_timer);
-	if (!m_timer)delete(m_timer);
+	DeleteGO(m_timer);
+	DeleteGO(m_countUpSE);
 }
 
 void ResultUI::Update()
 {
 	//スコアを時間でカウントアップさせる。
-
 	float t = m_timer->GetElapsedTime();
 	float score = m_scoreManager->GetScore();
 
-	if (t > 1.0f) t = 1.0f;
+	//スコアが0のとき効果音停止
+	if (score == 0)
+	{
+		m_countUpSE->Stop();
+	}
+
+	if (t > 1.0f)
+	{
+		t = 1.0f;
+		//効果音停止
+		if (m_countUpSE->IsPlaying())
+		{
+			m_countUpSE->Stop();
+		}
+	}
+
+	//補完計算
 	float displayScore = Lerp(0, score, t);
 
 	//スコアを適用
@@ -91,14 +106,19 @@ void ResultUI::Init()
 
 void ResultUI::Open()
 {
-	m_timer = NewGO<Timer>(0);
 	//タイマーを動かす
+	m_timer = NewGO<Timer>(0);
 	m_timer->SetRunning(true);
+
+	m_countUpSE = NewGO<SoundSource>(0);
+	m_countUpSE->Init(static_cast<int>(SoundID::enCountUpSE));
+	m_countUpSE->Play(false);
 }
 
 void ResultUI::Close()
 {
 	UIManager::GetInstance().UnregisterScreen(GetName());
+	m_countUpSE->Stop();
 }
 
 void ResultUI::ApplyScore(float score)

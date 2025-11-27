@@ -90,7 +90,7 @@ namespace nsK2EngineLow {
 		if (FAILED(hr = m_xAudio2->CreateMasteringVoice(&m_masteringVoice)))
 		{
 			Release();
-			K2_LOG( "Faild CreateMasteringVoice");
+			K2_LOG("Faild CreateMasteringVoice");
 			return;
 		}
 
@@ -228,7 +228,8 @@ namespace nsK2EngineLow {
 			vel.Set(m_listener.Position);
 			vel.Subtract(m_listenerPosition, vel);
 			vel.Div(deltaTime);
-			m_listenerPosition.CopyTo(m_listener.Position);
+			Vector3 scaledListenerPos = m_listenerPosition * m_3dSoundDistanceScale;
+			scaledListenerPos.CopyTo(m_listener.Position);
 			vel.CopyTo(m_listener.Velocity);
 		}
 		DWORD dwCalcFlags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER
@@ -283,8 +284,10 @@ namespace nsK2EngineLow {
 			emitter.CurveDistanceScaler = 14.0f;
 			emitter.DopplerScaler = 1.0f;
 
-			soundSource->GetPosition().CopyTo(emitter.Position);
-			soundSource->GetVelocity().CopyTo(emitter.Velocity);
+			Vector3 emitterPos = soundSource->GetPosition() * m_3dSoundDistanceScale;
+			emitterPos.CopyTo(emitter.Position);
+			Vector3 emitterVel = soundSource->GetVelocity() * m_3dSoundDistanceScale;
+			emitterVel.CopyTo(emitter.Velocity);
 
 			if (m_fUseInnerRadius) {
 				emitter.InnerRadius = 2.0f;

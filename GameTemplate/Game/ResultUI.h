@@ -30,6 +30,7 @@ private:
 	int m_displayNumber = 0;//•\¦‚·‚é”š
 	std::array<const char*, 10> m_spritePaths;
 	Timer* m_timer;
+	SoundSource* m_countUpSE;
 
 };
 

@@ -18,5 +18,6 @@ private:
 	Timer* m_timer = nullptr;
 	std::unique_ptr<TimerUI> m_timeUI;
 	std::unique_ptr<CoinDirectionArrowUI> m_coinArrowUI = nullptr;
+	SoundSource* m_gamePlayBGM = nullptr;
 };
 
