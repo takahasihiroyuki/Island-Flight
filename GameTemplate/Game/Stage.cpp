@@ -10,7 +10,11 @@
 #include "PlacementObject.h"
 
 
-namespace {
+namespace
+{
+	//scale:pos=1:39がベスト
+	constexpr float OBJECT_SCALE_OFFSET = 10.0f / 5.0f;
+	constexpr float OBJECT_POS_OFFSET = 390.0f / 5.0f;
 
 	//各オブジェクトごとに objectNames を線形探索すると全体で O(N²) になるため
 	//高速に存在判定できる unordered_set にしておく。
@@ -191,8 +195,8 @@ bool Stage::Start()
 			//nameに対応する文字列を取得する。
 			std::string name = json["name"];
 
-			float scaleOffset = 15.0f;
-			Vector3 posOffset = Vector3::One*9;
+			float scaleOffset = 10.0f / 5.0f;
+			float posOffset = 390 / 5;
 
 			//nameとtargetNameが等しいか調べる。
 			//findはO(1)で済む。
@@ -206,10 +210,8 @@ bool Stage::Start()
 					Quaternion rot;
 					Vector3 scale;
 					std::tie(pos, rot, scale) = transform;
-					pos.x *= posOffset.x * 39; // ポジション
-					pos.y *= posOffset.y * 39;
-					pos.z *= posOffset.z * 39;
-					scale *= 1 * 10; // スケール
+					pos *= OBJECT_POS_OFFSET; // ポジション
+					scale *= OBJECT_SCALE_OFFSET; // スケール
 
 					m_coinManager->Spawn(pos, rot, scale);
 					return true;
@@ -224,10 +226,8 @@ bool Stage::Start()
 				Vector3 pos = std::get<0>(transform);
 				Quaternion rot = std::get<1>(transform);
 				Vector3 scale = std::get<2>(transform);
-				pos.x *= posOffset.x * 39; // ポジション
-				pos.y *= posOffset.y * 39;
-				pos.z *= posOffset.z * 39;
-				scale *= 1 * 10; // スケール
+				pos *= OBJECT_POS_OFFSET; // ポジション
+				scale *= OBJECT_SCALE_OFFSET; // スケール
 				object->Init(paths[name].c_str(), pos, rot, scale, name.c_str());
 
 				return true;

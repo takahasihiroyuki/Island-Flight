@@ -27,6 +27,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	GameManager* gameManager = NewGO<GameManager>(0);
 
+	// カメラの視野角を設定。
+	g_camera3D->SetViewAngle(0.5);
+
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{

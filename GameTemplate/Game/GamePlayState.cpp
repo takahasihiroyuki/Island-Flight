@@ -62,6 +62,7 @@ void GamePlayState::Update()
 void GamePlayState::Exit()
 {
 	UIManager::GetInstance().HideScreen("timerUI");
+	UIManager::GetInstance().HideScreen("coinArrowUI");
 }
 
 bool GamePlayState::RequestChangeState(InGameStateType& type)

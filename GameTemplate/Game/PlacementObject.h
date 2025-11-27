@@ -3,6 +3,7 @@
 class PlacementObject : public IGameObject
 {
 public:
+	virtual ~PlacementObject();
 	virtual bool Start() override final;
 	virtual void Update() override;
 	virtual void Render(RenderContext& rc) override;

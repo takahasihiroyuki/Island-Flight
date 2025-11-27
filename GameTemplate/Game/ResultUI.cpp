@@ -98,7 +98,7 @@ void ResultUI::Open()
 
 void ResultUI::Close()
 {
-	UIManager::GetInstance().UnregisterScreen("ResultUI");
+	UIManager::GetInstance().UnregisterScreen(GetName());
 }
 
 void ResultUI::ApplyScore(float score)

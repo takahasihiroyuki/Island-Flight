@@ -5,7 +5,7 @@
 #include "UIManager.h"
 
 namespace {
-	static const Vector3 ARROW_SCALE = Vector3{ 5,5,5 };
+	static const Vector3 ARROW_SCALE = Vector3{ 2,2,2 };
 }
 
 void CoinDirectionArrowUI::Update()
@@ -69,7 +69,7 @@ void CoinDirectionArrowUI::Open()
 
 void CoinDirectionArrowUI::Close()
 {
-	UIManager::GetInstance().UnregisterScreen("coinArrowUI");
+	UIManager::GetInstance().UnregisterScreen(GetName());
 }
 
 Vector3 CoinDirectionArrowUI::CalcArrowPosOffsetFromDir(const Vector3& playerToCoinDir, float radius)

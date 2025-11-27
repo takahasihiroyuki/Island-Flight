@@ -5,6 +5,12 @@ std::unordered_map<std::string, size_t> PlacementObject::m_maxInstance;
 std::unordered_map<std::string, bool>   PlacementObject::m_isInstancingTable{};
 
 
+PlacementObject::~PlacementObject()
+{
+	m_maxInstance.clear();
+	m_isInstancingTable.clear();
+}
+
 bool PlacementObject::Start()
 {
 	//インスタンシングするか決める。

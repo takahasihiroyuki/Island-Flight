@@ -17,6 +17,7 @@ public:
 	void RegisterScreen(const std::string& name, std::unique_ptr<UIScreen> screen)
 	{
 		m_screens[name] = std::move(screen);
+		m_screens[name]->SetName(name.c_str());
 	};
 
 	//“o˜^‰ğœ

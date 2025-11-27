@@ -70,7 +70,7 @@ void TimerUI::Open()
 
 void TimerUI::Close()
 {
-	UIManager::GetInstance().UnregisterScreen("timerUI");
+	UIManager::GetInstance().UnregisterScreen(GetName());
 }
 
 void TimerUI::ApplyTime(float elapsedTime)

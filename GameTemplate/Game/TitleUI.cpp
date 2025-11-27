@@ -13,7 +13,7 @@ namespace {
 
 TitleUI::~TitleUI()
 {
-	
+
 }
 
 void TitleUI::Update()
@@ -66,6 +66,6 @@ void TitleUI::Open()
 
 void TitleUI::Close()
 {
-	UIManager::GetInstance().UnregisterScreen("timerUI");
 	DeleteGO(m_timer);
+	UIManager::GetInstance().UnregisterScreen(GetName());
 }

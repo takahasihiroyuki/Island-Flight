@@ -42,7 +42,18 @@ public:
 		return m_displayed;
 	}
 
+	void SetName(const char* name)
+	{
+		m_name = name;
+	}
+
+	const char* GetName() const
+	{
+		return m_name;
+	}
+
 protected:
-	bool m_displayed = false;//表示するかどうか
+	bool m_displayed = false;		//表示するかどうか
+	const char* m_name = nullptr;	//スクリーンの名前
 };
 

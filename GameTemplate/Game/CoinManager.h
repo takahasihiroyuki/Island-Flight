@@ -80,7 +80,7 @@ private:
 	void SelectActive(const Vector3& playerPos, const Vector3& playerForward);
 
 private:
-	float m_pickupRadius = 2000.0f;		//コインの取得範囲
+	float m_pickupRadius = 800.0f;		//コインの取得範囲
 	std::vector<Coin*> m_coins;
 	std::vector<Coin*> m_pendingCoins;	//
 	ScoreManager* m_scoreManager;
