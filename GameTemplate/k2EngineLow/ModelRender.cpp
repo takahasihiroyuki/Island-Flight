@@ -252,6 +252,7 @@ namespace nsK2EngineLow {
 			}
 		}
 		else {
+			float debug = 0;
 		}
 	}
 

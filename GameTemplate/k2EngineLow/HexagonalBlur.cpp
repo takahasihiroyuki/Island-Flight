@@ -11,31 +11,35 @@ void nsK2EngineLow::HexagonalBlur::Init(RenderTarget& mainRenderTarget)
 
 void nsK2EngineLow::HexagonalBlur::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
+	//水平方向と対角線方向のブラーを掛ける
 	ApplyVertDiagonalBlur(rc);
-	ApplyHecagonalBlur(rc, mainRenderTarget);
+	//↑で作成した縦と対角線のブラー画像を使って六角形ブラーを掛ける
+	ApplyHecagonalBlur(rc);
+	//六角形ブラー画像と深度をブレンドする
+	BlendHexBlurWithDepth(rc, mainRenderTarget);
 }
 
 void nsK2EngineLow::HexagonalBlur::InitRenderTarget(RenderTarget& mainRenderTarget)
 {
 	m_rtVerticalBlur.Create(
-		1280,
-		720,
+		g_graphicsEngine->GetFrameBufferWidth(),
+		g_graphicsEngine->GetFrameBufferHeight(),
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
 		DXGI_FORMAT_UNKNOWN);
 
 	m_rtDiagonalBlur.Create(
-		1280,
-		720,
+		g_graphicsEngine->GetFrameBufferWidth(),
+		g_graphicsEngine->GetFrameBufferHeight(),
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT
 		, DXGI_FORMAT_UNKNOWN);
 
 	m_rtRhomboidBlur.Create(
-		1280,
-		720,
+		g_graphicsEngine->GetFrameBufferWidth(),
+		g_graphicsEngine->GetFrameBufferHeight(),
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -47,8 +51,8 @@ void nsK2EngineLow::HexagonalBlur::InitVertDiagonalBlurSprite(RenderTarget& main
 {
 	SpriteInitData vertDiagonalBlurSpriteInitData;
 	vertDiagonalBlurSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-	vertDiagonalBlurSpriteInitData.m_width = 1280;
-	vertDiagonalBlurSpriteInitData.m_height = 720;
+	vertDiagonalBlurSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
+	vertDiagonalBlurSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
 	vertDiagonalBlurSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
 	vertDiagonalBlurSpriteInitData.m_psEntryPoinFunc = "PSVerticalDiagonalBlur";
 	vertDiagonalBlurSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -61,8 +65,8 @@ void nsK2EngineLow::HexagonalBlur::InitRhomboidBlurSprite(RenderTarget& mainRend
 	SpriteInitData phomboidBlurSpriteInitData;
 	phomboidBlurSpriteInitData.m_textures[0] = &m_rtVerticalBlur.GetRenderTargetTexture();
 	phomboidBlurSpriteInitData.m_textures[1] = &m_rtDiagonalBlur.GetRenderTargetTexture();
-	phomboidBlurSpriteInitData.m_width = 1280;
-	phomboidBlurSpriteInitData.m_height = 720;
+	phomboidBlurSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
+	phomboidBlurSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
 	phomboidBlurSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
 	phomboidBlurSpriteInitData.m_psEntryPoinFunc = "PSRhomboidBlur";
 	phomboidBlurSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -77,8 +81,8 @@ void nsK2EngineLow::HexagonalBlur::InitCombineBokeImageSprite(Texture& bokeTextu
 	combineBokeImageSpriteInitData.m_textures[1] = &depthTexture;
 	//combineBokeImageSpriteInitData.m_expandShaderResoruceView[0] = &bokeTexture;
 	//combineBokeImageSpriteInitData.m_expandShaderResoruceView[1] = &depthTexture;
-	combineBokeImageSpriteInitData.m_width = 1280;
-	combineBokeImageSpriteInitData.m_height = 720;
+	combineBokeImageSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
+	combineBokeImageSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
 	combineBokeImageSpriteInitData.m_fxFilePath = "Assets/shader/BlendBokehByDepth.fx";
 	combineBokeImageSpriteInitData.m_psEntryPoinFunc = "PSMain";
 	combineBokeImageSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -114,7 +118,7 @@ void nsK2EngineLow::HexagonalBlur::ApplyVertDiagonalBlur(RenderContext& rc)
 	rc.WaitUntilFinishDrawingToRenderTargets(2, blurRts);
 }
 
-void nsK2EngineLow::HexagonalBlur::ApplyHecagonalBlur(RenderContext& rc, RenderTarget& mainRenderTarget)
+void nsK2EngineLow::HexagonalBlur::ApplyHecagonalBlur(RenderContext& rc)
 {
 	BeginGPUEvent("HecagonalBlur");
 	rc.WaitUntilToPossibleSetRenderTarget(m_rtRhomboidBlur);
@@ -125,7 +129,10 @@ void nsK2EngineLow::HexagonalBlur::ApplyHecagonalBlur(RenderContext& rc, RenderT
 	// レンダリングターゲットへの書き込み終了待ち
 	rc.WaitUntilFinishDrawingToRenderTarget(m_rtRhomboidBlur);
 
+}
 
+void nsK2EngineLow::HexagonalBlur::BlendHexBlurWithDepth(RenderContext& rc, RenderTarget& mainRenderTarget)
+{
 	BeginGPUEvent("BlendBokehByDepth");
 	// ボケ画像と深度テクスチャを利用して、ボケ画像を描きこんでいく
 	// メインレンダリングターゲットを設定
@@ -139,6 +146,5 @@ void nsK2EngineLow::HexagonalBlur::ApplyHecagonalBlur(RenderContext& rc, RenderT
 
 	// レンダリングターゲットへの書き込み終了待ち
 	rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
-
 
 }

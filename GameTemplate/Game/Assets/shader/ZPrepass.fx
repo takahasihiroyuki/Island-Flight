@@ -99,7 +99,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstanci
     psIn.depth.z = psIn.pos.z; //カメラ座標系をZ値に設定
     psIn.pos = mul(mProj, psIn.pos); //カメラ座標系をスクリーン座標系に変換
     psIn.depth.x = psIn.pos.z / psIn.pos.w;
-    psIn.depth.y = saturate(psIn.pos.w / 1000.0f);
+    psIn.depth.y = saturate(psIn.pos.w / 20000.0f);
     
     return psIn;
 }

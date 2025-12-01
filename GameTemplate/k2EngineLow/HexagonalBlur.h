@@ -33,7 +33,14 @@ namespace nsK2EngineLow {
 		/// ˜ZŠpŒ`ƒuƒ‰[‚ğŠ|‚¯‚é
 		/// </summary>
 		/// <param name="rc"></param>
-		void ApplyHecagonalBlur(RenderContext& rc, RenderTarget& mainRenderTarget);
+		void ApplyHecagonalBlur(RenderContext& rc);
+
+		/// <summary>
+		/// ˜ZŠpŒ`ƒuƒ‰[‚ğŠ|‚¯‚½‰æ‘œ‚ğ[“x‚ÆƒuƒŒƒ“ƒh‚·‚é
+		/// </summary>
+		/// <param name="rc"></param>
+		/// <param name="mainRenderTarget"></param>
+		void BlendHexBlurWithDepth(RenderContext& rc, RenderTarget& mainRenderTarget);
 
 
 	private:

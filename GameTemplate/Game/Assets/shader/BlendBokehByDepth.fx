@@ -33,7 +33,7 @@ sampler Sampler : register(s0);
 float4 PSMain(PSInput In) : SV_Target0
 {
     // カメラ空間での深度値をサンプリング。
-    float depth = depthTexture.Sample(Sampler, In.uv);
+    float depth = depthTexture.Sample(Sampler, In.uv).y;
     // カメラ空間での深度値が200以下ならピクセルキル 
     //      -> ボケ画像を描きこまない。
     //clip(depth - 200.0f);
@@ -42,8 +42,8 @@ float4 PSMain(PSInput In) : SV_Target0
     // 深度値から不透明度を計算する。
     // 深度値200からボケが始まり、深度値500で最大のボケ具合になる。
     //  -> つまり、深度値500で不透明度が1になる。
-    //boke.a = min( 1.0f, ( depth - 200.0f ) / 500.0f );
-    float t = saturate((depth - 200.0f) / 500.0f);
+    //boke.a = min(1.0f, (depth - 200.0f) / 500.0f);
+    float t = saturate(depth);
     boke.a = t * t * (3.0f - 2.0f * t); // Hermite補間
     // ボケ画像を出力。
     return boke;

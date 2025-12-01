@@ -138,8 +138,8 @@ namespace
 		"WaterVase_1",
 		"WaterVase_2",
 		"WaterVase_3",
-		"WodenLog",
-		"WodenLog_2",
+		"WoodenLog",
+		"WoodenLog_2",
 		"Wooden_Box"
 	};
 
