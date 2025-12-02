@@ -8,9 +8,9 @@ enum class CameraControllerType
 };
 
 struct CameraState {
-	Vector3 pos=Vector3::Zero;
+	Vector3 pos = Vector3::Zero;
 	Vector3 targetPos = Vector3::One;
-	Vector3 up=Vector3::Up;
+	Vector3 up = Vector3::Up;
 	Vector3 velocity = Vector3::Zero;
 };
 
@@ -68,12 +68,20 @@ public:
 	}
 
 private:
-	Vector3 pos=Vector3::Zero;
-	Vector3 vel=Vector3::Zero;//ターゲットの速度ベクトル
-	Quaternion rot=Quaternion::Identity;
+	Vector3 pos = Vector3::Zero;
+	Vector3 vel = Vector3::Zero;//ターゲットの速度ベクトル
+	Quaternion rot = Quaternion::Identity;
 	bool hasPos = false;
 	bool hasVel = false;
 	bool hasRot = false;
 	bool valid = false;
 };
 
+struct ICameraControllerSettings {};
+
+struct SpringFollowSettings :ICameraControllerSettings
+{
+	Vector3 localOffsetPos = { 0.0f, 5.0f, -15.0f }; // ばねカメラのローカルオフセット
+	float dampingRate = 0.3f;                        // 減衰率
+	float dampingC = 2.0f;                           // 減衰係数
+};

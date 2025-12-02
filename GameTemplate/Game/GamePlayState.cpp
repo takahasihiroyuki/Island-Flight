@@ -8,7 +8,7 @@
 
 namespace
 {
-	constexpr float TIMELIMIT = 1;
+	constexpr float TIMELIMIT = 100;
 }
 
 GamePlayState::GamePlayState()

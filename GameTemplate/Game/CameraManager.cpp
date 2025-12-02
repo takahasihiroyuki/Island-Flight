@@ -29,6 +29,9 @@ bool CameraManager::Start()
 
 void CameraManager::Update()
 {
+	//コントローラーがなければ更新しない
+	if (!m_activeController) return;
+
 	TargetSnapshot snap;
 	if (m_targetSnapshot.GetValid()) {
 		snap = m_targetSnapshot;
@@ -80,8 +83,9 @@ void CameraManager::ChangeController(CameraControllerType type)
 	switch (type)
 	{
 	case CameraControllerType::enStatic:
-		m_activeController = new StaticController(m_currentState, snap);
+		m_activeController = new StaticController(m_currentState, snap);;
 		m_activeController->Enter();
+		//m_activeController->Initialize(m_cameraParamerTyp);
 		break;
 	case CameraControllerType::enSpringFollow:
 		m_activeController = new SpringFollowController(m_currentState, snap);

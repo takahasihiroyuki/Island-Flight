@@ -24,6 +24,8 @@ public:
 	}
 	virtual void OnEnter() {};
 
+	virtual void Initialize(int parameterSelect) {}
+
 protected:
 	CameraState m_cameraState;
 	TargetSnapshot m_targetSnapshot;

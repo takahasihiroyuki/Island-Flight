@@ -39,7 +39,7 @@ void TitleUI::Update()
 
 void TitleUI::Render(RenderContext& rc)
 {
-	m_titleScreen.Draw(rc);
+	//m_titleScreen.Draw(rc);
 	m_titleLogo.Draw(rc);
 	m_titleStart.Draw(rc);
 

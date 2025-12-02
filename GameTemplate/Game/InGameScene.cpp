@@ -52,6 +52,9 @@ bool InGameScene::Start()
 	m_inGameStateManeger->SetContext(m_context);
 
 	m_aircraft->Start();
+
+	g_camera3D->SetFar(100000);
+
 	return true;
 }
 
@@ -65,7 +68,6 @@ void InGameScene::Update()
 
 	m_skyCube->SetPosition(g_camera3D->GetPosition());
 
-	g_camera3D->SetFar(100000);
 
 }
 

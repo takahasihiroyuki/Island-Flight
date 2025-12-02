@@ -22,6 +22,19 @@ public:
 		m_cameraState.targetPos = pos + m_targetOffset;
 	}
 
+	void SetTargetOffset(const Vector3& offset) {
+		m_targetOffset = offset;
+	}
+
+
+	//Enumとかでどのパラメーターを使うかをもらう
+	void Initialize(int parameterSelect) override
+	{
+		// どのパラメーターかの情報をつかってParameterManagerからパラメーターを取得する。
+		//StaticParameter* param = static_cast<StaticParameter*>(parameter);
+		//param.a;
+	}
+
 private:
 	Vector3 m_targetOffset = Vector3(0.0f, 0.0, 500.0f);
 };

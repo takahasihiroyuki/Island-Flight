@@ -28,7 +28,6 @@ Aircraft::Aircraft()
 }
 bool Aircraft::Start()
 {
-	m_engine = std::make_unique<Engine>();
 	return true;
 }
 void Aircraft::Init(const char* filePath, Vector3 initPos)
@@ -48,6 +47,8 @@ void Aircraft::Init(const char* filePath, Vector3 initPos)
 
 	InitAllLiftingSurfaces();
 
+	//エンジン
+	m_engine = std::make_unique<Engine>();
 }
 
 void Aircraft::Update()

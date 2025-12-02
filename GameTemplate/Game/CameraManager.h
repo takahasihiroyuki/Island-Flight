@@ -7,6 +7,15 @@ class CameraState;
 class CameraManager :public Noncopyable
 {
 public:
+	enum EnCameraParamterType
+	{
+		StaticA = 0,
+		StaticB,
+		SpringFollowA = 0,
+		SpringFollowB
+	};
+
+public:
 	static CameraManager& GetInstance() {
 		static CameraManager instance;
 		return instance;
@@ -44,5 +53,6 @@ private:
 	Quaternion m_rotation;			// ‰ñ“]
 	Quaternion m_targetRotationX;	// –Ú•W‰ñ“]
 	Vector3 m_cameraPosition = Vector3::Zero;		// ƒJƒƒ‰À•W
+	ICameraControllerSettings m_controllerSettings;
 };
 
