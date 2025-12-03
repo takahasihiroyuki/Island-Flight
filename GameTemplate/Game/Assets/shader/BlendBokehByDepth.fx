@@ -41,8 +41,8 @@ float4 PSMain(PSInput In) : SV_Target0
     float4 boke = bokeTexture.Sample(Sampler, In.uv);
     // 深度値から不透明度を計算する。
     // 深度値200からボケが始まり、深度値500で最大のボケ具合になる。
-    //  -> つまり、深度値500で不透明度が1になる。
-    //boke.a = min(1.0f, (depth - 200.0f) / 500.0f);
+    //  つまり、深度値500で不透明度が1になる。
+    boke.a = min(1.0f, (depth - 200.0f) / 500.0f);
     float t = saturate(depth);
     boke.a = t * t * (3.0f - 2.0f * t); // Hermite補間
     // ボケ画像を出力。

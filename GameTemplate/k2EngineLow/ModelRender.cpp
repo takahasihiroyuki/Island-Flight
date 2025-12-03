@@ -115,6 +115,9 @@ namespace nsK2EngineLow {
 	void ModelRender::Update()
 	{
 		if (m_isEnableInstancingDraw)return;
+
+		m_zprepassModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+
 		if (m_isFowardRender)
 		{
 			if (m_frowardRenderModel.IsInited()) {
@@ -132,6 +135,7 @@ namespace nsK2EngineLow {
 
 		//‰e‚Ìƒ‚ƒfƒ‹‚ÉˆÚ“®‰ñ“]Šg‘å‚ğ“n‚·
 		m_shadowModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+
 
 		for (auto it = m_ReflectionModel.begin(); it != m_ReflectionModel.end(); ++it) {
 			auto& rayer = it->first;

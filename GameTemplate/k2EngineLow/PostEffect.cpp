@@ -9,11 +9,11 @@ namespace nsK2EngineLow {
 	}
 	void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
-		//ブルームの描画処理
-		OnRenderBloom(rc, mainRenderTarget);
-
 		//六角形のブラーの描画
 		OnRenderHexagonBlur(rc, mainRenderTarget);
+
+		//ブルームの描画処理
+		OnRenderBloom(rc, mainRenderTarget);
 
 		//メインレンダーターゲットをPRESENTからRENDERTARGETへ。
 		rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
