@@ -13,8 +13,8 @@
 namespace
 {
 	//scale:pos=1:39がベスト
-	constexpr float OBJECT_SCALE_OFFSET = 10.0f / 5.0f;
-	constexpr float OBJECT_POS_OFFSET = 390.0f / 5.0f;
+	constexpr float OBJECT_SCALE_OFFSET = 10.0f;
+	constexpr float OBJECT_POS_OFFSET = 390.0f;
 
 	//各オブジェクトごとに objectNames を線形探索すると全体で O(N²) になるため
 	//高速に存在判定できる unordered_set にしておく。

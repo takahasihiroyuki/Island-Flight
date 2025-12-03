@@ -137,9 +137,12 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstanci
     float4 posVS = psIn.pos;
     
     psIn.pos = mul(mProj, psIn.pos);
-    psIn.normal = mul(m, vsIn.normal);
-    psIn.tangent = normalize(mul(m, vsIn.tangent));
-    psIn.biNormal = normalize(mul(m, vsIn.biNormal));
+    //法線、接ベクトル、従ベクトルをワールド空間に変換する。
+    //平行移動を無視するために、3x3行列に変換してから乗算する。
+    float3x3 m3x3 = (float3x3) mWorld;
+    psIn.normal = normalize(mul(mWorld, vsIn.normal));
+    psIn.tangent = normalize(mul(mWorld, vsIn.tangent));
+    psIn.biNormal = normalize(mul(mWorld, vsIn.biNormal));
 
     psIn.uv = vsIn.uv;
 

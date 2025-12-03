@@ -13,12 +13,14 @@ namespace nsK2EngineLow {
 	}
 	bool Ocean::Start()
 	{
+		BeginGPUEvent("Ocean");
+
 		SetConstatntBuffer(
 			g_renderingEngine->GetReflectViewProjectionMatrix(ReflectLayer::enOcean),
 			g_renderingEngine->GetSceneLight().GetLight(),
 			g_renderingEngine->GetReflectCamera(ReflectLayer::enOcean).GetPosition(),
 			BASEREFLECTANCE
-			);
+		);
 
 		//g_renderingEngine->SetReflectPlane(m_plane, ReflectLayer::enOcean);
 

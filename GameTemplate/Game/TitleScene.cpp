@@ -103,7 +103,7 @@ void TitleScene::Enter()
 	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
 	CameraManager::GetInstance().ChangeController(CameraControllerType::enSpringFollow);
 
-	g_camera3D->SetFar(100000);
+	g_camera3D->SetFar(1000000);
 
 
 

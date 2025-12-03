@@ -131,11 +131,12 @@ SPSIn VSMain(SVSIn vsIn)
     
     psIn.uv = vsIn.uv;
    
-    psIn.normal = mul(mWorld, vsIn.normal);
-    
-    //接ベクトルと従ベクトルをワールド空間に変換する
-    psIn.tangent = normalize(mul(mWorld, vsIn.tangent));
-    psIn.biNormal = normalize(mul(mWorld, vsIn.biNormal));
+    //法線、接ベクトル、従ベクトルをワールド空間に変換する。
+    //平行移動を無視するために、3x3行列に変換してから乗算する。
+    float3x3 m3x3 = (float3x3) mWorld;
+    psIn.normal = normalize(mul(m3x3, vsIn.normal));
+    psIn.tangent = normalize(mul(m3x3, vsIn.tangent));
+    psIn.biNormal = normalize(mul(m3x3, vsIn.biNormal));
     
     //クリップ座標を用意しておく。
     psIn.refClip = mul(ReflectionCameraVP, float4(psIn.worldPos.xyz, 1.0));
@@ -176,13 +177,13 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float flesnel = ComputeFresnel(normal, normalize(light.cameraEyePos - psIn.worldPos), baseReflectance);
     
     float4 litColor = albedoColor;
-    //litColor.xyz += lig;
+    litColor.xyz += lig;
     
     float shadowPow = CalcShadowPow(psIn.worldPos);
     
     float4 finalColor;
     finalColor = lerp(litColor, reflect, flesnel);
-    finalColor * shadowPow;
+    finalColor *= shadowPow;
     return finalColor;
 }
 
@@ -191,15 +192,20 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 //////////////////////////////////////////////////////////////////////////////////
 float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 normal)
 {
+    normal = normalize(normal);
+    lightDirection = normalize(lightDirection);
+    
 	//ピクセルの法線とライトの方向の内積を計算し、ライトの影響度を求める
     float t = dot(normal, lightDirection);
-	//内積の結果の-1をかける
+    
+    //内積の結果の-1をかける
     t *= -1.0f;
 	//内積の結果が0以下なら0にする
     if (t < 0.0f)
     {
         t = 0.0f;
     }
+    
 	//ライトの影響度を返す
     return lightColor * t;
 }
@@ -246,6 +252,7 @@ float3 CalcLigFromDrectionLight(SPSIn psIn, float3 normal)
 		light.directionLight.direction, light.directionLight.color, psIn.worldPos, normal, psIn.uv);
 
 	//最終的な光
+
     return diffDirection + specDirection;
 }
 
@@ -299,27 +306,27 @@ float CalcShadowPow(float3 worldPos)
 {
     float shadowPow = 1.0f;
         //ライトビュースクリーン区間からUV座標空間に変換
-        float4 posInLVP = mul(light.mLVP, float4(worldPos, 1.0f));
+    float4 posInLVP = mul(light.mLVP, float4(worldPos, 1.0f));
     
-        float zInLVP = posInLVP.z / posInLVP.w;
-        if (zInLVP >= 0.0f && zInLVP <= 1.0f)
-        {
+    float zInLVP = posInLVP.z / posInLVP.w;
+    if (zInLVP >= 0.0f && zInLVP <= 1.0f)
+    {
 
-            float2 shadowUV = posInLVP.xy / posInLVP.w;
-            shadowUV *= float2(0.5f, -0.5f);
-            shadowUV += 0.5f;
+        float2 shadowUV = posInLVP.xy / posInLVP.w;
+        shadowUV *= float2(0.5f, -0.5f);
+        shadowUV += 0.5f;
 
 	        //UV座標を使ってシャドウマップから影情報をサンプリング
-            if (shadowUV.x >= 0.0f && shadowUV.x <= 1.0f &&
+        if (shadowUV.x >= 0.0f && shadowUV.x <= 1.0f &&
                 shadowUV.y >= 0.0f && shadowUV.y <= 1.0f)
-            {
+        {
                 //シャドウマップから深度をサンプリング
-                float zInShadowMap = g_shadowMap.Sample(g_sampler, shadowUV).r;
-                if (zInLVP > zInShadowMap)
-                {
-                    shadowPow = 0.5f; //影が落ちている。
-                }
+            float zInShadowMap = g_shadowMap.Sample(g_sampler, shadowUV).r;
+            if (zInLVP > zInShadowMap)
+            {
+                shadowPow = 0.5f; //影が落ちている。
             }
         }
+    }
     return shadowPow;
 }
