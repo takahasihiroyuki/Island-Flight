@@ -9,6 +9,7 @@ struct CoinDesc {
 };
 
 struct CoinDesc;
+class Timer;
 class Coin : public ItemMeshObject
 {
 public:
@@ -38,5 +39,7 @@ public:
 private:
 	SoundSource* m_coinSE = nullptr;
 	SoundSource* m_coinGetSE = nullptr;
+	Timer* m_timer = nullptr;
+	float m_rotateSpeed = 300.0f;
 };
 

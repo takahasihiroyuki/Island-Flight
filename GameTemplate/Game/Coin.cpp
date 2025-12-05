@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Coin.h"
 #include"CoinManager.h"
+#include"Timer.h"
 
 Coin::Coin()
 {
@@ -23,6 +24,13 @@ void Coin::OnStart()
 
 void Coin::OnUpdate()
 {
+
+
+	Quaternion rot;
+	float deltaTime = g_gameTime->GetFrameDeltaTime();
+	m_rotation.AddRotationDegY(deltaTime * m_rotateSpeed);
+
+
 	// ƒRƒCƒ“‚ÌˆÊ’u‚ÉSE‚ð’Ç]‚³‚¹‚é
 	m_coinSE->SetPosition(GetPosition());
 }
