@@ -91,6 +91,7 @@
     <ClCompile Include="CoinDirectionArrowUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="CoinGetUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -179,5 +180,6 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="SoundID.h" />
+    <ClInclude Include="CoinGetUI.h" />
   </ItemGroup>
 </Project>
