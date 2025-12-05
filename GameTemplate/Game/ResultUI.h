@@ -23,10 +23,12 @@ private:
 	std::array< SpriteRender, 10> OnesSprite;
 	std::array< SpriteRender, 10> TensSprite;
 	std::array< SpriteRender, 10> HundredsSprite;
+	std::array< SpriteRender, 10> ThousandsSprite;
 	SpriteRender m_panel;
 	int m_displayOnesNum = 0;
 	int m_displayTensNum = 0;
 	int m_displayHundredsNum = 0;
+	int m_displayThousandsNum = 0;
 	int m_displayNumber = 0;//•\¦‚·‚é”š
 	std::array<const char*, 10> m_spritePaths;
 	Timer* m_timer;

@@ -8,13 +8,16 @@
 namespace
 {
 	const SceneType NEXT_SCENE = SceneType::InGame;
-	const Vector3 CAMERA_TARGET_POS_OFFSET = Vector3(0, 100, 0);
+	const Vector3 CAMERA_TARGET_POS_OFFSET = Vector3(0, 50, 0);
+	const Vector3 INIT_AIRCRAFT_POS = Vector3(0.0f, 50000.0f, 0.0f);
+	constexpr float AIRCRAFT_BASE_THRUST = 2000.0f;
 }
 
 TitleScene::~TitleScene()
 {
 	DeleteGO(m_titleBGM);
 	DeleteGO(m_ocean);
+	DeleteGO(m_skyCube);
 }
 
 bool TitleScene::Start()
@@ -34,16 +37,16 @@ void TitleScene::Update()
 
 	m_elapsedTime += g_gameTime->GetFrameDeltaTime();
 
-	//飛行機の動き
-	float tailInput = g_pad[0]->GetLStickYF()/*sin(m_elapsedTime)*/;
-	m_aircraft->SetControlInputs(
-		0.0f,
-		0.0f,
-		tailInput,
-		0.0f,
-		false,
-		false
-	);
+	////飛行機の動き
+	//float tailInput = sin(3.1415*m_elapsedTime);
+	//m_aircraft->SetControlInputs(
+	//	0.0f,
+	//	0.0f,
+	//	tailInput,
+	//	0.0f,
+	//	false,
+	//	false
+	//);
 
 	m_aircraft->Update();
 
@@ -82,13 +85,13 @@ void TitleScene::Enter()
 
 	//モデル
 	m_aircraft = new Aircraft();
-	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", Vector3(0, 50000, 0));
+	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", INIT_AIRCRAFT_POS, AIRCRAFT_BASE_THRUST);
 
 	//空
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 	m_skyCube->SetLuminance(1.0f);
-	m_skyCube->SetScale(10000.0f);
-	m_skyCube->SetPosition({ 0.0f,0.0f,0.0f });
+	m_skyCube->SetScale(100000.0f);
+	m_skyCube->SetPosition(g_camera3D->GetPosition());
 	m_skyCube->SetType((EnSkyCubeType)enSkyCubeType_Day);
 
 	//海

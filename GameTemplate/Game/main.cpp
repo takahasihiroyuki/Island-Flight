@@ -4,6 +4,10 @@
 #include "CameraManager.h"
 #include "UIManager.h"
 
+enum class EffectID {
+	enCoinGetEffect = 0,
+};
+
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
 
@@ -14,6 +18,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 {
 	// ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
+
+	//EffectEngine::GetInstance()->ResistEffect(static_cast<int>(EffectID::enCoinGetEffect), u"Assets/effect/coinGet.efk");
 
 	// k2EngineLowの初期化。
 	g_k2EngineLow = new K2EngineLow();

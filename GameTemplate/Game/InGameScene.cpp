@@ -10,7 +10,8 @@
 
 namespace
 {
-	Vector3 INIT_AIRCRAFT = Vector3(0.0f, 0.0f, -15000.0f);
+	Vector3 INIT_AIRCRAFT_POS = Vector3(0.0f, 5000.0f, -30000.0f);
+	float AIRCRAFT_BASE_THRUST = 5000.0f;
 }
 
 InGameScene::InGameScene()
@@ -39,7 +40,7 @@ bool InGameScene::Start()
 
 	m_ocean = NewGO<Ocean>(0);
 	m_aircraft = new Aircraft();
-	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", INIT_AIRCRAFT);
+	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", INIT_AIRCRAFT_POS, AIRCRAFT_BASE_THRUST);
 	m_coinManager = NewGO<CoinManager>(0, "coinManager");
 	m_scoreManager = NewGO<ScoreManager>(0, "ScoreManager");
 
@@ -97,10 +98,10 @@ void InGameScene::InitInGameContext()
 
 void InGameScene::PlayerInput()
 {
-	bool mainLeftInput = -g_pad[0]->IsPress(enButtonLB1);
-	bool mainRightInput = g_pad[0]->IsPress(enButtonRB1);
-	bool tailInput = g_pad[0]->GetLStickYF();
-	bool verticalInput = g_pad[0]->GetLStickXF();
+	float mainLeftInput = -g_pad[0]->IsPress(enButtonLB1);
+	float mainRightInput = g_pad[0]->IsPress(enButtonRB1);
+	float tailInput = g_pad[0]->GetLStickYF();
+	float verticalInput = g_pad[0]->GetLStickXF();
 	bool isBoostOn = g_pad[0]->IsPress(enButtonA);
 	bool isThrottleCut = g_pad[0]->IsPress(enButtonB);
 

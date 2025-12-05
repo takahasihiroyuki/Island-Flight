@@ -18,7 +18,6 @@ struct PSIn
 {
     float4 pos : SV_POSITION; //スクリーン空間でのピクセルの座標。
     float2 uv : TEXCOORD0; //uv座標。
-    float4 worldPos : TEXCOORD1; //ワールド座標
 };
 
 //ディレクションライト構造体
@@ -55,14 +54,13 @@ float3 CalcLigFromDrectionLight(PSIn psIn, float3 normal, float3 worldPos);
 float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 normal);
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv);
 float CalcShadowPow(float isDrawShadow, PSIn psIn, float3 worldPos);
-
+float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance);
 
 
 
 PSIn VSMain(VSInput vsIn)
 {
     PSIn psIn;
-    psIn.worldPos = vsIn.pos;
     psIn.pos = mul(mvp, vsIn.pos);
     psIn.uv = vsIn.uv;
     return psIn;
@@ -84,12 +82,19 @@ float4 PSMain(PSIn psIn) : SV_Target0
     
     float3 lig = dirLight + ambientColor;
 	
+    //フレネル反射率を計算
+    float flesnel = ComputeFresnel(normal, normalize(eyepos - worldPos), 0.001f);
+
+    
     //最終的な色
     float4 finalColor = albedo;
     
     finalColor.xyz *= lig;
+
+    finalColor = lerp(finalColor, float4(directionLight.color, 1), 0);
     
     finalColor.xyz *= shadowPow;
+    //finalColor.xyz = dirLight;
     
     return finalColor;
 
@@ -135,12 +140,12 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 	//鏡面反射の強さを0~1にする
     t = max(0.0f, t);
 
-	//鏡面反射の強さを絞る
-    t = pow(t, 10.0f);
+	////鏡面反射の強さを絞る
+ //   t = pow(t, 10.0f);
     
     float specPower = g_speculaTexture.Sample(g_sampler, uv);
 	//鏡面反射光
-    float3 specularLig = lightColor * t * specPower;
+    float3 specularLig = lightColor * t/* * specPower*/;
 
     return specularLig;
 }
@@ -195,4 +200,18 @@ float CalcShadowPow(float isDrawShadow, PSIn psIn, float3 worldPos)
         }
     }
     return shadowPow;
+}
+
+float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance)
+{
+    
+    float cosTheta = saturate(dot(normalize(normal), -normalize(viewDir)));
+    
+    //角度により反射率の係数。
+    float angleFactor = pow(1.0f - cosTheta, 5.0f);
+    //angleFactorの割合の上限。
+    float remainingReflectance = 1 - baseReflectance;
+
+    //フレネル反射率
+    return baseReflectance + remainingReflectance * angleFactor;
 }

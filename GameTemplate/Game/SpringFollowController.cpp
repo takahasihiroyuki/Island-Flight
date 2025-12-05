@@ -2,8 +2,8 @@
 #include "SpringFollowController.h"
 namespace
 {
-	static constexpr float DAMPING_RATE = 0.3f;	//Œ¸Š—¦
-	static constexpr float DAMPING_C = 2.0f;	//Œ¸ŠŒW”
+	static constexpr float DAMPING_RATE = 0.8f*3;	//Œ¸Š—¦
+	static constexpr float DAMPING_C = 5.0f*3;	//Œ¸ŠŒW”
 }
 
 void SpringFollowController::OnEnter()

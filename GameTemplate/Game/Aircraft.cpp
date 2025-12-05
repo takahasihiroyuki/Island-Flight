@@ -11,10 +11,10 @@ namespace
 	constexpr float CAPSELLE_HEIGHT = 10.0f; // カプセルコライダーの高さ
 
 	// 各操縦面の最大操舵角度（度数法）
-	constexpr float MAX_LEFT_AILERON_ANGLE = 5.0f;
-	constexpr float MAX_RIGHT_AILERON_ANGLE = 5.0f;
-	constexpr float MAX_ELEVATOR_ANGLE = 3.0f;//上下回転
-	constexpr float MAX_RUDDER_ANGLE = 6.0*1.5f;// 左右回転
+	constexpr float MAX_LEFT_AILERON_ANGLE = 5.0*0.5f;
+	constexpr float MAX_RIGHT_AILERON_ANGLE = 5.0*0.5f;
+	constexpr float MAX_ELEVATOR_ANGLE = 3.0f*0.5;//上下回転
+	constexpr float MAX_RUDDER_ANGLE = 6.0*0.5;// 左右回転
 
 	float DegToRad(float deg)
 	{
@@ -30,7 +30,7 @@ bool Aircraft::Start()
 {
 	return true;
 }
-void Aircraft::Init(const char* filePath, Vector3 initPos)
+void Aircraft::Init(const char* filePath, Vector3 initPos, float baseThrust)
 {
 	m_position = initPos;
 
@@ -49,13 +49,13 @@ void Aircraft::Init(const char* filePath, Vector3 initPos)
 
 	//エンジン
 	m_engine = std::make_unique<Engine>();
+	m_engine->SetBaseThrust(baseThrust);
 }
 
 void Aircraft::Update()
 {
 	m_worldDirty = true;
 
-	ApplyControlInputs();
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
 		//if (i == 0||i==1 || i == 3/*|| i == 3*/ /*|| i == 1*/) {
 		m_wings[i]->UpdateControlSurface();
@@ -311,7 +311,7 @@ void Engine::UpdateThrustForce()
 
 
 	//入力値を非線形にして推力に反映。
-	thrustScale = std::pow(m_throttleRatio, 2) * m_maxThrust;
+	thrustScale = std::pow(m_throttleRatio, 2) * m_baseThrust;
 
 	if (m_isBoostOn)
 	{

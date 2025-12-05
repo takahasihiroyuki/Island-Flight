@@ -13,7 +13,7 @@
 namespace
 {
 	//scale:pos=1:39がベスト
-	constexpr float OBJECT_SCALE_OFFSET = 10.0f;
+	constexpr float OBJECT_SCALE_OFFSET = 10.0f*0.9;
 	constexpr float OBJECT_POS_OFFSET = 390.0f;
 
 	//各オブジェクトごとに objectNames を線形探索すると全体で O(N²) になるため
@@ -105,7 +105,7 @@ namespace
 		"Rock_8",
 		"Rock_9",
 		"Rock_10",
-		////"Rock_Formation_1",
+		//"Rock_Formation_1",
 		"Shipwreck",
 		"Spear",
 		"Stall_1",
@@ -211,6 +211,7 @@ bool Stage::Start()
 					Vector3 scale;
 					std::tie(pos, rot, scale) = transform;
 					pos *= OBJECT_POS_OFFSET; // ポジション
+					pos.y += -3000;
 					scale *= OBJECT_SCALE_OFFSET; // スケール
 
 					m_coinManager->Spawn(pos, rot, scale);
@@ -227,6 +228,7 @@ bool Stage::Start()
 				Quaternion rot = std::get<1>(transform);
 				Vector3 scale = std::get<2>(transform);
 				pos *= OBJECT_POS_OFFSET; // ポジション
+				pos.y += -3000;
 				scale *= OBJECT_SCALE_OFFSET; // スケール
 				object->Init(paths[name].c_str(), pos, rot, scale, name.c_str());
 

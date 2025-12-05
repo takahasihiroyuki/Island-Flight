@@ -40,8 +40,10 @@ public:
 
 	const Vector3& GetThrustForce() const { return m_thrustForce; }
 
+	void SetBaseThrust(float maxThrust) { m_baseThrust = maxThrust; }
+
 private:
-	float m_maxThrust = 2000.0f;				// 最大推力
+	float m_baseThrust = 2000.0f;				// 最大推力
 	float m_throttleRatio = 0.0f;				// スロットル割合
 	float m_throttleSmoothValue = 0.0f;			// 推力を滑らかにするための値
 	float m_boostMultiplier = 2.0f;				// ブースト時の推力倍率
@@ -67,7 +69,7 @@ public:
 	~Aircraft() {};
 	bool Start();
 	void fly();
-	void Init(const char* filePath, Vector3 initPos);
+	void Init(const char* filePath, Vector3 initPos, float baseThrust = 2000);
 	void Update();
 	void Render(RenderContext& rc);
 
@@ -82,14 +84,13 @@ public:
 		return m_state.orientation;
 	}
 	void SetControlInputs(
-		float aileronInput,
+		float mainLeftInput,
 		float mainRightInput,
 		float tailInput,
 		float verticalInput,
 		bool isBoostOn,
 		bool isThrottleCut
 	);
-
 
 private:
 	void InitLiftingSurface(
