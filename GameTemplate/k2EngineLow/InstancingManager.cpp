@@ -53,7 +53,7 @@ namespace nsK2EngineLow {
 				nullptr,
 				0,
 				enModelUpAxisY,
-				false,
+				true,
 				m_maxInstanceTable[name],
 				false,
 				ReflectLayer::enNone

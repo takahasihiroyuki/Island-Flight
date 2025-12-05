@@ -95,7 +95,7 @@ namespace nsK2EngineLow {
 	{
 		m_isFowardRender = true;
 		m_frowardRenderModel.Init(initData);
-		InitModelOnZprepass(tkmFilePath, enModelUpAxisZ);
+		InitModelOnZprepass(tkmFilePath, enModelUpAxisZ,true);
 		InitInstancingDraw(1);
 
 	}
@@ -269,7 +269,7 @@ namespace nsK2EngineLow {
 		m_skeleton.Init(skeletonFilePath.c_str());
 	}
 
-	void ModelRender::InitModelOnZprepass(const char* tkmFilePath, EnModelUpAxis modelUpAxis)
+	void ModelRender::InitModelOnZprepass(const char* tkmFilePath, EnModelUpAxis modelUpAxis, bool isSkyCube)
 	{
 
 		ModelInitData modelInitData;
@@ -302,6 +302,11 @@ namespace nsK2EngineLow {
 			else {
 				modelInitData.m_vsEntryPointFunc = "VSMain";
 			}
+		}
+
+		if (isSkyCube)
+		{
+			modelInitData.m_psEntryPointFunc = "PSSkyCubeMain";
 		}
 
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;

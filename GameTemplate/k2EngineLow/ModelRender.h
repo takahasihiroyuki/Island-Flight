@@ -145,6 +145,11 @@ namespace nsK2EngineLow {
 			m_rotation = rotation;
 		}
 
+		void AddRotation(const Quaternion& addRotation)
+		{
+			m_rotation.Add(addRotation);
+		}
+
 		/// <summary>
 		/// ëÂÇ´Ç≥ÇÃê›íË
 		/// </summary>
@@ -281,7 +286,8 @@ namespace nsK2EngineLow {
 
 		void InitModelOnZprepass(
 			const char* tkmFilePath,
-			EnModelUpAxis modelUpAxis
+			EnModelUpAxis modelUpAxis,
+			bool isSkyCube = false
 		);
 
 		/// <summary>

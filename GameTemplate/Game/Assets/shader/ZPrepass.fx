@@ -104,6 +104,13 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstanci
     return psIn;
 }
 
+//スカイキューブの時にこれを呼び出す
+float4 PSSkyCubeMain(SPSIn psIn) : SV_Target0
+{
+    // 空は無限遠なので0にする
+    return float4(0, 0, 0, 1);
+}
+
 // スキンなしメッシュ用の頂点シェーダーのエントリー関数。
 SPSIn VSMain(SVSIn vsIn)
 {
