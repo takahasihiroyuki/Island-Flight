@@ -34,14 +34,14 @@ cbuffer LightCB : register(b1)
     float3 eyepos; //視点の位置
     float3 ambientColor; //アンビエントカラー
     float4x4 mLVP; //ライトのビュー×プロジェクション行列
+    float4x4 mViewProjInv; // ビュープロジェクション行列の逆行列
 }
 
 
 Texture2D<float4> g_albedoTexture : register(t0); // アルベド
 Texture2D<float4> g_normalTexture : register(t1); // 法線
 Texture2D<float4> g_speculaTexture : register(t2); //スペキュラパワー
-Texture2D<float4> g_worldPosTexture : register(t3); //ワールド座標
-Texture2D<float4> g_shadowMap : register(t4); // シャドウマップ(GBufferではない)
+Texture2D<float4> g_shadowMap : register(t3); // シャドウマップ(GBufferではない)
 
 
 
@@ -55,7 +55,7 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv);
 float CalcShadowPow(float isDrawShadow, PSIn psIn, float3 worldPos);
 float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance);
-
+float3 CalcWorldPosFromUVZ(float2 uv, float zInScreen, float4x4 mViewProjInv);
 
 
 PSIn VSMain(VSInput vsIn)
@@ -71,27 +71,27 @@ float4 PSMain(PSIn psIn) : SV_Target0
 	//GBufferの内容を使ってライティング
     float4 albedo = g_albedoTexture.Sample(g_sampler, psIn.uv);
     
-    float4 normal = g_normalTexture.Sample(g_sampler, psIn.uv);
+    float3 normal = g_normalTexture.Sample(g_sampler, psIn.uv).xyz;
     normal = (normal * 2.0f) - 1.0f;
     
-    float3 worldPos = g_worldPosTexture.Sample(g_sampler, psIn.uv).xyz;
+    //ワールドポジションを計算
+    //アルベドのw成分にスクリーン空間のZ値を入れている。
+    float3 worldPos = CalcWorldPosFromUVZ(psIn.uv, albedo.w, mViewProjInv);
     
     float3 dirLight = CalcLigFromDrectionLight(psIn, normal.xyz, worldPos);
     
-    float shadowPow = CalcShadowPow(normal.w, psIn, worldPos);
+    float isDrawShadow = g_normalTexture.Sample(g_sampler, psIn.uv).w;
+    float shadowPow = CalcShadowPow(isDrawShadow, psIn, worldPos);
     
     float3 lig = dirLight + ambientColor;
 	
-    //フレネル反射率を計算
-    float flesnel = ComputeFresnel(normal, normalize(eyepos - worldPos), 0.001f);
+
 
     
     //最終的な色
     float4 finalColor = albedo;
     
     finalColor.xyz *= lig;
-
-    finalColor = lerp(finalColor, float4(directionLight.color, 1), 0);
     
     finalColor.xyz *= shadowPow;
     //finalColor.xyz = dirLight;
@@ -99,6 +99,24 @@ float4 PSMain(PSIn psIn) : SV_Target0
     return finalColor;
 
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+//UV座標とスクリーン空間のZ値からワールド座標を計算
+//////////////////////////////////////////////////////////////////////////////////
+float3 CalcWorldPosFromUVZ(float2 uv, float zInScreen, float4x4 mViewProjInv)
+{
+    float3 screenPos;
+    //0~1のUV座標を-1~1のスクリーン座標に変換
+    screenPos.xy = (uv * float2(2.0f, -2.0f)) + float2(-1.0f, 1.0f);
+    //スクリーン空間のZ値をセット
+    screenPos.z = zInScreen;
+	
+    //逆行列を使ってワールド座標に変換
+    float4 worldPos = mul(mViewProjInv, float4(screenPos, 1.0f));
+    worldPos.xyz /= worldPos.w;
+    return worldPos.xyz;
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////
 //Lambert拡散反射を計算
@@ -130,6 +148,8 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 {
 	//反射ベクトルを求める
     float3 refVec = reflect(lightDirection, normal);
+    refVec = normalize(refVec);
+    
 	//光が当たったサーフェイス(表面)から視点に伸びるベクトルを求める
     float3 toEye = eyepos - worldPos;
     toEye = normalize(toEye);
@@ -140,13 +160,13 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 	//鏡面反射の強さを0~1にする
     t = max(0.0f, t);
 
-	////鏡面反射の強さを絞る
- //   t = pow(t, 10.0f);
+	//鏡面反射の強さを絞る
+    t = pow(t, 10.0f);
     
-    float specPower = g_speculaTexture.Sample(g_sampler, uv);
+    float specPower = g_speculaTexture.Sample(g_sampler, uv).g;
 	//鏡面反射光
-    float3 specularLig = lightColor * t/* * specPower*/;
-
+    float3 specularLig = lightColor * t /** specPower*/;
+    
     return specularLig;
 }
 
@@ -162,8 +182,11 @@ float3 CalcLigFromDrectionLight(PSIn psIn, float3 normal, float3 worldPos)
     float3 specDirection = CalcPhongSpecular(
 		directionLight.direction, directionLight.color, worldPos, normal, psIn.uv);
 
+    //フレネル反射率を計算
+    float flesnel = ComputeFresnel(normal, normalize(eyepos - worldPos), 0.001f);
+    
 	//最終的な光
-    return diffDirection + specDirection;
+    return (diffDirection + specDirection) * flesnel;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

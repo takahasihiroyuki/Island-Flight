@@ -5,6 +5,14 @@
 namespace nsK2EngineLow
 {
 
+	namespace
+	{
+		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_COLOR = Vector3(1.0f, 0.95f, 0.80f) * 0.5;
+		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_DIRECTION = Vector3(0.8f, 0.1f, 0.1f);
+		const Vector3 SCENELIGHT_AMBIENTLIGHT_COLOR = Vector3(0.43f, 0.47f, 0.50f) * 2;
+		const Vector3 LIGHTCAMERA_POSITION = Vector3(100.0f, 2000.0f, 500.0f);
+	}
+
 	RenderingEngine::RenderingEngine()
 	{
 		for (int i = 0; i < static_cast<int>(ReflectLayer::enNum); ++i) {
@@ -54,8 +62,13 @@ namespace nsK2EngineLow
 
 		InitGBuffer();
 
-		//ディレクションライトの設定。
-		m_sceneLight.Init();
+		//ライトの設定。
+		m_sceneLight.Init(SCENELIGHT_DHIRECTIONLIGHT_DIRECTION,
+			SCENELIGHT_DHIRECTIONLIGHT_COLOR,
+			SCENELIGHT_AMBIENTLIGHT_COLOR,
+			LIGHTCAMERA_POSITION,
+			g_camera3D->GetViewProjectionMatrixInv()
+		);
 
 		//ポストエフェクトの初期化。
 		m_postEffect.Init(
@@ -147,16 +160,6 @@ namespace nsK2EngineLow
 			DXGI_FORMAT_UNKNOWN
 		);
 
-		//ワールド座標用のターゲットを作成
-		m_gBuffer[enGBufferWorldPos].Create(
-			g_graphicsEngine->GetFrameBufferWidth(),
-			g_graphicsEngine->GetFrameBufferHeight(),
-			1,
-			1,
-			DXGI_FORMAT_R32G32B32A32_FLOAT,
-			DXGI_FORMAT_UNKNOWN
-		);
-
 	}
 
 	void RenderingEngine::InitDefferedLightingSprite()
@@ -171,7 +174,6 @@ namespace nsK2EngineLow
 		spriteInitData.m_textures[enGBufferAlbedoDepth] = &m_gBuffer[enGBufferAlbedoDepth].GetRenderTargetTexture();
 		spriteInitData.m_textures[enGBufferNormal] = &m_gBuffer[enGBufferNormal].GetRenderTargetTexture();
 		spriteInitData.m_textures[enGBufferSpecular] = &m_gBuffer[enGBufferSpecular].GetRenderTargetTexture();
-		spriteInitData.m_textures[enGBufferWorldPos] = &m_gBuffer[enGBufferWorldPos].GetRenderTargetTexture();
 		spriteInitData.m_textures[enGBufferShadow] = &m_shadow.GetShadowTarget().GetRenderTargetTexture();
 
 
@@ -229,7 +231,6 @@ namespace nsK2EngineLow
 			&m_gBuffer[enGBufferAlbedoDepth]   // 0番目のレンダリングターゲット
 			,&m_gBuffer[enGBufferNormal]   // 1番目のレンダリングターゲット
 			,&m_gBuffer[enGBufferSpecular] // 2番目のレンダリングターゲット
-			,&m_gBuffer[enGBufferWorldPos] // 3番目のレンダリングターゲット
 		};
 
 		// まず、レンダリングターゲットとして設定できるようになるまで待つ
@@ -255,6 +256,11 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::DeferredLighting(RenderContext& rc)
 	{
+
+		GetSceneLight().SetEyePos(g_camera3D->GetPosition());
+		// カメラの逆行列を定数バッファにセット
+		GetSceneLight().SetCameraViewProjInv(g_camera3D->GetViewProjectionMatrixInv());
+
 		// レンダリング先をメインレンダリングターゲットにする
 		rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
 		rc.SetRenderTargetAndViewport(m_mainRenderTarget);

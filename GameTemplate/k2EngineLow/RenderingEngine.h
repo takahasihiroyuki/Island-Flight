@@ -235,7 +235,6 @@ namespace nsK2EngineLow {
 			enGBufferAlbedoDepth,      // アルベド
 			enGBufferNormal,           // 法線
 			enGBufferSpecular,         // スペキュラ
-			enGBufferWorldPos,         // ワールド座標
 			enGBufferShadow,           // シャドウ
 			enGBufferNum,              // G-Bufferの数
 

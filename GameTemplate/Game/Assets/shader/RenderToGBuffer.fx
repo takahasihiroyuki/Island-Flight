@@ -43,7 +43,6 @@ struct SPSOut
     float4 albedo : SV_Target0; // アルベド
     float4 normal : SV_Target1; // 法線
     float specPow : SV_Target2; // スペキュラ強度
-    float3 worldPos : SV_Target3; // ワールド座標
 };
 
 //シェーダーリソース
@@ -165,10 +164,7 @@ SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
     
     
     psOut.specPow = g_specularMap.Sample(g_sampler, psIn.uv); //スペキュラ強度はとりあえず1.0fで固定。
-    
-    //ワールド座標の抽出
-    psOut.worldPos = psIn.worldPos;
-    
+        
     // シャドウレシーバーかどうかを判定するフラグをw成分に格納する。
     //法線マップのｗは使わないので、ここに格納する。
     if (isShadowReciever == true)

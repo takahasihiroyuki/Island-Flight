@@ -100,7 +100,7 @@ namespace nsK2EngineLow {
 		Light m_light;
 		Plane m_plane = Plane(INIT_OCEAN_PLANE_NORMAL, INIT_OCEAN_PLANE_POSITION);
 		OceanConstantBuffer m_constantBuffer;
-		float m_waveSpeed = 0.1f;
+		float m_waveSpeed = 0.01f;
 		PhysicsStaticObject m_physics;//“–‚½‚è”»’è
 
 	};

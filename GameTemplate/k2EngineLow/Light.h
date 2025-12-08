@@ -23,13 +23,20 @@ namespace nsK2EngineLow {
 		float				pad;					//パティング
 		Vector3             ambientColor;           //アンビエントカラー
 		float				pad1;					//パティング
-		Matrix mLVP;//ライトビュー投影行列。
+		Matrix				mLVP;					//ライトビュー投影行列。
+		Matrix				mCameraViewProjInv=Matrix::Identity;		//カメラのビュー射影行列の逆行列。
 	};
 
 	class SceneLight
 	{
 	public:
-		void Init();
+		void Init(
+			const Vector3& directionLightDir,
+			const Vector3& directionLightColor,
+			const Vector3& ambientLightColor,
+			const Vector3& lightCameraPos,
+			const Matrix& mCameraViewProjInv
+		);
 		void LightCameraUpdate();
 
 		Light& GetLight()
@@ -98,7 +105,7 @@ namespace nsK2EngineLow {
 		/// <param name="ambientColor"></param>
 		void SetAmbientLight(Vector3 ambientColor)
 		{
-			m_light.ambientColor= ambientColor;
+			m_light.ambientColor = ambientColor;
 		}
 
 		//////////////////////////////////////////////////////////////////////
@@ -113,7 +120,15 @@ namespace nsK2EngineLow {
 		{
 			m_light.mLVP = lvp;
 		}
-		
+
+		/// <summary>
+		/// カメラのビュー射影行列の逆行列を設定する
+		/// </summary>
+		/// <param name="inv"></param>
+		void SetCameraViewProjInv(Matrix inv)
+		{
+			m_light.mCameraViewProjInv = inv;
+		}
 
 
 		////////////////////////////////////////////////////////

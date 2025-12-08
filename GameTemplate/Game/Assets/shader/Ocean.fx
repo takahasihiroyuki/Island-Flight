@@ -48,6 +48,7 @@ struct Light
     float3 cameraEyePos; //カメラの座標
     float3 ambientColor; //アンビエントカラー
     float4x4 mLVP; //ライトビュー投影行列。
+    float4x4 mViewProjInv; // ライトビュー行列
 };
 
 ////////////////////////////////////////////////
