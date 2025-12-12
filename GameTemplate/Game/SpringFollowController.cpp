@@ -102,8 +102,8 @@ void SpringFollowController::UpdateState(const TargetSnapshot& snap)
 	//カメラのポジションのオフセットを求める。（ワールド座標）
 	Vector3 woldeCamOffsetPos=CalcWoldeCameraOffsetPos(orientation);
 
-	//カメラの速度
-	m_cameraState.velocity = CalcSpringMove(DAMPING_C, DAMPING_RATE, snap, woldeCamOffsetPos);
+	////カメラの速度
+	//m_cameraState.velocity = CalcSpringMove(DAMPING_C, DAMPING_RATE, snap, woldeCamOffsetPos);
 
 	//速度を積分
 	//変位を足す。

@@ -62,6 +62,16 @@ enum class WingType {
 	Count
 };
 
+enum DebugMomentArrowUIType
+{
+	enMainLeft,
+	enMainRight,
+	enTail,
+	enVertical,
+	Count
+};
+
+class DebugArrowUI;
 class Aircraft
 {
 public:
@@ -106,7 +116,6 @@ private:
 	void InitWingPositionOffset();
 	void InitAllLiftingSurfaces();
 
-	void ApplyControlInputs();
 	void UpdateModel();
 
 	/// <summary>
@@ -142,8 +151,6 @@ private:
 	/// </summary>
 	/// <returns></returns>
 	Vector3 ComputeForce();
-
-	void Move();
 
 	/////////////モーメント計算系///////////////////
 
@@ -183,7 +190,6 @@ private:
 		return Vector3(rhs.x / Ix, rhs.y / Iy, rhs.z / Iz);
 	}
 
-
 private:
 	CharacterController m_characterController;
 	ModelRender m_model;					// モデル
@@ -192,6 +198,7 @@ private:
 	Vector3 m_position;
 	std::unique_ptr<Engine> m_engine;			// 所有権付きポインタ
 	Vector3 m_linearVelocity = Vector3::Zero;	//機体の並進速度ベクトル（ワールド座標）
+	Vector3 m_accel = Vector3::Zero;			//加速度ベクトル（ワールド座標）
 	const float m_mass = 10.0f;							//質量
 	std::array<LiftingSurface*, static_cast<size_t>(WingType::Count)> m_wings;
 	std::array<Quaternion, static_cast<size_t>(WingType::Count)> m_initWingsOrientation;
@@ -203,5 +210,9 @@ private:
 
 	mutable Matrix m_world;							//ワールド行列
 	mutable bool m_worldDirty = true;				// ワールド行列が最新かどうか
+
+	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugMomentUI;
+	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugForceUI;
+	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugMomentArm;
 
 };

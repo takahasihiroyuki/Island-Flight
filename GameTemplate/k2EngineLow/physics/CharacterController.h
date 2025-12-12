@@ -42,6 +42,8 @@ namespace nsK2EngineLow {
 			*@return 移動後のキャラクターの座標。
 			*/
 		const Vector3& Execute(Vector3& moveSpeed, float deltaTime);
+
+		const Vector3& AircraftExecute( Vector3& moveSpeed, float deltaTime);
 		/*!
 			* @brief	座標を取得。
 			*/
@@ -92,9 +94,10 @@ namespace nsK2EngineLow {
 	private:
 		bool				m_isInited = false;				//!<初期化済み？
 		Vector3 			m_position;						//!<座標。
+		Vector3 			m_velocity = g_vec3Zero;		//!<速度。
 		bool 				m_isJump = false;				//!<ジャンプ中？
 		bool				m_isOnGround = true;			//!<地面の上にいる？
-		ICollider*			m_activeCollider;				//!<コライダー。
+		ICollider* m_activeCollider;				//!<コライダー。
 		CCapsuleCollider	m_capsuleCollider;				//!<カプセルコライダー。
 		MeshCollider		m_meshCollider;					//!<メッシュコライダー。
 		float				m_radius = 0.0f;				//!<カプセルコライダーの半径。

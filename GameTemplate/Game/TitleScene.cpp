@@ -18,6 +18,7 @@ TitleScene::~TitleScene()
 	DeleteGO(m_titleBGM);
 	DeleteGO(m_ocean);
 	DeleteGO(m_skyCube);
+	delete(m_aircraft);
 }
 
 bool TitleScene::Start()

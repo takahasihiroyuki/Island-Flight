@@ -230,6 +230,7 @@
     <ClCompile Include="CoinDirectionArrowUI.cpp" />
     <ClCompile Include="CoinGetUI.cpp" />
     <ClCompile Include="CoinManager.cpp" />
+    <ClCompile Include="DebugArrowUI.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GamePlayState.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="CoinDirectionArrowUI.h" />
     <ClInclude Include="CoinGetUI.h" />
     <ClInclude Include="CoinManager.h" />
+    <ClInclude Include="DebugArrowUI.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GamePlayState.h" />

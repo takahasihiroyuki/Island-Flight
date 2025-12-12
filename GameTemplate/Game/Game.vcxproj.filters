@@ -91,7 +91,12 @@
     <ClCompile Include="CoinDirectionArrowUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="CoinGetUI.cpp" />
+    <ClCompile Include="CoinGetUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugArrowUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -180,6 +185,11 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="SoundID.h" />
-    <ClInclude Include="CoinGetUI.h" />
+    <ClInclude Include="CoinGetUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugArrowUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

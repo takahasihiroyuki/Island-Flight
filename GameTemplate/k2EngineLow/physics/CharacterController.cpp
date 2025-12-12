@@ -320,6 +320,72 @@ namespace nsK2EngineLow {
 		//@todo 未対応。 trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
 		return m_position;
 	}
+
+	const Vector3& CharacterController::AircraftExecute(Vector3& moveSpeed, float deltaTime)
+	{
+		// 1. "本来" 行きたい先
+		Vector3 desiredNextPos = m_position + moveSpeed * deltaTime;
+
+		// 2. 今の位置 → desiredNextPos までをカプセル(または球)でスイープ
+		btTransform start, end;
+		start.setIdentity();
+		end.setIdentity();
+
+		//距離チェック用の変数
+		Vector3 sweepVec = desiredNextPos - m_position;
+		float sweepLenSq = sweepVec.LengthSq();
+		const float kMinSweepDistSq = 1e-6f;  // お好みで調整
+		Vector3 nextPos = desiredNextPos;
+
+		// 十分に移動するならスイープする
+		if (sweepLenSq > kMinSweepDistSq)
+		{
+			// カプセルの中心位置（今の位置）。必要なら高さオフセット足す
+			start.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
+			end.setOrigin(btVector3(desiredNextPos.x, desiredNextPos.y, desiredNextPos.z));
+
+			SweepResultWall cb;
+			cb.me = m_rigidBody.GetBody();
+			cb.startPos = m_position;
+
+			PhysicsWorld::GetInstance()->ConvexSweepTest(
+				(const btConvexShape*)m_activeCollider->GetBody(),
+				start, end, cb
+			);
+
+			Vector3 nextPos = desiredNextPos;
+
+			if (cb.isHit) {
+				// 3. 当たった。ヒット位置まで戻して、少し押し出す
+				Vector3 hitPos = cb.hitPos;
+				Vector3 n = cb.hitNormal;
+				n.Normalize();
+
+				// カプセル半径ぶん＋ちょっとだけ押し出す
+				const float kSlop = 0.01f;
+				nextPos = hitPos + n * (m_radius + kSlop);
+
+				// 4. 速度から法線成分を削ってスライドさせる
+				float vn = moveSpeed.Dot(n);      // 法線方向成分
+				if (vn < 0.0f) {                 // 壁に向かっているときだけ削る
+					moveSpeed -= n * vn;          // v' = v - (v?n) n
+				}
+			}
+		}
+
+		m_position = nextPos;
+
+		// Bullet の剛体も追従させる
+		btRigidBody* btBody = m_rigidBody.GetBody();
+		btBody->setActivationState(DISABLE_DEACTIVATION);
+		btTransform& trans = btBody->getWorldTransform();
+		trans.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
+
+		return m_position;
+	}
+
+
+
 	/*!
 	* @brief	死亡したことを通知。
 	*/

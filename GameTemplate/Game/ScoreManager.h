@@ -9,7 +9,7 @@ public:
 public:
 	void AddScore(float score) 
 	{
-		m_score = score;
+		m_score += score;
 	};
 
 	float GetScore() {

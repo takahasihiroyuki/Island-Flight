@@ -27,7 +27,7 @@ public:
 			return;
 		}
 
-		if (input <-1)
+		if (input < -1)
 		{
 			controlInput = -1;
 			return;
@@ -126,6 +126,11 @@ public:
 	}
 
 	void UpdateOrientation(Quaternion orientation);
+
+	Vector3 GetWorldMomentArm()const
+	{
+		return m_worldMomentArm;
+	}
 private:
 
 	/// <summary>

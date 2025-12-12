@@ -1,0 +1,40 @@
+#pragma once
+#include"UIScreen.h"
+
+enum collarType
+{
+	enYerrow,
+	enRed,
+	enBlue,
+};
+
+class DebugArrowUI :public UIScreen
+{
+public:
+	DebugArrowUI()
+	{}
+	~DebugArrowUI() {};
+	void Update()override;
+	void Render(RenderContext& rc)override;
+	void Init(collarType collar, float length, float scale = 1.0f);
+	void Open();
+	void Close();
+	void UpdateTargetVec(const Vector3& moment)
+	{
+		m_targetVec = moment;
+	}
+	void UpdatePosition(const Vector3& position)
+	{
+		m_position = position;
+	}
+
+private:
+	Vector3 m_targetVec;
+	Vector3 m_position;
+	float m_baseLength = 1;
+	float m_baseScale = 1;
+	ModelRender m_arrow;
+
+
+};
+

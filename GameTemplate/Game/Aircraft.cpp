@@ -1,6 +1,8 @@
 ﻿#include "stdafx.h"
 #include "Aircraft.h"
 #include "LiftingSurface.h"
+#include "DebugArrowUI.h"
+#include "UIManager.h"
 
 namespace
 {
@@ -11,15 +13,16 @@ namespace
 	constexpr float CAPSELLE_HEIGHT = 10.0f; // カプセルコライダーの高さ
 
 	// 各操縦面の最大操舵角度（度数法）
-	constexpr float MAX_LEFT_AILERON_ANGLE = 5.0*0.5f;
-	constexpr float MAX_RIGHT_AILERON_ANGLE = 5.0*0.5f;
-	constexpr float MAX_ELEVATOR_ANGLE = 3.0f*0.5;//上下回転
-	constexpr float MAX_RUDDER_ANGLE = 6.0*0.5;// 左右回転
+	constexpr float MAX_LEFT_AILERON_ANGLE = 5.0 * 0.5f;
+	constexpr float MAX_RIGHT_AILERON_ANGLE = 5.0 * 0.5f;
+	constexpr float MAX_ELEVATOR_ANGLE = 3.0f * 0.5;//上下回転
+	constexpr float MAX_RUDDER_ANGLE = 6.0 * 0.5;// 左右回転
 
 	float DegToRad(float deg)
 	{
 		return deg * (3.1415f / 180.0f);
 	}
+
 }
 
 Aircraft::Aircraft()
@@ -39,6 +42,7 @@ void Aircraft::Init(const char* filePath, Vector3 initPos, float baseThrust)
 	m_model.SetScale(MODEL_SCALE);
 	m_model.Update();
 
+	// キャラクターコントローラーの初期化
 	m_characterController.Init(CAPSELLE_RADIUS, CAPSELLE_HEIGHT, m_position);
 
 	InitOrientation();
@@ -50,49 +54,109 @@ void Aircraft::Init(const char* filePath, Vector3 initPos, float baseThrust)
 	//エンジン
 	m_engine = std::make_unique<Engine>();
 	m_engine->SetBaseThrust(baseThrust);
+
+	//デバッグ用のUIを登録
+	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
+	{
+		auto debugMomentUI = std::make_unique<DebugArrowUI>();
+		debugMomentUI->Init(collarType::enYerrow, 0.001);
+		debugMomentUI->SetDisplayed(true);
+		m_debugMomentUI[i] = debugMomentUI.get();
+
+		auto debugForceUI = std::make_unique<DebugArrowUI>();
+		debugForceUI->Init(collarType::enRed, 0.0005);
+		debugForceUI->SetDisplayed(true);
+		m_debugForceUI[i] = debugForceUI.get();
+
+		auto debugMomentArmUI = std::make_unique<DebugArrowUI>();
+		debugMomentArmUI->Init(collarType::enBlue, 2.0f);
+		debugMomentArmUI->SetDisplayed(true);
+		m_debugMomentArm[i] = debugMomentArmUI.get();
+
+		UIManager::GetInstance().RegisterScreen("DebugMomentArrowUI" + std::to_string(i), std::move(debugMomentUI));
+		UIManager::GetInstance().RegisterScreen("DebugForceArrowUI" + std::to_string(i), std::move(debugForceUI));
+		UIManager::GetInstance().RegisterScreen("DebugMomentArmUI" + std::to_string(i), std::move(debugMomentArmUI));
+	}
+
+
 }
 
 void Aircraft::Update()
 {
 	m_worldDirty = true;
 
+	//翼の更新
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
-		//if (i == 0||i==1 || i == 3/*|| i == 3*/ /*|| i == 1*/) {
+		//if (i == 3) {
+			//翼の制御面の更新
 		m_wings[i]->UpdateControlSurface();
+		//翼の姿勢更新
 		m_wings[i]->UpdateOrientation(m_state.orientation);
-		//}
+		/*}*/
 	}
 
-	m_engine->UpdateOrientation(m_state.orientation);
+	//エンジンの更新
+	{
+		//エンジンの姿勢更新
+		m_engine->UpdateOrientation(m_state.orientation);
+		//推力ベクトルの更新
+		m_engine->UpdateThrustForce();
+	}
 
-	Move();
 
+	//力を計算
+	Vector3 force = ComputeForce();
+
+	//加速度を計算
+	m_accel = force / m_mass;
+
+	//加速度を積分して速度を更新
+	AddLinearVelocity(m_accel * g_gameTime->GetFrameDeltaTime());
+
+	Vector3 debug = Vector3(0.0f, 0.0f, 0.0f);
+	//移動実行
+	m_position =
+		m_characterController
+		.AircraftExecute(
+			/*m_linearVelocity*/debug,
+			g_gameTime->GetFrameDeltaTime()
+		);
+
+
+	//モーメントの計算と姿勢の更新
 	ComputeMoment();
 
+	//相対風の更新
 	UpdateRelWind();
 
+	//モデルの更新
 	UpdateModel();
 
+	//デバッグ用のUIを更新
+	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
+	{
 
-	////カメラ設定
-	////TODO:後でちゃんと他のクラスでかく。
-	//Vector3 camPosL = Vector3(0.0f, 300.0f, -500.0f); // 機体の後方・上
-	//Vector3 camTgtL = Vector3(0.0f, 100.0f, 0.0f); // 機体の少し前方上
-	//Vector3 upL = Vector3::Up;                     // 機体ローカルUp
-	////m_state.orientation.Apply(camPosL);
-	////m_state.orientation.Apply(camTgtL);
-	////m_state.orientation.Apply(upL);
+		//m_debugMomentUI[i]->UpdateTargetVec(m_wings[i]->ComputeMoment(m_state));
+		//m_debugMomentUI[i]->UpdatePosition(m_position);
 
-	//Vector3 camPosW = GetPosition() + camPosL;
-	//Vector3 camTgtW = GetPosition() + camTgtL;
-	//Vector3 upW = upL;
-	//upW.Normalize();
+		//m_debugForceUI[i]->UpdateTargetVec(m_wings[i]->GetForce()+ m_engine->GetThrustForce());
+		//m_debugForceUI[i]->UpdatePosition(m_position);
 
-	//g_camera3D->SetPosition(camPosW);
-	//g_camera3D->SetTarget(camTgtW);
-	//g_camera3D->SetUp(upW);
+		//m_debugMomentArm[i]->UpdateTargetVec(m_wings[i]->GetWorldMomentArm());
+		//m_debugMomentArm[i]->UpdatePosition(m_position);
+
+	}
 
 
+
+	//デバッグ用UIの更新
+	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
+	{
+		if (i == 3) {
+			m_debugMomentUI[i]->UpdateTargetVec(m_wings[i]->ComputeMoment(m_state));
+			m_debugMomentUI[i]->UpdatePosition(m_position);
+		}
+	}
 
 }
 void Aircraft::Render(RenderContext& rc)
@@ -178,42 +242,49 @@ void Aircraft::InitAllLiftingSurfaces()
 	);
 }
 
-void Aircraft::ApplyControlInputs()
-{
-	m_wings[static_cast<int>(WingType::MainLeft)]->SetControlInput(-g_pad[0]->IsPress(enButtonLB1));
-	m_wings[static_cast<int>(WingType::MainRight)]->SetControlInput(g_pad[0]->IsPress(enButtonRB1));
-	m_wings[static_cast<int>(WingType::Tail)]->SetControlInput(g_pad[0]->GetLStickYF());
-	m_wings[static_cast<int>(WingType::Vertical)]->SetControlInput(g_pad[0]->GetLStickXF());
-}
-
-void Aircraft::Move()
-{
-	//力を計算
-	Vector3 force = ComputeForce();
-
-	AddLinearVelocity(((force / m_mass)) * g_gameTime->GetFrameDeltaTime());
-
-	Vector3 debug = Vector3::Zero;
-	m_position = m_characterController
-		.Execute(
-			m_linearVelocity,
-			g_gameTime->GetFrameDeltaTime()
-		);
-}
-
 Vector3 Aircraft::ComputeForce()
 {
-	m_engine->UpdateThrustForce();
-
 	Vector3 thrust = m_engine->GetThrustForce();
 
 	Vector3 wingsForce = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
-		//if (i == 0 || i == 1 || i == 3) {
+		//if (i == 3) {
 		m_wings[i]->ComputeForces(m_state);
 		wingsForce += m_wings[i]->GetForce();
+
+		m_debugForceUI[i]->UpdateTargetVec(m_wings[i]->GetForce() /*+ m_engine->GetThrustForce()*/);
+
+		switch (static_cast<WingType>(i))
+		{
+		case WingType::MainLeft:
+			m_debugForceUI[i]->UpdatePosition(m_position+Vector3(-200,0,0));
+			break;
+
+		case WingType::MainRight:
+			m_debugForceUI[i]->UpdatePosition(m_position + Vector3(200, 0, 0));
+
+			break;
+
+		case WingType::Tail:
+			m_debugForceUI[i]->UpdatePosition(m_position + Vector3(0, 0, -200));
+
+			break;
+
+		case WingType::Vertical:
+			m_debugForceUI[i]->UpdatePosition(m_position + Vector3(0, 0, 200));
+
+			break;
+
+		default:
+			break;
+		}
+
 		//}
 	}
+
+	m_debugForceUI[0]->UpdateTargetVec(wingsForce /*+ m_engine->GetThrustForce()*/);
+	m_debugForceUI[0]->UpdatePosition(m_position);
+
 
 	Vector3 force = thrust + wingsForce;
 	force += ComputeGravity();
@@ -240,14 +311,15 @@ void Aircraft::ComputeMoment()
 	Vector3 totalMomentObj = totalMomentWold;
 	objMat.Apply(totalMomentObj);
 
-
 	//角加速度
-	Vector3 angularAcc = ComputeOmegaDotBody(totalMomentWold);
+	Vector3 angularAcc = ComputeOmegaDotBody(totalMomentObj);
 
 	float delta = g_gameTime->GetFrameDeltaTime();
 
 
+
 	//角速度
+	//TODO:なぜか角速度を積分しない方が正しい動きになっている。
 	m_angularVelocity = angularAcc * delta;
 
 	Vector3 angularAxis = m_angularVelocity;
@@ -257,12 +329,12 @@ void Aircraft::ComputeMoment()
 
 	K2_LOG("angularVelocity: %f, %f, %f\n", m_angularVelocity.x, m_angularVelocity.y, m_angularVelocity.z);
 
-	float omega = m_angularVelocity.Length();
-	if (omega > 1e-5f) { // 小さすぎる場合は無視
+	float angle = m_angularVelocity.Length() * g_gameTime->GetFrameDeltaTime();
+	if (angle > 1e-5f) { // 小さすぎる場合は無視
 		// 姿勢を更新
 		Quaternion deltaQuaternion;
-		deltaQuaternion.SetRotation(angularAxis, m_angularVelocity.Length() * g_gameTime->GetFrameDeltaTime());
-		m_state.orientation = deltaQuaternion * m_state.orientation;
+		deltaQuaternion.SetRotation(angularAxis, angle);
+		m_state.orientation = m_state.orientation * deltaQuaternion;
 		m_state.orientation.Normalize();
 	}
 }
@@ -278,7 +350,7 @@ Vector3 Aircraft::ComputeTotalMomentWorld()
 {
 	Vector3 totalMomentWorld = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
-		//if (i == 0 || i == 1||i==3) {
+		//if (i == 3) {
 		if (m_wings[i]) {
 			totalMomentWorld += m_wings[i]->ComputeMoment(m_state);
 		}
