@@ -10,7 +10,7 @@ namespace
 	const SceneType NEXT_SCENE = SceneType::InGame;
 	const Vector3 CAMERA_TARGET_POS_OFFSET = Vector3(0, 50, 0);
 	const Vector3 INIT_AIRCRAFT_POS = Vector3(0.0f, 50000.0f, 0.0f);
-	constexpr float AIRCRAFT_BASE_THRUST = 2000.0f;
+	constexpr float AIRCRAFT_BASE_THRUST = 8000.0f;
 }
 
 TitleScene::~TitleScene()
@@ -28,6 +28,46 @@ bool TitleScene::Start()
 
 void TitleScene::Update()
 {
+	switch (m_phase)
+	{
+	case TitlePhase::WaitingInput:
+		WaitingInputPhaseUpdate();
+
+		//Aボタンが押されたら、フェーズを進める
+		if (g_pad[0]->IsTrigger(enButtonA)) {
+			m_phase = TitlePhase::Outro;
+
+			//カメラのコントローラーを変える
+			TargetSnapshot targetSnapshot;
+			targetSnapshot.SetPosition(m_aircraft->GetPosition() + CAMERA_TARGET_POS_OFFSET);
+			targetSnapshot.SetRotation(m_aircraft->GetOrientation());
+
+			CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
+			CameraManager::GetInstance().ChangeController(CameraControllerType::enStatic);
+
+
+		}
+
+		break;
+	case TitlePhase::Outro:
+		OutroPhaseUpdate();
+
+		if (m_outroFinishTime <= m_elapsedTime) {
+			m_elapsedTime = 0;
+
+			m_phase = TitlePhase::ToNextScene;
+		}
+		break;
+	case TitlePhase::ToNextScene:
+		break;
+	default:
+		break;
+	}
+
+}
+
+void TitleScene::WaitingInputPhaseUpdate()
+{
 	//カメラのターゲット情報更新
 	TargetSnapshot targetSnapshot;
 	targetSnapshot.SetPosition(m_aircraft->GetPosition() + CAMERA_TARGET_POS_OFFSET);
@@ -36,21 +76,21 @@ void TitleScene::Update()
 
 	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
 
+	m_aircraft->Update();
+}
+
+void TitleScene::OutroPhaseUpdate()
+{
+	//タイマーを進める
 	m_elapsedTime += g_gameTime->GetFrameDeltaTime();
 
-	////飛行機の動き
-	//float tailInput = sin(3.1415*m_elapsedTime);
-	//m_aircraft->SetControlInputs(
-	//	0.0f,
-	//	0.0f,
-	//	tailInput,
-	//	0.0f,
-	//	false,
-	//	false
-	//);
+	TargetSnapshot targetSnapshot;
+	targetSnapshot.SetPosition(m_aircraft->GetPosition() + CAMERA_TARGET_POS_OFFSET);
 
+	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
+
+	m_aircraft->SetControlInputs(0.0f, 0.0f, -0.5f, 0.0f, true, false);
 	m_aircraft->Update();
-
 
 }
 
@@ -62,10 +102,12 @@ void TitleScene::Render(RenderContext& rc)
 
 bool TitleScene::RequestChangeScene(SceneType& type)
 {
-	if (g_pad[0]->IsTrigger(enButtonA)) {
+	if (m_phase == TitlePhase::ToNextScene)
+	{
 		type = NEXT_SCENE;
 		return true;
 	}
+
 
 	return false;
 }
