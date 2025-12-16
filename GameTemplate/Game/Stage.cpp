@@ -13,7 +13,7 @@
 namespace
 {
 	//scale:pos=1:39がベスト
-	constexpr float OBJECT_SCALE_OFFSET = 10.0f*0.9;
+	constexpr float OBJECT_SCALE_OFFSET = 10.0f * 0.9;
 	constexpr float OBJECT_POS_OFFSET = 390.0f;
 
 	//各オブジェクトごとに objectNames を線形探索すると全体で O(N²) になるため
@@ -108,6 +108,7 @@ namespace
 		//"Rock_Formation_1",
 		"Shipwreck",
 		"Spear",
+		"StartPosition",
 		"Stall_1",
 		"Stall_2",
 		"Stall_3",
@@ -180,7 +181,7 @@ namespace
 };
 
 
-bool Stage::Start()
+void Stage::Init()
 {
 	m_instancingManager = NewGO<InstancingManager>(0, "instancingManager");
 	std::unordered_set<std::string> usedStageObjectNameSet;
@@ -205,34 +206,44 @@ bool Stage::Start()
 				//ParseTransformComponentsはtupleでposition, rotation, scaleをまとめた型のものを返す。
 				auto transform = ParseTransformComponents(json["Transform"]);
 
-				if (name == "Coin") {
-					Vector3 pos = Vector3::Zero;
-					Quaternion rot;
-					Vector3 scale;
-					std::tie(pos, rot, scale) = transform;
-					pos *= OBJECT_POS_OFFSET; // ポジション
-					pos.y += -3000;
-					scale *= OBJECT_SCALE_OFFSET; // スケール
+				//トランスフォームからpos,rot,scaleにする
+				Vector3 pos = Vector3::Zero;
+				Quaternion rot;
+				Vector3 scale;
+				std::tie(pos, rot, scale) = transform;
 
+				//トランスフォームを調整
+				pos *= OBJECT_POS_OFFSET; // ポジション
+				pos.y += -3000;
+				scale *= OBJECT_SCALE_OFFSET; // スケール
+
+
+
+				//コインだったら
+				if (name == "Coin") {
 					m_coinManager->Spawn(pos, rot, scale);
 					return true;
 				}
 
-				//実際に使われたオブジェクト名を保存しておく。
-				usedStageObjectNameSet.insert(name);
+				//startポジションだったら
+				if (name == "StartPosition")
+				{
+					m_playerStartPos = pos;
+					return true;
+				}
 
-				paths[name] = "Assets/modelData/stage/islandStage/" + name + ".tkm";
+				else
+				{
+					//実際に使われたオブジェクト名を保存しておく。
+					usedStageObjectNameSet.insert(name);
 
-				auto* object = NewGO<StageMeshObject>(0);
-				Vector3 pos = std::get<0>(transform);
-				Quaternion rot = std::get<1>(transform);
-				Vector3 scale = std::get<2>(transform);
-				pos *= OBJECT_POS_OFFSET; // ポジション
-				pos.y += -3000;
-				scale *= OBJECT_SCALE_OFFSET; // スケール
-				object->Init(paths[name].c_str(), pos, rot, scale, name.c_str());
+					paths[name] = "Assets/modelData/stage/islandStage/" + name + ".tkm";
 
-				return true;
+					auto* object = NewGO<StageMeshObject>(0);
+					object->Init(paths[name].c_str(), pos, rot, scale, name.c_str());
+
+					return true;
+				}
 			}
 		});
 	std::unordered_map<std::string, bool> instancingFlags;
@@ -258,6 +269,11 @@ bool Stage::Start()
 	m_coinManager->RegisterCoinInstancingModel();
 
 	m_coinManager->ActivateInitialCoins();
+
+}
+
+bool Stage::Start()
+{
 
 	return true;
 }

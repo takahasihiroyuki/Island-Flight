@@ -13,6 +13,7 @@ public:
 
 	};
 
+	void Init();
 	bool Start() override;
 	void GetCoinManager(CoinManager* coinManager)
 	{
@@ -21,19 +22,26 @@ public:
 	void Update() {
 	}
 
+	Vector3 GetPlayerStartPos() const
+	{
+		return m_playerStartPos;
+	}
+
 	/// <summary>
-	/// ï¿½tï¿½Hï¿½Oï¿½Ìƒpï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½ï¿½İ’ï¿½
+	/// ƒtƒHƒO‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è
 	/// </summary>
 	/// <param name="collar"></param>
 	/// <param name="fogDistanceScale"></param>
 	void SetFogParams(Vector3 collar, float fogDistanceScale) {
 		g_renderingEngine->SetFogParams(collar, fogDistanceScale);
 	}
+
 private:
 	CoinManager* m_coinManager;
 	InstancingManager* m_instancingManager = nullptr;
 	Vector3 m_posOfset = Vector3::Zero;
 	Vector3 m_ScaleOfset;
+	Vector3 m_playerStartPos;
 
 };
 
