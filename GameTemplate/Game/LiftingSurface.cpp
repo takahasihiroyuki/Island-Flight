@@ -152,15 +152,18 @@ Vector3 LiftingSurface::ComputeDrag(
 float LiftingSurface::ComputeLiftCoefficient(float angleOfAttack) const
 {
 	//個の角度を超えると減速（15度）
-	constexpr float stall = 0.261799f;
+	constexpr float stall = 0.261799f*2;
 	// この関数の傾き、簡易的な関数にしているので傾きは一定（線形）。
 	const float slope = 0.05f;
 
-	// 迎角が-15度から15度の範囲でのみ揚力を発生させる
-	if (angleOfAttack < -stall)	return -slope * angleOfAttack;
-	if (angleOfAttack > stall)	return	(-slope * (angleOfAttack - stall)) + (slope * stall);
+	float cl = slope * angleOfAttack;
+	float clMax = slope * stall;
 
-	return  (slope * angleOfAttack);
+	// 迎角が-15度から15度の範囲でのみ揚力を発生させる
+	//cl = (cl > clMax) ? clMax :
+	//	(cl < -clMax) ? -clMax :
+	//	cl;
+	return cl;
 }
 
 float LiftingSurface::ComputeDragCoefficient(float angleOfAttack) const

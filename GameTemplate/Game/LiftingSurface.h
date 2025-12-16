@@ -32,9 +32,7 @@ public:
 			controlInput = -1;
 			return;
 		}
-		if (controlInput == -1) {
-			float a = 0;
-		}
+
 		controlInput = input;
 	}
 	void SetDeflection(float def) { deflection = def; }

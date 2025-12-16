@@ -16,7 +16,7 @@ namespace
 	constexpr float MAX_LEFT_AILERON_ANGLE = 5.0 * 0.5f;
 	constexpr float MAX_RIGHT_AILERON_ANGLE = 5.0 * 0.5f;
 	constexpr float MAX_ELEVATOR_ANGLE = 3.0f * 0.5;//上下回転
-	constexpr float MAX_RUDDER_ANGLE = 6.0 * 0.5;// 左右回転
+	constexpr float MAX_RUDDER_ANGLE = 6.0;// 左右回転
 
 	float DegToRad(float deg)
 	{
@@ -103,6 +103,8 @@ void Aircraft::Update()
 		m_engine->UpdateThrustForce();
 	}
 
+	//相対風の更新
+	UpdateRelWind();
 
 	//力を計算
 	Vector3 force = ComputeForce();
@@ -118,7 +120,7 @@ void Aircraft::Update()
 	m_position =
 		m_characterController
 		.AircraftExecute(
-			/*m_linearVelocity*/debug,
+			m_linearVelocity/*debug*/,
 			g_gameTime->GetFrameDeltaTime()
 		);
 
@@ -126,8 +128,6 @@ void Aircraft::Update()
 	//モーメントの計算と姿勢の更新
 	ComputeMoment();
 
-	//相対風の更新
-	UpdateRelWind();
 
 	//モデルの更新
 	UpdateModel();
@@ -152,10 +152,10 @@ void Aircraft::Update()
 	//デバッグ用UIの更新
 	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
 	{
-		if (i == 3) {
-			m_debugMomentUI[i]->UpdateTargetVec(m_wings[i]->ComputeMoment(m_state));
+		
+			m_debugMomentUI[i]->UpdateTargetVec(ComputeTotalMomentWorld());
 			m_debugMomentUI[i]->UpdatePosition(m_position);
-		}
+		
 	}
 
 }
@@ -196,10 +196,10 @@ void Aircraft::InitOrientation()
 
 void Aircraft::InitWingPositionOffset()
 {
-	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(-3.5f, 0.0f, 0.20f);
-	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(3.5f, 0.0f, 0.20f);
-	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 3.00f);
-	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f, 3.00f);
+	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(-3.5f, 0.0f, 0.0f);
+	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(3.5f, 0.0f, 0.0f);
+	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 1.00f);
+	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f, 1.00f);
 }
 
 void Aircraft::InitAllLiftingSurfaces()
@@ -249,6 +249,7 @@ Vector3 Aircraft::ComputeForce()
 	Vector3 wingsForce = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
 		//if (i == 3) {
+
 		m_wings[i]->ComputeForces(m_state);
 		wingsForce += m_wings[i]->GetForce();
 
@@ -257,7 +258,7 @@ Vector3 Aircraft::ComputeForce()
 		switch (static_cast<WingType>(i))
 		{
 		case WingType::MainLeft:
-			m_debugForceUI[i]->UpdatePosition(m_position+Vector3(-200,0,0));
+			m_debugForceUI[i]->UpdatePosition(m_position + Vector3(-200, 0, 0));
 			break;
 
 		case WingType::MainRight:
@@ -282,12 +283,12 @@ Vector3 Aircraft::ComputeForce()
 		//}
 	}
 
-	m_debugForceUI[0]->UpdateTargetVec(wingsForce /*+ m_engine->GetThrustForce()*/);
-	m_debugForceUI[0]->UpdatePosition(m_position);
-
-
 	Vector3 force = thrust + wingsForce;
 	force += ComputeGravity();
+
+
+	m_debugForceUI[0]->UpdateTargetVec(force /*+ m_engine->GetThrustForce()*/);
+	m_debugForceUI[0]->UpdatePosition(m_position);
 
 	return force;
 }

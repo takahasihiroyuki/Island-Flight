@@ -40,7 +40,9 @@ public:
 
 	const Vector3& GetThrustForce() const { return m_thrustForce; }
 
-	void SetBaseThrust(float maxThrust) { m_baseThrust = maxThrust; }
+	void SetBaseThrust(float maxThrust) {
+		m_baseThrust = maxThrust;
+	}
 
 private:
 	float m_baseThrust = 2000.0f;				// Å‘å„—Í
