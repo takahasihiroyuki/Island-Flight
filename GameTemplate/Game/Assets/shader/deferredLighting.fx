@@ -155,7 +155,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
     toEye = normalize(toEye);
 
 	//鏡面反射の強さを求める
-    float t = dot(refVec, toEye);
+    float t = -dot(refVec, toEye);
 
 	//鏡面反射の強さを0~1にする
     t = max(0.0f, t);
@@ -183,10 +183,10 @@ float3 CalcLigFromDrectionLight(PSIn psIn, float3 normal, float3 worldPos)
 		directionLight.direction, directionLight.color, worldPos, normal, psIn.uv);
 
     //フレネル反射率を計算
-    float flesnel = ComputeFresnel(normal, normalize(eyepos - worldPos), 0.001f);
+    float flesnel = ComputeFresnel(normal, normalize(eyepos - worldPos), 0.01f);
     
 	//最終的な光
-    return (diffDirection + specDirection) * flesnel;
+    return diffDirection + specDirection;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -223,18 +223,4 @@ float CalcShadowPow(float isDrawShadow, PSIn psIn, float3 worldPos)
         }
     }
     return shadowPow;
-}
-
-float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance)
-{
-    
-    float cosTheta = saturate(dot(normalize(normal), -normalize(viewDir)));
-    
-    //角度により反射率の係数。
-    float angleFactor = pow(1.0f - cosTheta, 5.0f);
-    //angleFactorの割合の上限。
-    float remainingReflectance = 1 - baseReflectance;
-
-    //フレネル反射率
-    return baseReflectance + remainingReflectance * angleFactor;
 }

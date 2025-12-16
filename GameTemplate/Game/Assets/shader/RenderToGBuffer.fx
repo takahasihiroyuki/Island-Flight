@@ -199,9 +199,11 @@ float3 CalcNormal(SPSIn psIn)
     float3 normalMap = g_normalMap.Sample(g_sampler, psIn.uv).xyz;
     normalMap = (normalMap - 0.5f) * 2.0f;
     
+    float3 normal = float3(1.0f, 1.0f, 1.0f);
+
     // タンジェントスペースの法線をワールドスペースに変換する
-    float3 normal = (psIn.tangent * normalMap.x * 0) + (psIn.biNormal * normalMap.y * 0) + (psIn.normal * normalMap.z);
-    
+    normal = (psIn.tangent * normalMap.x) + (psIn.biNormal * normalMap.y) + (psIn.normal * normalMap.z);
+
     //// 出力は0～1に丸められてしまいマイナスの値が失われてしまうので-1～1を0～1に変換する
     normal = (normal / 2.0f) + 0.5f;
    

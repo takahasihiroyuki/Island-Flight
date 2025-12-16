@@ -52,6 +52,8 @@ namespace nsK2EngineLow {
 		Sprite m_rhomboidBlurSprite;
 		Sprite m_combineBokeImageSprite;
 
+		int m_downSampleRate = 2;
+
 	};
 
 }

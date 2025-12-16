@@ -13,13 +13,11 @@ public:
 
 	void UpdateState(const TargetSnapshot& m_targetSnapshot)override {
 
-		Vector3 pos = Vector3::Zero;
-		Quaternion rot = Quaternion::Identity;
-
-		m_targetSnapshot.GetPosition(pos);
-		m_targetSnapshot.GetRotation(rot);
+		Vector3 pos = g_camera3D->GetPosition();
+		Vector3 targetPos = Vector3::Zero;
+		m_targetSnapshot.GetPosition(targetPos);
 		m_cameraState.pos = pos;
-		m_cameraState.targetPos = pos + m_targetOffset;
+		m_cameraState.targetPos = targetPos;
 	}
 
 	void SetTargetOffset(const Vector3& offset) {

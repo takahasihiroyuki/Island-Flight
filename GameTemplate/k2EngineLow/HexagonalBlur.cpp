@@ -22,24 +22,24 @@ void nsK2EngineLow::HexagonalBlur::OnRender(RenderContext& rc, RenderTarget& mai
 void nsK2EngineLow::HexagonalBlur::InitRenderTarget(RenderTarget& mainRenderTarget)
 {
 	m_rtVerticalBlur.Create(
-		g_graphicsEngine->GetFrameBufferWidth(),
-		g_graphicsEngine->GetFrameBufferHeight(),
+		g_graphicsEngine->GetFrameBufferWidth() / m_downSampleRate,
+		g_graphicsEngine->GetFrameBufferHeight() / m_downSampleRate,
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
 		DXGI_FORMAT_UNKNOWN);
 
 	m_rtDiagonalBlur.Create(
-		g_graphicsEngine->GetFrameBufferWidth(),
-		g_graphicsEngine->GetFrameBufferHeight(),
+		g_graphicsEngine->GetFrameBufferWidth() / m_downSampleRate,
+		g_graphicsEngine->GetFrameBufferHeight() / m_downSampleRate,
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT
 		, DXGI_FORMAT_UNKNOWN);
 
 	m_rtRhomboidBlur.Create(
-		g_graphicsEngine->GetFrameBufferWidth(),
-		g_graphicsEngine->GetFrameBufferHeight(),
+		g_graphicsEngine->GetFrameBufferWidth() / m_downSampleRate,
+		g_graphicsEngine->GetFrameBufferHeight() / m_downSampleRate,
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -51,8 +51,8 @@ void nsK2EngineLow::HexagonalBlur::InitVertDiagonalBlurSprite(RenderTarget& main
 {
 	SpriteInitData vertDiagonalBlurSpriteInitData;
 	vertDiagonalBlurSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-	vertDiagonalBlurSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
-	vertDiagonalBlurSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
+	vertDiagonalBlurSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth() / m_downSampleRate;
+	vertDiagonalBlurSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight() / m_downSampleRate;
 	vertDiagonalBlurSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
 	vertDiagonalBlurSpriteInitData.m_psEntryPoinFunc = "PSVerticalDiagonalBlur";
 	vertDiagonalBlurSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -65,8 +65,8 @@ void nsK2EngineLow::HexagonalBlur::InitRhomboidBlurSprite(RenderTarget& mainRend
 	SpriteInitData phomboidBlurSpriteInitData;
 	phomboidBlurSpriteInitData.m_textures[0] = &m_rtVerticalBlur.GetRenderTargetTexture();
 	phomboidBlurSpriteInitData.m_textures[1] = &m_rtDiagonalBlur.GetRenderTargetTexture();
-	phomboidBlurSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
-	phomboidBlurSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
+	phomboidBlurSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth() / m_downSampleRate;
+	phomboidBlurSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight() / m_downSampleRate;
 	phomboidBlurSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
 	phomboidBlurSpriteInitData.m_psEntryPoinFunc = "PSRhomboidBlur";
 	phomboidBlurSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;

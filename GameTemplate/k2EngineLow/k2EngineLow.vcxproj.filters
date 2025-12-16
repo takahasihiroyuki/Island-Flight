@@ -245,6 +245,8 @@
     </ClCompile>
     <ClCompile Include="Fog.cpp">
       <Filter>PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeOut.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -540,6 +542,8 @@
     </ClInclude>
     <ClInclude Include="Fog.h">
       <Filter>PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeOut.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
