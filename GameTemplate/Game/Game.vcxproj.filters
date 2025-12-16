@@ -97,6 +97,9 @@
     <ClCompile Include="DebugArrowUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="StageOrbitCameraController.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="DebugArrowUI.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="StageOrbitCameraController.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

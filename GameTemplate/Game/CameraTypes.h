@@ -4,7 +4,8 @@
 enum class CameraControllerType
 {
 	enStatic,				//固定カメラ。
-	enSpringFollow		//ばねのように追従するカメラ。
+	enSpringFollow,	//ばねのように追従するカメラ。
+	enStageOrbit,
 };
 
 struct CameraState {

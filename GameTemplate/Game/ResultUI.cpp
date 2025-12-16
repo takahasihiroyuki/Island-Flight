@@ -6,7 +6,7 @@
 
 namespace
 {
-	const Vector3 SPRITE_BASE_POS = Vector3(0.0f, 0.0f, 0.0f);
+	const Vector3 SPRITE_BASE_POS = Vector3(100.0f, 0.0f, 0.0f);
 	constexpr float SPACING_X = 75;//êîéöÇÃåÑä‘ÇÃí∑Ç≥ÅiÇòÅj
 	const Vector3 ONES_SPLITE_POS = Vector3(SPRITE_BASE_POS.x, SPRITE_BASE_POS.y, 0.0f);
 	const Vector3 TENS_SPLITE_POS = Vector3(SPRITE_BASE_POS.x - SPACING_X, SPRITE_BASE_POS.y, 0.0f);

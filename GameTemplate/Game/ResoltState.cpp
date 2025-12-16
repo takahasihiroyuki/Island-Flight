@@ -3,6 +3,10 @@
 #include "ResultUI.h"
 #include "UIManager.h"
 
+namespace {
+	Vector3 CAMERA_TARGET_POS = { 0.0f,0.0f,0.0f };
+}
+
 ResoltState::ResoltState()
 {
 }
@@ -25,6 +29,15 @@ void ResoltState::OnEnter()
 	m_resultEnterSE = NewGO<SoundSource>(0);
 	m_resultEnterSE->Init(static_cast<int>(SoundID::enResultEnterSE));
 	m_resultEnterSE->Play(false);
+
+	//カメラのターゲット情報を渡す。
+	TargetSnapshot targetSnapshot;
+	targetSnapshot.SetPosition(CAMERA_TARGET_POS);
+
+	//カメラ
+	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
+	CameraManager::GetInstance().ChangeController(CameraControllerType::enStageOrbit);
+
 }
 
 void ResoltState::Update()
@@ -38,7 +51,7 @@ void ResoltState::Exit()
 
 bool ResoltState::RequestChangeState(InGameStateType& type)
 {
-	if (g_pad[0]->IsPress(enButtonA))
+	if (g_pad[0]->IsTrigger(enButtonA))
 	{
 		type = InGameStateType::enEnd;
 		return true;

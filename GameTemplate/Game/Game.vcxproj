@@ -251,6 +251,7 @@
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SpringFollowController.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="StageOrbitCameraController.cpp" />
     <ClCompile Include="StaticController.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -299,6 +300,7 @@
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SpringFollowController.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="StageOrbitCameraController.h" />
     <ClInclude Include="StaticController.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
