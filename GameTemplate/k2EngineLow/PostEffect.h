@@ -1,6 +1,7 @@
 #pragma once
 #include "Bloom.h"
 #include "HexagonalBlur.h"
+#include "Fog.h"
 
 
 namespace nsK2EngineLow {
@@ -35,8 +36,16 @@ namespace nsK2EngineLow {
 
 		void OnRenderHexagonBlur(RenderContext& rc, RenderTarget& mainRenderTarget);
 
+		void OnRenderFog(RenderContext& rc, RenderTarget& mainRenderTarget);
+
+		//フォグのパラメータを設定。
+		void SetFogParams(Vector3 collar, float fogDistanceScale) {
+			m_fog.SetFogCB(collar, fogDistanceScale);
+		}
+
 	private:
 		Bloom m_bloom;		//ブルーム
 		HexagonalBlur m_hexagonalBlur;
+		Fog m_fog;
 	};
 }

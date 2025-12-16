@@ -21,6 +21,14 @@ public:
 	void Update() {
 	}
 
+	/// <summary>
+	/// �t�H�O�̃p�����[�^��ݒ�
+	/// </summary>
+	/// <param name="collar"></param>
+	/// <param name="fogDistanceScale"></param>
+	void SetFogParams(Vector3 collar, float fogDistanceScale) {
+		g_renderingEngine->SetFogParams(collar, fogDistanceScale);
+	}
 private:
 	CoinManager* m_coinManager;
 	InstancingManager* m_instancingManager = nullptr;

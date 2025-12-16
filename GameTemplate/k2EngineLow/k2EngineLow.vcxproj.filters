@@ -243,6 +243,8 @@
     <ClCompile Include="HexagonalBlur.cpp">
       <Filter>PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Fog.cpp">
+      <Filter>PostEffect</Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -536,6 +538,8 @@
     <ClInclude Include="HexagonalBlur.h">
       <Filter>PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Fog.h">
+      <Filter>PostEffect</Filter>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

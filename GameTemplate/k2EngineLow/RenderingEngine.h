@@ -218,6 +218,15 @@ namespace nsK2EngineLow {
 			return m_zprepassRenderTarget;
 		}
 
+		/// <summary>
+		/// フォグのパラメータを設定
+		/// </summary>
+		/// <param name="collar"></param>
+		/// <param name="fogDistanceScale"></param>
+		void SetFogParams(Vector3 collar, float fogDistanceScale) {
+			m_postEffect.SetFogParams(collar, fogDistanceScale);
+		}
+
 	private:
 
 		/// <summary>

@@ -7,7 +7,7 @@ static const float BLUR_TEX_W = 1280.0f;
 static const float BLUR_TEX_H = 720.0f;
 
 // ブラー半径。この数値を大きくすると六角形ボケが大きくなる
-static const float BLUR_RADIUS = 8.0f;
+static const float BLUR_RADIUS = 3.0f;
 
 
 cbuffer cb : register(b0)

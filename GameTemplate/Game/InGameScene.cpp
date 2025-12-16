@@ -10,8 +10,9 @@
 
 namespace
 {
-	Vector3 INIT_AIRCRAFT_POS = Vector3(0.0f, 5000.0f, -30000.0f);
-	float AIRCRAFT_BASE_THRUST = 5000.0f;
+	static constexpr float AIRCRAFT_BASE_THRUST = 5000.0f;
+	static const Vector3 FOG_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
+	static constexpr float FOG_DISTANCE_SCALE = 0.3;
 }
 
 InGameScene::InGameScene()
@@ -32,28 +33,40 @@ InGameScene::~InGameScene()
 bool InGameScene::Start()
 {
 
+	//スカイキューブ
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 	m_skyCube->SetLuminance(1.0f);
 	m_skyCube->SetScale(10000.0f);
 	m_skyCube->SetPosition({ 0.0f,0.0f,0.0f });
 	m_skyCube->SetType((EnSkyCubeType)enSkyCubeType_Day);
 
+	//海
 	m_ocean = NewGO<Ocean>(0);
-	m_aircraft = new Aircraft();
-	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", INIT_AIRCRAFT_POS, AIRCRAFT_BASE_THRUST);
-	m_coinManager = NewGO<CoinManager>(0, "coinManager");
+
+	//スコアマネージャー
 	m_scoreManager = NewGO<ScoreManager>(0, "ScoreManager");
 
+	//コインマネージャー
+	m_coinManager = NewGO<CoinManager>(0, "coinManager");
 	m_coinManager->SetScoreManager(m_scoreManager);
+
+	//ステージ
 	m_stage = NewGO<Stage>(0);
 	m_stage->GetCoinManager(m_coinManager);
+	m_stage->Init();
+	m_stage->SetFogParams(FOG_COLLAR, FOG_DISTANCE_SCALE);
 
+	//飛行機
+	m_aircraft = new Aircraft();
+	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", m_stage->GetPlayerStartPos(), AIRCRAFT_BASE_THRUST);
+	m_aircraft->Start();
+
+	//インゲームステートmanager
 	InitInGameContext();
 	m_inGameStateManeger = NewGO<InGameStateManager>(0);
 	m_inGameStateManeger->SetContext(m_context);
 
-	m_aircraft->Start();
-
+	//カメラ
 	g_camera3D->SetFar(100000);
 
 	return true;

@@ -255,6 +255,7 @@
     <ClCompile Include="AI\PathFinding\Path.cpp" />
     <ClCompile Include="AI\PathFinding\PathFinding.cpp" />
     <ClCompile Include="Bloom.cpp" />
+    <ClCompile Include="Fog.cpp" />
     <ClCompile Include="gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
     <ClCompile Include="geometry\AABB.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="dbg\MyAssert.h" />
     <ClInclude Include="dbg\MyLog.h" />
+    <ClInclude Include="Fog.h" />
     <ClInclude Include="gameObject\GameObjectManager.h" />
     <ClInclude Include="gameObject\IGameobject.h" />
     <ClInclude Include="geometry\AABB.h" />
