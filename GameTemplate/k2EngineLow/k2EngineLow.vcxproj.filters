@@ -246,7 +246,12 @@
     <ClCompile Include="Fog.cpp">
       <Filter>PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="FadeOut.cpp" />
+    <ClCompile Include="FadeOut.cpp">
+      <Filter>PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffectBase.cpp">
+      <Filter>PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -543,7 +548,13 @@
     <ClInclude Include="Fog.h">
       <Filter>PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="FadeOut.h" />
+    <ClInclude Include="FadeOut.h">
+      <Filter>PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffectBase.h">
+      <Filter>PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectType.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

@@ -11,6 +11,8 @@ namespace
 	const Vector3 CAMERA_TARGET_POS_OFFSET = Vector3(0, 50, 0);
 	const Vector3 INIT_AIRCRAFT_POS = Vector3(0.0f, 50000.0f, 0.0f);
 	constexpr float AIRCRAFT_BASE_THRUST = 8000.0f;
+
+	const Vector3 FADE_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
 }
 
 TitleScene::~TitleScene()
@@ -45,7 +47,10 @@ void TitleScene::Update()
 			CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
 			CameraManager::GetInstance().ChangeController(CameraControllerType::enStatic);
 
+			g_renderingEngine->GetPostEffect().SetFadeEnabled(true);
+			g_renderingEngine->GetPostEffect().StartFadeOut(m_outroFinishTime, FADE_COLLAR);
 
+			UIManager::GetInstance().HideScreen("TitleUI");
 		}
 
 		break;
@@ -151,7 +156,10 @@ void TitleScene::Enter()
 
 	g_camera3D->SetFar(1000000);
 
-
+	//ポストエフェクト
+	g_renderingEngine->GetPostEffect().SetHexagonalBlurEnabled(true);
+	g_renderingEngine->GetPostEffect().SetFogEnabled(true);
+	g_renderingEngine->GetPostEffect().SetBloomEnabled(true);
 
 }
 

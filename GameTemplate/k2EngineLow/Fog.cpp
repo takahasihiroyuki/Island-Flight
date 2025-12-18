@@ -39,7 +39,6 @@ void nsK2EngineLow::Fog::InitFinalSprite(Texture& depthTexture)
 
 	finalSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
-	//ただし、加算合成で描画するので、アルファブレンディングモードを加算する
 	finalSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
 
 	//スプライトを初期化

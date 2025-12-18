@@ -227,6 +227,10 @@ namespace nsK2EngineLow {
 			m_postEffect.SetFogParams(collar, fogDistanceScale);
 		}
 
+		PostEffect& GetPostEffect() {
+			return m_postEffect;
+		}
+
 	private:
 
 		/// <summary>

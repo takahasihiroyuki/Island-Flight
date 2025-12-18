@@ -37,6 +37,6 @@ private:
 	Ocean* m_ocean = nullptr;
 	float m_elapsedTime = 0.0f;
 	TitlePhase m_phase = TitlePhase::WaitingInput;
-	float m_outroFinishTime=3.0f;
+	float m_outroFinishTime = 3.0f;
 };
 

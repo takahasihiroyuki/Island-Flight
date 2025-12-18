@@ -1,7 +1,9 @@
 #pragma once
+#include "PostEffectBase.h"
+
 namespace nsK2EngineLow {
 
-	class HexagonalBlur
+	class HexagonalBlur :public PostEffectBase
 	{
 	public:
 		void Init(RenderTarget& mainRenderTarget);
@@ -52,7 +54,8 @@ namespace nsK2EngineLow {
 		Sprite m_rhomboidBlurSprite;
 		Sprite m_combineBokeImageSprite;
 
-		int m_downSampleRate = 2;
+		int m_downSampleRate = 1;
+
 
 	};
 

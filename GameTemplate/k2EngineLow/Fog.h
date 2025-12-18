@@ -1,19 +1,21 @@
 #pragma once
+#include "PostEffectBase.h"
+
 namespace nsK2EngineLow {
 	struct FogCB
 	{
 		Vector3 fogCollar = Vector3{ 0.0f,0.0f,0.0f };
-		float padding=0.0f;
+		float padding = 0.0f;
 		float fogDistanceScale = 0.3f;//‹——£‚É‘Î‚·‚éƒtƒHƒO‚Ì‹­‚³
 
 	};
 
-	class Fog
+	class Fog :public PostEffectBase
 	{
 	public:
 		void Init();
 
-		void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget);
+		void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)override;
 
 		void SetFogCB(Vector3 collar, float fogDistanceScale) {
 			m_fogCB.fogCollar = collar;

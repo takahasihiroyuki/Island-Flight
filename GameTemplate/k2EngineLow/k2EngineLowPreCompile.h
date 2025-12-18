@@ -123,4 +123,6 @@ static const int MAX_BONE = 512;	// ƒ{[ƒ“‚ÌÅ‘å”B
 #include "SpriteRender.h"
 #include "HexagonalBlur.h"
 #include "Fog.h"
+#include "FadeOut.h"
+
 

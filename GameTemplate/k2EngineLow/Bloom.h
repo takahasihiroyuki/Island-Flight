@@ -1,6 +1,8 @@
 #pragma once
+#include "PostEffectBase.h"
+
 namespace nsK2EngineLow {
-	class Bloom
+	class Bloom :public PostEffectBase
 	{
 	public:
 		void Init(RenderTarget& mainRenderTarget);
@@ -28,13 +30,13 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void InitGaussianBlur();
 
+
 	private:
 		RenderTarget m_luminanceRenderTarget;
-
 		Sprite m_luminanceSprite;
 		Sprite m_finalSprite;
-
 		GaussianBlur m_gaussianBlur[4];
+
 
 	};
 }

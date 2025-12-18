@@ -42,6 +42,11 @@ void Aircraft::Init(const char* filePath, Vector3 initPos, float baseThrust)
 	m_model.SetScale(MODEL_SCALE);
 	m_model.Update();
 
+	m_propeller.Init("Assets/modelData/Plane/Propeller.tkm", nullptr, 0, enModelUpAxisZ, false);
+	m_propeller.SetScale(MODEL_SCALE);
+	m_propeller.Update();
+
+
 	// キャラクターコントローラーの初期化
 	m_characterController.Init(CAPSELLE_RADIUS, CAPSELLE_HEIGHT, m_position);
 
@@ -149,19 +154,20 @@ void Aircraft::Update()
 
 
 
-	//デバッグ用UIの更新
-	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
-	{
-		
-			m_debugMomentUI[i]->UpdateTargetVec(ComputeTotalMomentWorld());
-			m_debugMomentUI[i]->UpdatePosition(m_position);
-		
-	}
+	////デバッグ用UIの更新
+	//for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
+	//{
+
+	//	m_debugMomentUI[i]->UpdateTargetVec(ComputeTotalMomentWorld());
+	//	m_debugMomentUI[i]->UpdatePosition(m_position);
+
+	//}
 
 }
 void Aircraft::Render(RenderContext& rc)
 {
 	m_model.Draw(rc);
+	m_propeller.Draw(rc);
 }
 void Aircraft::SetControlInputs(float mainLeftInput, float mainRightInput, float tailInput, float verticalInput, bool isBoostOn, bool isThrottleCut)
 {
@@ -253,32 +259,32 @@ Vector3 Aircraft::ComputeForce()
 		m_wings[i]->ComputeForces(m_state);
 		wingsForce += m_wings[i]->GetForce();
 
-		m_debugForceUI[i]->UpdateTargetVec(m_wings[i]->GetForce() /*+ m_engine->GetThrustForce()*/);
+		//m_debugForceUI[i]->UpdateTargetVec(m_wings[i]->GetForce() /*+ m_engine->GetThrustForce()*/);
 
-		switch (static_cast<WingType>(i))
-		{
-		case WingType::MainLeft:
-			m_debugForceUI[i]->UpdatePosition(m_position + Vector3(-200, 0, 0));
-			break;
+		//switch (static_cast<WingType>(i))
+		//{
+		//case WingType::MainLeft:
+		//	m_debugForceUI[i]->UpdatePosition(m_position + Vector3(-200, 0, 0));
+		//	break;
 
-		case WingType::MainRight:
-			m_debugForceUI[i]->UpdatePosition(m_position + Vector3(200, 0, 0));
+		//case WingType::MainRight:
+		//	m_debugForceUI[i]->UpdatePosition(m_position + Vector3(200, 0, 0));
 
-			break;
+		//	break;
 
-		case WingType::Tail:
-			m_debugForceUI[i]->UpdatePosition(m_position + Vector3(0, 0, -200));
+		//case WingType::Tail:
+		//	m_debugForceUI[i]->UpdatePosition(m_position + Vector3(0, 0, -200));
 
-			break;
+		//	break;
 
-		case WingType::Vertical:
-			m_debugForceUI[i]->UpdatePosition(m_position + Vector3(0, 0, 200));
+		//case WingType::Vertical:
+		//	m_debugForceUI[i]->UpdatePosition(m_position + Vector3(0, 0, 200));
 
-			break;
+		//	break;
 
-		default:
-			break;
-		}
+		//default:
+		//	break;
+		//}
 
 		//}
 	}
@@ -287,8 +293,8 @@ Vector3 Aircraft::ComputeForce()
 	force += ComputeGravity();
 
 
-	m_debugForceUI[0]->UpdateTargetVec(force /*+ m_engine->GetThrustForce()*/);
-	m_debugForceUI[0]->UpdatePosition(m_position);
+	//m_debugForceUI[0]->UpdateTargetVec(force /*+ m_engine->GetThrustForce()*/);
+	//m_debugForceUI[0]->UpdatePosition(m_position);
 
 	return force;
 }
@@ -341,10 +347,22 @@ void Aircraft::ComputeMoment()
 }
 void Aircraft::UpdateModel()
 {
+	//本体モデルの更新
 	m_model.SetPosition(m_position);
-	m_characterController.SetPosition(m_position);
+	//m_characterController.SetPosition(m_position);
 	m_model.SetRotation(m_state.orientation);
 	m_model.Update();
+
+	//プロペラモデルの更新
+	float speed = m_linearVelocity.Length();
+
+	m_propeller.SetPosition(m_position);
+	Quaternion rot;
+	m_propellerSpin.AddRotationDegZ(speed*0.03);
+	rot.Multiply(m_propellerSpin, m_state.orientation);
+	m_propeller.SetRotation(rot);
+	m_propeller.Update();
+
 }
 
 Vector3 Aircraft::ComputeTotalMomentWorld()

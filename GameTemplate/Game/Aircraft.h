@@ -195,6 +195,7 @@ private:
 private:
 	CharacterController m_characterController;
 	ModelRender m_model;					// ƒ‚ƒfƒ‹
+	ModelRender m_propeller;
 
 	AircraftState m_state;
 	Vector3 m_position;
@@ -216,5 +217,6 @@ private:
 	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugMomentUI;
 	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugForceUI;
 	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugMomentArm;
+	Quaternion m_propellerSpin = Quaternion::Identity;
 
 };
