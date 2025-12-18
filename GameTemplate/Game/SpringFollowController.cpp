@@ -3,7 +3,7 @@
 namespace
 {
 	static constexpr float DAMPING_RATE = 0.8f*2;	//Œ¸Š—¦
-	static constexpr float DAMPING_C = 5.0f*2;	//Œ¸ŠŒW”
+	static constexpr float DAMPING_C = 5.0f;	//Œ¸ŠŒW”
 }
 
 void SpringFollowController::OnEnter()

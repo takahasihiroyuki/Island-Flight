@@ -29,6 +29,7 @@ void GamePlayState::OnEnter()
 	targetSnapshot.SetVelocity(m_context->aircraft->GetLinearVelocity());
 	targetSnapshot.SetRotation(m_context->aircraft->GetOrientation());
 
+	//ƒJƒƒ‰
 	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
 	CameraManager::GetInstance().ChangeController(CameraControllerType::enSpringFollow);
 

@@ -10,9 +10,9 @@
 
 namespace
 {
-	static constexpr float AIRCRAFT_BASE_THRUST = 5000.0f;
+	static constexpr float AIRCRAFT_BASE_THRUST = 10000.0f;
 	static const Vector3 FOG_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
-	static constexpr float FOG_DISTANCE_SCALE = 0.3;
+	static constexpr float FOG_DISTANCE_SCALE = 0.6;
 }
 
 InGameScene::InGameScene()
@@ -36,7 +36,7 @@ bool InGameScene::Start()
 	//スカイキューブ
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 	m_skyCube->SetLuminance(1.0f);
-	m_skyCube->SetScale(10000.0f);
+	m_skyCube->SetScale(15000.0f);
 	m_skyCube->SetPosition({ 0.0f,0.0f,0.0f });
 	m_skyCube->SetType((EnSkyCubeType)enSkyCubeType_Day);
 
@@ -67,7 +67,7 @@ bool InGameScene::Start()
 	m_inGameStateManeger->SetContext(m_context);
 
 	//カメラ
-	g_camera3D->SetFar(100000);
+	g_camera3D->SetFar(200000);
 
 	return true;
 }
@@ -100,6 +100,11 @@ bool InGameScene::RequestChangeScene(SceneType& type)
 		return true;
 	}
 	return false;
+}
+
+void InGameScene::Enter()
+{
+	g_renderingEngine->GetPostEffect().StartFadeIn(3);
 }
 
 void InGameScene::InitInGameContext()

@@ -36,7 +36,7 @@ private:
 	CoinManager* m_coinManager = nullptr;
 	Aircraft* m_player = nullptr;
 	float m_arrowMaxDistance = 10000.0f;// –îˆó‚ª•\¦‚³‚ê‚éÅ‘å‹——£
-	float m_arrowPosSphereRadius = 300.0f;// –îˆó‚ÌˆÊ’u‚ğŒˆ‚ß‚é‹…‚Ì”¼Œa
+	float m_arrowPosSphereRadius = 100.0f;// –îˆó‚ÌˆÊ’u‚ğŒˆ‚ß‚é‹…‚Ì”¼Œa
 	std::array<ModelRender, MAX_ARROW_COUNT> m_arrows;
 
 };

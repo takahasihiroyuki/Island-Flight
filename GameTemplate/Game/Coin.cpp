@@ -2,6 +2,7 @@
 #include "Coin.h"
 #include"CoinManager.h"
 #include"Timer.h"
+#include"EffectType.h"
 
 Coin::Coin()
 {
@@ -33,4 +34,14 @@ void Coin::OnUpdate()
 
 	// ƒRƒCƒ“‚ÌˆÊ’u‚ÉSE‚ð’Ç]‚³‚¹‚é
 	m_coinSE->SetPosition(GetPosition());
+}
+
+void Coin::PlayCollectEffects()
+{
+	m_coinGetSE->Play(false);
+
+	auto* e = NewGO<EffectEmitter>(0);
+	e->Init(enCoinGet);
+	e->SetPosition(m_position);
+	e->Play();
 }

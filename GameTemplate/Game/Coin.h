@@ -31,10 +31,7 @@ public:
 		m_coinGetSE->Stop();
 	}
 
-	void PlayCollectEffects()
-	{
-		m_coinGetSE->Play(false);
-	}
+	void PlayCollectEffects();
 
 private:
 	SoundSource* m_coinSE = nullptr;

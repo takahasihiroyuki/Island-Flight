@@ -9,7 +9,7 @@
 namespace {
 	static const char* COIN_FILEPATH = "Assets/modelData/coin.tkm";
 	static const char* COIN_MODELNAME = "Coin";
-	static constexpr size_t INITIAL_COIN_COUNT = 6;			//コインの初期枚数
+	static constexpr size_t INITIAL_COIN_COUNT = 15;			//コインの初期枚数
 
 	float RandomFloat(float min, float max)
 	{
