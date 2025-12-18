@@ -181,9 +181,6 @@ float3 CalcLigFromDrectionLight(PSIn psIn, float3 normal, float3 worldPos)
 	//鏡面反射
     float3 specDirection = CalcPhongSpecular(
 		directionLight.direction, directionLight.color, worldPos, normal, psIn.uv);
-
-    //フレネル反射率を計算
-    float flesnel = ComputeFresnel(normal, normalize(eyepos - worldPos), 0.01f);
     
 	//最終的な光
     return diffDirection + specDirection;
