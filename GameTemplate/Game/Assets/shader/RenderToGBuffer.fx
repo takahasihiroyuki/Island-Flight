@@ -104,7 +104,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstanci
     
     //法線、接ベクトル、従ベクトルをワールド空間に変換する。
     //平行移動を無視するために、3x3行列に変換してから乗算する。
-    float3x3 m3x3 = (float3x3) mWorld;
+    float3x3 m3x3 = (float3x3) m;
     psIn.normal = normalize(mul(m3x3, vsIn.normal));
     psIn.tangent = normalize(mul(m3x3, vsIn.tangent));
     psIn.biNormal = normalize(mul(m3x3, vsIn.biNormal));
@@ -159,7 +159,7 @@ SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
 
         
     psOut.normal.xyz = CalcNormal(psIn);
-    normalize(psOut.normal);
+    psOut.normal.xyz = normalize(psOut.normal.xyz);
 
     
     

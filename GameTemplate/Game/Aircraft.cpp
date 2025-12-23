@@ -202,10 +202,10 @@ void Aircraft::InitOrientation()
 
 void Aircraft::InitWingPositionOffset()
 {
-	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(-3.5f, 0.0f, 0.0f);
-	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(3.5f, 0.0f, 0.0f);
-	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 1.00f);
-	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f, 1.00f);
+	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(3.5f, 0.0f, 0.0f);
+	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(-3.5f, 0.0f, 0.0f);
+	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 3.00f);
+	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f, 3.00f);
 }
 
 void Aircraft::InitAllLiftingSurfaces()
