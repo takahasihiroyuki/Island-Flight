@@ -100,6 +100,7 @@
     <ClCompile Include="StageOrbitCameraController.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
+    <ClCompile Include="FlightDebugScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -197,5 +198,6 @@
     <ClInclude Include="StageOrbitCameraController.h">
       <Filter>Camera</Filter>
     </ClInclude>
+    <ClInclude Include="FlightDebugScene.h" />
   </ItemGroup>
 </Project>

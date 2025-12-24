@@ -28,7 +28,7 @@ private:
 	Vector3 m_position = Vector3{0.0,30.0f,100.0f};				// 座標
 	Vector3 m_cameraPosition=Vector3::Zero;		// カメラ座標
 	Vector3 m_cameraTarget;			// カメラ注視点
-	Quaternion m_rotation;			// 回転
+	Quaternion /*m_rotation*/;			// 回転
 	Vector3 m_scale = g_vec3One;	// 拡大率
 	std::array<AnimationClip, 4> m_animationClipArray;	// アニメーションクリップ配列
 	Ocean* m_ocean = nullptr;
