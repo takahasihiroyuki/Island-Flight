@@ -93,7 +93,7 @@ namespace nsK2EngineLow {
 	private:
 		ModelRender m_modelRender;
 		Vector3 m_position = g_vec3Zero;
-		Vector3 m_scale = g_vec3One * 10000.0f;
+		Vector3 m_scale = g_vec3One * 5.0f;
 		Quaternion m_rotation = Quaternion::Identity;
 		bool m_isDirty = false;
 		RenderTarget* m_reflectionRenderTarget;

@@ -11,8 +11,8 @@
 namespace
 {
 	static constexpr float AIRCRAFT_BASE_THRUST = 10000.0f;
-	static const Vector3 FOG_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
-	static constexpr float FOG_DISTANCE_SCALE = 0.6;
+	static const Vector3 FOG_COLLAR = Vector3(0.9f, 1.0f, 1.0f);
+	static constexpr float FOG_DISTANCE_SCALE = 0.5;
 }
 
 InGameScene::InGameScene()

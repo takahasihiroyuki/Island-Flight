@@ -13,10 +13,10 @@ namespace
 	constexpr float CAPSELLE_HEIGHT = 10.0f; // カプセルコライダーの高さ
 
 	// 各操縦面の最大操舵角度（度数法）
-	constexpr float MAX_LEFT_AILERON_ANGLE = 5.0 * 0.5f;
-	constexpr float MAX_RIGHT_AILERON_ANGLE = 5.0 * 0.5f;
-	constexpr float MAX_ELEVATOR_ANGLE = 3.0f * 0.5;//上下回転
-	constexpr float MAX_RUDDER_ANGLE = 3.0;// 左右回転
+	constexpr float MAX_LEFT_AILERON_ANGLE = 1.0;
+	constexpr float MAX_RIGHT_AILERON_ANGLE = 1.0;
+	constexpr float MAX_ELEVATOR_ANGLE = 3.0f*0.4;//上下回転
+	constexpr float MAX_RUDDER_ANGLE = 3.0*0.8;// 左右回転
 
 	float DegToRad(float deg)
 	{
@@ -141,14 +141,14 @@ void Aircraft::Update()
 	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
 	{
 
-		m_debugMomentUI[i]->UpdateTargetVec(m_wings[i]->ComputeMoment(m_state));
-		m_debugMomentUI[i]->UpdatePosition(m_position);
+		//m_debugMomentUI[i]->UpdateTargetVec(m_wings[i]->ComputeMoment(m_state));
+		//m_debugMomentUI[i]->UpdatePosition(m_position);
 
-		m_debugForceUI[i]->UpdateTargetVec(m_wings[i]->GetForce()+ m_engine->GetThrustForce());
-		m_debugForceUI[i]->UpdatePosition(m_position);
+		//m_debugForceUI[i]->UpdateTargetVec(m_wings[i]->GetForce()+ m_engine->GetThrustForce());
+		//m_debugForceUI[i]->UpdatePosition(m_position);
 
-		m_debugMomentArm[i]->UpdateTargetVec(m_wings[i]->GetWorldMomentArm());
-		m_debugMomentArm[i]->UpdatePosition(m_position);
+		//m_debugMomentArm[i]->UpdateTargetVec(m_wings[i]->GetWorldMomentArm());
+		//m_debugMomentArm[i]->UpdatePosition(m_position);
 
 	}
 
@@ -158,8 +158,8 @@ void Aircraft::Update()
 	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
 	{
 
-		m_debugMomentUI[i]->UpdateTargetVec(ComputeTotalMomentWorld());
-		m_debugMomentUI[i]->UpdatePosition(m_position);
+		//m_debugMomentUI[i]->UpdateTargetVec(ComputeTotalMomentWorld());
+		//m_debugMomentUI[i]->UpdatePosition(m_position);
 
 	}
 
@@ -204,8 +204,8 @@ void Aircraft::InitWingPositionOffset()
 {
 	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(-3.5f, 0.0f, 0.0f);
 	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(3.5f, 0.0f, 0.0f);
-	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 3.00f);
-	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f, 3.00f);
+	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 2.0f);
+	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f,2.0f);
 }
 
 void Aircraft::InitAllLiftingSurfaces()

@@ -157,14 +157,21 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     //法線の計算
     float3 normal = ComputeNomal(psIn, uvScaled, waveScroll);
+    //uvの歪みの強さ
+    float refMapDistortionStrength=0.2;
+    float albedoDistortionStrength=0.3;
     
-    float2 uvR = CalcReflectUV(psIn.refClip);
-    uvR = saturate(uvR);
+    //反射マップuvを計算
+    float2 ReflectionMapUV = CalcReflectUV(psIn.refClip);
+    ReflectionMapUV = saturate(ReflectionMapUV);
     //法線でUVを歪ませる
-    float2 distortedUV = DistortUVByNormal(uvR, normal, 0.2);
-    float4 reflect = g_refLect.Sample(g_sampler, distortedUV);
-        //アルベドテクスチャのサンプリング
-    float4 albedoColor = g_albedo.Sample(g_sampler, distortedUV);
+    ReflectionMapUV = DistortUVByNormal(ReflectionMapUV, normal, refMapDistortionStrength);
+    
+    float4 reflect = g_refLect.Sample(g_sampler, ReflectionMapUV);
+    
+    //アルベドテクスチャのサンプリング
+    float2 albedoUv = uvScaled + normal.xz * albedoDistortionStrength;
+    float4 albedoColor = g_albedo.Sample(g_sampler, albedoUv);
 
 
     
@@ -257,6 +264,9 @@ float3 CalcLigFromDrectionLight(SPSIn psIn, float3 normal)
     return diffDirection + specDirection;
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+//反射カメラのuvを計算
+//////////////////////////////////////////////////////////////////////////////////
 
 float2 CalcReflectUV(float4 clip)
 {
@@ -293,13 +303,14 @@ float3 ComputeNomal(SPSIn psIn, float2 uv, float scroll)
 {
     //法線マップのサンプリング
     float3 localNormal = g_normalMap.Sample(g_sampler, uv + scroll).xyz;
-    
+    localNormal = normalize(localNormal);
     
     //0～1の範囲を-1～1の範囲にする。
     localNormal = (localNormal - 0.5f) * 2.0f;
     //接ベクトル空間からワールド空間に変換する
     float3 normal = psIn.normal;
     normal = psIn.tangent * localNormal.x + psIn.biNormal * localNormal.y + normal * localNormal.z;
+    normal = normalize(normal);
     return normal;
 }
 

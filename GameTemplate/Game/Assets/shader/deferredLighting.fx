@@ -90,7 +90,7 @@ float4 PSMain(PSIn psIn) : SV_Target0
     
     //最終的な色
     float4 finalColor = albedo;
-    
+        
     finalColor.xyz *= lig;
     
     finalColor.xyz *= shadowPow;
@@ -161,7 +161,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
     t = max(0.0f, t);
 
 	//鏡面反射の強さを絞る
-    t = pow(t, 10.0f);
+    t = pow(t, 50.0f);
     
     float specPower = g_speculaTexture.Sample(g_sampler, uv).g;
 	//鏡面反射光
@@ -220,4 +220,18 @@ float CalcShadowPow(float isDrawShadow, PSIn psIn, float3 worldPos)
         }
     }
     return shadowPow;
+}
+
+float ComputeFresnel(float3 normal, float3 viewDir, float baseReflectance)
+{
+    
+    float cosTheta = saturate(dot(normalize(normal), -normalize(viewDir)));
+    
+    //角度により反射率の係数。
+    float angleFactor = pow(1.0f - cosTheta, 5.0f);
+    //angleFactorの割合の上限。
+    float remainingReflectance = 1 - baseReflectance;
+
+    //フレネル反射率
+    return baseReflectance + remainingReflectance * angleFactor;
 }

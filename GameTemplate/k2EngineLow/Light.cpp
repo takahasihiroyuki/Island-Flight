@@ -28,6 +28,9 @@ namespace nsK2EngineLow {
             directionLightDir
         );
 
+        m_lightCamera.SetFar(100000000);
+		m_lightCamera.Update();
+
         // ライトビュー投影行列の設定
         SetLightLVP(
             m_lightCamera.GetViewProjectionMatrix()
