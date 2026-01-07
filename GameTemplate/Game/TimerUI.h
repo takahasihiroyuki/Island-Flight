@@ -23,14 +23,19 @@ public:
 	void SetTimer(Timer* timer) { m_timer = timer; }
 
 private:
-	int m_displayNumber = 0;//•\¦‚·‚é”š
+	int m_totalDisplaySec = 0;//•\¦‚·‚é”š
 	float m_t;				//•âŠ®—¦
-	std::array< SpriteRender, 10> OnesSprite;
-	std::array< SpriteRender, 10> TensSprite;
-	std::array< SpriteRender, 10> HundredsSprite;
-	int m_displayOnesNum = 0;
-	int m_displayTensNum = 0;
-	int m_displayHundredsNum = 0;
+	std::array< SpriteRender, 10> m_minOnesSprite;
+	std::array< SpriteRender, 10> m_minTensSprite;
+	SpriteRender m_colonSprite;
+	std::array< SpriteRender, 10> m_secOnesSprite;
+	std::array< SpriteRender, 10> m_secTensSprite;
+	SpriteRender m_timerBackSprite;
+	int m_displaySecOnesNum = 0;
+	int m_displaySecTensNum = 0;
+	int m_displayMinOnesNum = 0;
+	int m_displayMinTensNum = 0;
+
 	std::array<const char*, 10> m_spritePaths;
 	Timer* m_timer;
 };

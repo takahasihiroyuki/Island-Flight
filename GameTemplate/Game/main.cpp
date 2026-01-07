@@ -43,6 +43,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enCoinGetSE), "Assets/sound/SE/CoinGetSE.wav");
 	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enCountUpSE), "Assets/sound/SE/CountUp.wav");
 	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enResultEnterSE), "Assets/sound/SE/ResultEnter.wav");
+	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enPropellerSE), "Assets/sound/SE/Aircraft/propeller_spin.wav");
+
+	
 
 	//エフェクト登録
 	EffectEngine::GetInstance()->ResistEffect(enCoinGet,effectPath[enCoinGet]);
