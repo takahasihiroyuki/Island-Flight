@@ -78,7 +78,7 @@ class Aircraft
 {
 public:
 	Aircraft();
-	~Aircraft() {};
+	~Aircraft();
 	bool Start();
 	void fly();
 	void Init(const char* filePath, Vector3 initPos, float baseThrust = 2000);
@@ -218,5 +218,6 @@ private:
 	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugForceUI;
 	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugMomentArm;
 	Quaternion m_propellerSpin = Quaternion::Identity;
+	SoundSource* m_propellerSound = nullptr;
 
 };

@@ -15,8 +15,8 @@ namespace
 	// 各操縦面の最大操舵角度（度数法）
 	constexpr float MAX_LEFT_AILERON_ANGLE = 1.0;
 	constexpr float MAX_RIGHT_AILERON_ANGLE = 1.0;
-	constexpr float MAX_ELEVATOR_ANGLE = 3.0f*0.4;//上下回転
-	constexpr float MAX_RUDDER_ANGLE = 3.0*0.8;// 左右回転
+	constexpr float MAX_ELEVATOR_ANGLE = 3.0f * 0.4;//上下回転
+	constexpr float MAX_RUDDER_ANGLE = 3.0 * 0.8;// 左右回転
 
 	float DegToRad(float deg)
 	{
@@ -29,8 +29,15 @@ Aircraft::Aircraft()
 {
 
 }
+Aircraft::~Aircraft()
+{
+	DeleteGO(m_propellerSound);
+}
 bool Aircraft::Start()
 {
+	m_propellerSound = NewGO<SoundSource>(0);
+	m_propellerSound->Init(static_cast<int>(SoundID::enPropellerSE), true);
+	m_propellerSound->Play(true);
 	return true;
 }
 void Aircraft::Init(const char* filePath, Vector3 initPos, float baseThrust)
@@ -163,6 +170,10 @@ void Aircraft::Update()
 
 	}
 
+	//BGMの位置更新
+	if (m_propellerSound) {
+		m_propellerSound->SetPosition(g_camera3D->GetPosition());
+	}
 }
 void Aircraft::Render(RenderContext& rc)
 {
@@ -205,7 +216,7 @@ void Aircraft::InitWingPositionOffset()
 	m_wingPositionOffset[static_cast<int>(WingType::MainLeft)] = Vector3(-3.5f, 0.0f, 0.0f);
 	m_wingPositionOffset[static_cast<int>(WingType::MainRight)] = Vector3(3.5f, 0.0f, 0.0f);
 	m_wingPositionOffset[static_cast<int>(WingType::Tail)] = Vector3(0.0f, 0.0f, 2.0f);
-	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f,2.0f);
+	m_wingPositionOffset[static_cast<int>(WingType::Vertical)] = Vector3(0.0f, 0.0f, 2.0f);
 }
 
 void Aircraft::InitAllLiftingSurfaces()
@@ -358,7 +369,7 @@ void Aircraft::UpdateModel()
 
 	m_propeller.SetPosition(m_position);
 	Quaternion rot;
-	m_propellerSpin.AddRotationDegZ(speed*0.03);
+	m_propellerSpin.AddRotationDegZ(speed * 0.03);
 	rot.Multiply(m_propellerSpin, m_state.orientation);
 	m_propeller.SetRotation(rot);
 	m_propeller.Update();
