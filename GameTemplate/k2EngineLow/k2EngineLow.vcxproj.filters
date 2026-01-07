@@ -554,7 +554,6 @@
     <ClInclude Include="PostEffectBase.h">
       <Filter>PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="EffectType.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

@@ -354,7 +354,6 @@
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="dbg\MyAssert.h" />
     <ClInclude Include="dbg\MyLog.h" />
-    <ClInclude Include="EffectType.h" />
     <ClInclude Include="FadeOut.h" />
     <ClInclude Include="Fog.h" />
     <ClInclude Include="gameObject\GameObjectManager.h" />
