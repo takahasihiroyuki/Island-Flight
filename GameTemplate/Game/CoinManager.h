@@ -62,6 +62,10 @@ public:
 	/// </summary>
 	void ActivateInitialCoins();
 
+	size_t GetCoinCount() {
+		return m_coinCount;
+	}
+
 private:
 	/// <summary>
 	/// プレイヤーが取得したコインを判定する。
@@ -87,4 +91,5 @@ private:
 	InstancingManager* m_instancingManager = nullptr;
 	std::vector<size_t> m_hitIndices;//取られたコインのインデックス
 	float m_score = 100.0f;
+	size_t m_coinCount;
 };

@@ -5,10 +5,12 @@
 #include "TimerUI.h"
 #include "UIManager.h"
 #include "CoinDirectionArrowUI.h"
+#include "CoinCounterUI.h"
 
 namespace
 {
 	constexpr float TIMELIMIT = 100;
+	const Vector3 FADE_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
 }
 
 GamePlayState::GamePlayState()
@@ -37,6 +39,7 @@ void GamePlayState::OnEnter()
 	m_timer->SetLimitTime(TIMELIMIT);
 	m_timer->SetRunning(true);
 
+	//UI
 	//タイマーUIをUImanagerに登録
 	m_timeUI = std::make_unique<TimerUI>();
 	m_timeUI->Init(m_timer);
@@ -48,6 +51,11 @@ void GamePlayState::OnEnter()
 	m_coinArrowUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("coinArrowUI", std::move(m_coinArrowUI));
 
+	m_coinCounterUI = std::make_unique<CoinCounterUI>();
+	m_coinCounterUI->Init();
+	m_coinCounterUI->SetDisplayed(true);
+	UIManager::GetInstance().RegisterScreen("coinCounterUI", std::move(m_coinCounterUI));
+
 	//BGM
 	m_gamePlayBGM = NewGO<SoundSource>(0);
 	m_gamePlayBGM->Init(static_cast<int>(SoundID::enGamePlayBGM));
@@ -56,8 +64,31 @@ void GamePlayState::OnEnter()
 
 void GamePlayState::Update()
 {
+	switch (m_phase)
+	{
+	case GamePlayPhase::GamePlay:
+		if (m_timer->IsTimeUp())
+		{
+			m_phase = GamePlayPhase::Outro;
+			m_timer->Reset();
+			m_timer->SetRunning(true);
+			g_renderingEngine->GetPostEffect().SetFadeEnabled(true);
+			g_renderingEngine->GetPostEffect().StartFadeOut(m_outroFinishTime, FADE_COLLAR);
+
+		}
+		break;
+	case GamePlayPhase::Outro:
+		if(m_timer->GetElapsedTime() > m_outroFinishTime)
+		{
+			//終了処理へ
+			m_isChangeToResult = true;
+		}
+		break;
+	default:
+		break;
+	}
 	TargetSnapshot targetSnapshot;
-	targetSnapshot.SetPosition(m_context->aircraft->GetPosition());
+	targetSnapshot.SetPosition(m_context->aircraft->GetPosition()+Vector3(0,50,0));
 	targetSnapshot.SetVelocity(m_context->aircraft->GetLinearVelocity());
 	targetSnapshot.SetRotation(m_context->aircraft->GetOrientation());
 
@@ -69,12 +100,13 @@ void GamePlayState::Exit()
 {
 	UIManager::GetInstance().HideScreen("timerUI");
 	UIManager::GetInstance().HideScreen("coinArrowUI");
+	UIManager::GetInstance().HideScreen("coinCounterUI");
 	m_gamePlayBGM->Stop();
 }
 
 bool GamePlayState::RequestChangeState(InGameStateType& type)
 {
-	if (m_timer->IsTimeUp())
+	if (m_isChangeToResult)
 	{
 		type = InGameStateType::enResolt;
 		return true;

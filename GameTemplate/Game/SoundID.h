@@ -11,5 +11,6 @@ enum class SoundID
 	enCoinGetSE,
 	enEngineSE,
 	enAnbientSE,
+	enPropellerSE,
 	enMax,
 };

@@ -101,6 +101,7 @@
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="FlightDebugScene.cpp" />
+    <ClCompile Include="CoinCounterUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -199,5 +200,7 @@
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="FlightDebugScene.h" />
+    <ClInclude Include="CoinCounterUI.h" />
+    <ClInclude Include="EffectType.h" />
   </ItemGroup>
 </Project>

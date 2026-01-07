@@ -6,10 +6,7 @@
 
 Coin::Coin()
 {
-	m_coinSE = NewGO<SoundSource>(0);
-	m_coinSE->Init(static_cast<int>(SoundID::enCoinSE), true);
-	m_coinGetSE = NewGO<SoundSource>(0);
-	m_coinGetSE->Init(static_cast<int>(SoundID::enCoinGetSE), false);
+
 }
 
 Coin::~Coin()
@@ -20,12 +17,16 @@ Coin::~Coin()
 
 void Coin::OnStart()
 {
-
+	m_coinSE = NewGO<SoundSource>(0);
+	m_coinSE->Init(static_cast<int>(SoundID::enCoinSE), true);
+	m_coinSE->Play(true);
+	m_coinGetSE = NewGO<SoundSource>(0);
+	m_coinGetSE->Init(static_cast<int>(SoundID::enCoinGetSE), false);
+	m_coinGetSE->Stop();
 }
 
 void Coin::OnUpdate()
 {
-
 
 	Quaternion rot;
 	float deltaTime = g_gameTime->GetFrameDeltaTime();
@@ -38,10 +39,16 @@ void Coin::OnUpdate()
 
 void Coin::PlayCollectEffects()
 {
-	m_coinGetSE->Play(false);
+	// コイン取得音再生
+	auto* se = NewGO<nsK2EngineLow::SoundSource>(0, "CoinGetSE");
+	se->Init(static_cast<int>(SoundID::enCoinGetSE), false);
+	se->Play(false);
 
-	auto* e = NewGO<EffectEmitter>(0);
-	e->Init(enCoinGet);
-	e->SetPosition(m_position);
-	e->Play();
+	//エフェクトの初期化
+	m_collectEffect = NewGO<EffectEmitter>(0);
+	m_collectEffect->Init(enCoinGet);
+	m_collectEffect->SetPosition(m_position);
+	m_collectEffect->SetScale(Vector3::One*100000);
+	m_collectEffect->SetRotation(Quaternion::Identity);
+	m_collectEffect->Play();
 }

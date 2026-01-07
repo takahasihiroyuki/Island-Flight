@@ -187,6 +187,9 @@ void CoinManager::ProcessCollectedCoins(const Aircraft& player)
 	// 見つかったコインを処理
 	for (size_t index : m_hitIndices) {
 		Coin& coin = *m_coins[index];
+
+		m_coinCount++;
+
 		//スコアを加算
 		m_scoreManager->AddScore(m_score);
 		//コイン取得時のエフェクト

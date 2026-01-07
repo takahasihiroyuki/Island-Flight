@@ -21,14 +21,20 @@ public:
 	void Activate() override
 	{
 		PlacementObject::Activate();
-		m_coinSE->Play(true);
+		if (m_coinSE) {
+			m_coinSE->Play(true);
+		}
 	}
 
 	void Deactivate() override
 	{
 		PlacementObject::Deactivate();
-		m_coinSE->Stop();
-		m_coinGetSE->Stop();
+		if (m_coinSE) {
+			m_coinSE->Stop();
+		}
+		if (m_coinGetSE) {
+			m_coinGetSE->Stop();
+		}
 	}
 
 	void PlayCollectEffects();
@@ -38,5 +44,6 @@ private:
 	SoundSource* m_coinGetSE = nullptr;
 	Timer* m_timer = nullptr;
 	float m_rotateSpeed = 300.0f;
+	EffectEmitter* m_collectEffect = nullptr;
 };
 
