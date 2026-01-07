@@ -38,6 +38,9 @@ void ResoltState::OnEnter()
 	CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
 	CameraManager::GetInstance().ChangeController(CameraControllerType::enStageOrbit);
 
+	//フェードイン
+	g_renderingEngine->GetPostEffect().StartFadeIn(3);
+
 }
 
 void ResoltState::Update()

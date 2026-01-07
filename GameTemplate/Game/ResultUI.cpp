@@ -12,7 +12,8 @@ namespace
 	const Vector3 TENS_SPLITE_POS = Vector3(SPRITE_BASE_POS.x - SPACING_X, SPRITE_BASE_POS.y, 0.0f);
 	const Vector3 HUNDREDS_SPLITE_POS = Vector3(SPRITE_BASE_POS.x - SPACING_X * 2, SPRITE_BASE_POS.y, 0.0f);
 	const Vector3 THOUSANDS_SPLITE_POS = Vector3(SPRITE_BASE_POS.x - SPACING_X * 3, SPRITE_BASE_POS.y, 0.0f);
-	const Vector2 PANEL_SIZE = Vector2(1280.0f * 1.3f, 720.0f * 1.3f);
+	const Vector2 SCORE_SPRITE_SIZE = Vector2(1000.0f, 200.0f * 1.3f);
+	const Vector3 SCORE_SPRITE_POSITION= Vector3(0.0f, 300.0f, 0.0f);
 
 	/// <summary>
 	/// ê¨å`ï‚äÆ
@@ -66,7 +67,7 @@ void ResultUI::Update()
 
 void ResultUI::Render(RenderContext& rc)
 {
-	m_panel.Draw(rc);
+	m_scoreSprite.Draw(rc);
 	OnesSprite[m_displayOnesNum].Draw(rc);
 	TensSprite[m_displayTensNum].Draw(rc);
 	HundredsSprite[m_displayHundredsNum].Draw(rc);
@@ -106,9 +107,9 @@ void ResultUI::Init()
 
 	}
 
-	m_panel.Init("Assets/UI/Result/ResultPanel.DDS", PANEL_SIZE.x, PANEL_SIZE.y);
-	m_panel.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
-	m_panel.Update();
+	m_scoreSprite.Init("Assets/UI/Result/SCORE.DDS", SCORE_SPRITE_SIZE.x, SCORE_SPRITE_SIZE.y);
+	m_scoreSprite.SetPosition(SCORE_SPRITE_POSITION);
+	m_scoreSprite.Update();
 }
 
 void ResultUI::Open()

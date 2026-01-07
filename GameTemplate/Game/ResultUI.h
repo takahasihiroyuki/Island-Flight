@@ -24,7 +24,7 @@ private:
 	std::array< SpriteRender, 10> TensSprite;
 	std::array< SpriteRender, 10> HundredsSprite;
 	std::array< SpriteRender, 10> ThousandsSprite;
-	SpriteRender m_panel;
+	SpriteRender m_scoreSprite;
 	int m_displayOnesNum = 0;
 	int m_displayTensNum = 0;
 	int m_displayHundredsNum = 0;
