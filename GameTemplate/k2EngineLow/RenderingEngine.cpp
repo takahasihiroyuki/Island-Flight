@@ -323,10 +323,10 @@ namespace nsK2EngineLow
 
 		PostEffecting(rc);
 
-		SpriteRendering(rc);
-
 		//メインレンダリングターゲットの絵をフレームバッファにコピー
 		CopyMainRenderTargetToFrameBuffer(rc);
+
+		SpriteRendering(rc);
 
 		//描画したオブジェクトをクリアする
 		ObjectClear();
