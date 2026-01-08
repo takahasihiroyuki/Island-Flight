@@ -96,6 +96,7 @@ float4 PSMain(PSIn psIn) : SV_Target0
     finalColor.xyz *= shadowPow;
     //finalColor.xyz = dirLight;
     
+
     return finalColor;
 
 }
@@ -127,15 +128,8 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
     float t = dot(normal, lightDirection);
 	//“àÏ‚ÌŒ‹‰Ê‚Ì-1‚ğ‚©‚¯‚é
     t *= -1.0f;
-	//“àÏ‚ÌŒ‹‰Ê‚ª0ˆÈ‰º‚È‚ç0‚É‚·‚é
-    if (t < 0.0f)
-    {
-        t = 0.0f;
-    }
-    if (t >= 1.0f)
-    {
-        t = 1.0f;
-    }
+
+    t = saturate(t);
    
 	//ƒ‰ƒCƒg‚Ì‰e‹¿“x‚ğ•Ô‚·
     return lightColor * t;
@@ -161,7 +155,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
     t = max(0.0f, t);
 
 	//‹¾–Ê”½Ë‚Ì‹­‚³‚ği‚é
-    t = pow(t, 50.0f);
+    t = pow(t, 10.0f);
     
     float specPower = g_speculaTexture.Sample(g_sampler, uv).g;
 	//‹¾–Ê”½ËŒõ

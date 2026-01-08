@@ -20,6 +20,7 @@ namespace nsK2EngineLow
 
 	void Shadow::Execute(RenderContext& rc, std::vector<ModelRender*>& obj)
 	{
+		BeginGPUEvent("Shadow");
 		//ターゲットをシャドウマップに変更
 		rc.WaitUntilToPossibleSetRenderTarget(shadowMapTarget);
 		rc.SetRenderTargetAndViewport(shadowMapTarget);

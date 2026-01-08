@@ -99,8 +99,8 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin, uniform bool isEnableInstanci
 
     psIn.pos = mul(m, vsIn.pos); // モデルの頂点をワールド座標系に変換
     psIn.worldPos = psIn.pos;
-    psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
-    psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
+    float4 viewPos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
+    psIn.pos = mul(mProj, viewPos); // カメラ座標系からスクリーン座標系に変換
     
     //法線、接ベクトル、従ベクトルをワールド空間に変換する。
     //平行移動を無視するために、3x3行列に変換してから乗算する。
@@ -155,7 +155,7 @@ SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
     //アルベドカラーの抽出
     psOut.albedo = g_albedo.Sample(g_sampler, psIn.uv);
     clip(psOut.albedo.a - 0.2f); // ピクセルキル
-    psOut.albedo.w = psIn.pos.z;
+    psOut.albedo.w = psIn.pos.z / psIn.pos.w;
 
         
     psOut.normal.xyz = CalcNormal(psIn);
@@ -206,8 +206,6 @@ float3 CalcNormal(SPSIn psIn)
 
     //// 出力は0～1に丸められてしまいマイナスの値が失われてしまうので-1～1を0～1に変換する
     normal = (normal / 2.0f) + 0.5f;
-   
-    normal = normalize(normal);
 
     return normal;
 }

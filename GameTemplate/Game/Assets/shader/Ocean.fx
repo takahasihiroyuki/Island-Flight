@@ -97,7 +97,6 @@ float2 DistortUVByNormal(float2 uv, float3 normal, float distortionStrength);
 float3 ComputeNomal(SPSIn psIn, float2 uv, float scroll);
 float CalcShadowPow(float3 worldPos);
 
-
 /// <summary>
 //スキン行列を計算する。
 /// </summary>
@@ -117,7 +116,7 @@ float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
     return skinning;
 }
 
-/// <summary>
+/// <sumary>
 /// 頂点シェーダーのコア関数。
 /// </summary>
 SPSIn VSMain(SVSIn vsIn)
@@ -192,6 +191,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float4 finalColor;
     finalColor = lerp(litColor, reflect, flesnel);
     finalColor *= shadowPow;
+    
+
     return finalColor;
 }
 

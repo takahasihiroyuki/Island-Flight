@@ -36,6 +36,6 @@ private:
 
 
 private:
-	Vector3 m_localCameraOffsetPos = Vector3(0.0f, 200.0f, -800.0f);
+	Vector3 m_localCameraOffsetPos = Vector3(0.0f, 100.0f, -600.0f);
 };
 
