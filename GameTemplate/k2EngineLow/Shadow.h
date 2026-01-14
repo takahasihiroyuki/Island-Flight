@@ -13,9 +13,12 @@ namespace nsK2EngineLow {
 		{
 			return shadowMapTarget;
 		}
+
+		void UpdateLightCamera();
+
 	private:
 		RenderTarget shadowMapTarget;
 		float clearColor[4] = { 1.0f,1.0f,1.0f,1.0f };	//カラーバッファーは真っ白
-
+		float m_shadowDistance =100;
 	};
 };

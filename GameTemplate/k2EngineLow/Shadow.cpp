@@ -20,7 +20,11 @@ namespace nsK2EngineLow
 
 	void Shadow::Execute(RenderContext& rc, std::vector<ModelRender*>& obj)
 	{
+
 		BeginGPUEvent("Shadow");
+
+		UpdateLightCamera();
+
 		//ターゲットをシャドウマップに変更
 		rc.WaitUntilToPossibleSetRenderTarget(shadowMapTarget);
 		rc.SetRenderTargetAndViewport(shadowMapTarget);
@@ -34,6 +38,19 @@ namespace nsK2EngineLow
 		}
 
 		rc.WaitUntilFinishDrawingToRenderTarget(shadowMapTarget);
+	}
+	void Shadow::UpdateLightCamera()
+	{
+		//
+		Vector3 mainCameraPosition = g_camera3D->GetPosition();
+		Vector3 lightDir = g_renderingEngine->GetSceneLight().GetDirLigDirection();
+		lightDir.Normalize();
+
+		Vector3 lightCameraPosition;
+		lightCameraPosition = mainCameraPosition - lightDir * m_shadowDistance;
+		g_renderingEngine->GetLightCamera().SetPosition(lightCameraPosition);
+		g_renderingEngine->GetLightCamera().SetTarget(mainCameraPosition);
+		g_renderingEngine->GetLightCamera().SetFar(m_shadowDistance*2);
 	}
 }
 

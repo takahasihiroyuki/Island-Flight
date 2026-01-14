@@ -24,7 +24,7 @@ namespace nsK2EngineLow {
 		Vector3             ambientColor;           //アンビエントカラー
 		float				pad1;					//パティング
 		Matrix				mLVP;					//ライトビュー投影行列。
-		Matrix				mCameraViewProjInv=Matrix::Identity;		//カメラのビュー射影行列の逆行列。
+		Matrix				mCameraViewProjInv = Matrix::Identity;		//カメラのビュー射影行列の逆行列。
 	};
 
 	class SceneLight
@@ -35,6 +35,7 @@ namespace nsK2EngineLow {
 			const Vector3& directionLightColor,
 			const Vector3& ambientLightColor,
 			const Vector3& lightCameraPos,
+			const float& lightCameraFar,
 			const Matrix& mCameraViewProjInv
 		);
 		void LightCameraUpdate();
@@ -149,11 +150,12 @@ namespace nsK2EngineLow {
 		////////////////////////////////////////////////////////
 
 
-		void SetLightCamera(Vector3 pos, Vector3 target)
+		void SetLightCamera(Vector3 pos, Vector3 target, float fFar)
 		{
 			m_lightCamera.SetPosition(pos);
 			target.Normalize();
 			m_lightCamera.SetTarget(target);
+			m_lightCamera.SetFar(fFar);
 		}
 
 

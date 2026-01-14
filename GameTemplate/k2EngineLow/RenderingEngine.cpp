@@ -7,10 +7,10 @@ namespace nsK2EngineLow
 
 	namespace
 	{
-		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_COLOR = Vector3(1.0f, 0.95f, 0.80f);
-		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_DIRECTION = Vector3(0.6f, 0.1f, 0.3f);
-		const Vector3 SCENELIGHT_AMBIENTLIGHT_COLOR = Vector3(0.43f, 0.47f, 0.50f)*1.8/*Vector3(1.0f, 1.0f, 1.0f)*0.7*/;
-		const Vector3 LIGHTCAMERA_POSITION = Vector3(100.0f, 2000.0f, 500.0f);
+		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_COLOR = Vector3(1.0f, 0.95f, 0.80f)*0.95;		//ディレクションライトの色
+		const Vector3 SCENELIGHT_DHIRECTIONLIGHT_DIRECTION = Vector3(0.6f, 0.1f, 0.3f);		//ディレクションライトの方向
+		const Vector3 SCENELIGHT_AMBIENTLIGHT_COLOR = Vector3(0.43f, 0.47f, 0.50f) * 1.8;	//環境光の色
+		const Vector3 LIGHTCAMERA_POSITION = Vector3(10000.0f, 20000.0f, -50000.0f);		//ライトカメラの位置
 	}
 
 	RenderingEngine::RenderingEngine()
@@ -63,10 +63,12 @@ namespace nsK2EngineLow
 		InitGBuffer();
 
 		//ライトの設定。
-		m_sceneLight.Init(SCENELIGHT_DHIRECTIONLIGHT_DIRECTION,
+		m_sceneLight.Init(
+			SCENELIGHT_DHIRECTIONLIGHT_DIRECTION,
 			SCENELIGHT_DHIRECTIONLIGHT_COLOR,
 			SCENELIGHT_AMBIENTLIGHT_COLOR,
 			LIGHTCAMERA_POSITION,
+			50000000,
 			g_camera3D->GetViewProjectionMatrixInv()
 		);
 

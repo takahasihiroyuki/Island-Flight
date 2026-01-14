@@ -13,11 +13,12 @@ namespace nsK2EngineLow {
 	}
 	void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
-		//フォグの描画
-		OnRenderFog(rc, mainRenderTarget);
 
 		//ブルームの描画処理
 		OnRenderBloom(rc, mainRenderTarget);
+
+		//フォグの描画
+		OnRenderFog(rc, mainRenderTarget);
 
 		//六角形のブラーの描画
 		OnRenderHexagonBlur(rc, mainRenderTarget);

@@ -207,15 +207,24 @@ void CoinManager::SelectActive(const Vector3& playerPos, const Vector3& playerFo
 {
 	std::vector<float> weights;		// 確率の重み付け用
 	std::vector<size_t> indices;	// 候補コインのインデックス
+
+	// プレイヤーの正面方向を正規化
 	Vector3 playerForwardDir = playerForward;
 	playerForwardDir.Normalize();
 
+	// アクティブでないコインを列挙し、重みを計算
 	for (size_t i = 0; i < m_coins.size(); ++i)
 	{
+		// アクティブなコインはスキップ
 		if (m_coins[i]->IsActive()) continue;
 
+		// プレイヤーからコインへのベクトル
 		Vector3 playerToCoin = m_coins[i]->GetPosition() - playerPos;
+
+		//プレイヤーとコインの距離
 		float dist = playerToCoin.Length();
+
+		//正規化
 		playerToCoin.Normalize();
 
 		//どれだけプレイヤーがそのコインの方向を向いているか
