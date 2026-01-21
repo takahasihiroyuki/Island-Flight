@@ -3,6 +3,7 @@
 #include "IScene.h"
 #include "InGameScene.h"
 #include "TitleScene.h"
+#include "FlightDebugScene.h"
 
 
 SceneManager::SceneManager()
@@ -23,11 +24,11 @@ bool SceneManager::Start()
 void SceneManager::Update()
 {
 
-	if(m_currentScene->RequestChangeScene(m_nextSceneType))
+	if (m_currentScene->RequestChangeScene(m_nextSceneType))
 	{
 		ChangeScene(m_nextSceneType);
 	}
-	
+
 }
 
 void SceneManager::ChangeScene(SceneType type)
@@ -39,14 +40,17 @@ void SceneManager::ChangeScene(SceneType type)
 
 	switch (type) {
 	case SceneType::Title:
-		 m_currentScene = NewGO<TitleScene>(0);
+		m_currentScene = NewGO<TitleScene>(0);
 		break;
 	case SceneType::InGame:
-		 m_currentScene = NewGO<InGameScene>(0);
+		m_currentScene = NewGO<InGameScene>(0);
 		break;
 	case SceneType::GameResolt:
 		// m_currentScene = NewGO<GameResoltScene>();
 		//m_currentScene->Init(this);
+		break;
+	case SceneType::FlightDebug:
+		m_currentScene = NewGO<FlightDebugScene>(0);
 		break;
 	}
 

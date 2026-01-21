@@ -389,6 +389,26 @@ Vector3 Aircraft::ComputeTotalMomentWorld()
 	return totalMomentWorld;
 }
 
+Vector3 Aircraft::GetWingMomentWorld(WingType wingType) const
+{
+
+	size_t index = static_cast<size_t>(wingType);
+	return m_wings[index]->GetWorldMoment();
+
+}
+
+Vector3 Aircraft::GetWingForceWorld(WingType wingType) const
+{
+	size_t index = static_cast<size_t>(wingType);
+	return m_wings[index]->GetForce();
+}
+
+Vector3 Aircraft::GetWingMomentArmWorld(WingType wingType) const
+{
+	size_t index = static_cast<size_t>(wingType);
+	return m_wings[index]->GetWorldMomentArm();
+}
+
 void Engine::UpdateThrustForce()
 {
 	float deltaTime = g_gameTime->GetFrameDeltaTime();

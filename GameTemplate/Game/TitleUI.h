@@ -1,6 +1,7 @@
 #pragma once
 #include"UIScreen.h"
 
+class Aircraft;
 class Timer;
 class TitleUI :public UIScreen
 {
@@ -18,6 +19,7 @@ private:
 	SpriteRender m_titleLogo;
 	SpriteRender m_titleScreen;
 	SpriteRender m_titleStart;
+	Aircraft* m_aircraft = nullptr;
 	Timer* m_timer;
 	Vector3 m_logoPos;
 	Vector3 m_logoPosBase = Vector3{ 0.0f,200.0f,0.0f };

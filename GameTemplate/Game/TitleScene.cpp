@@ -113,6 +113,10 @@ bool TitleScene::RequestChangeScene(SceneType& type)
 		return true;
 	}
 
+	if (g_pad[0]->IsTrigger(enButtonB)) {
+		type = SceneType::FlightDebug;
+		return true;
+	}
 
 	return false;
 }

@@ -3,5 +3,6 @@ enum class SceneType
 {
 	Title,
 	InGame,
-	GameResolt
+	GameResolt,
+	FlightDebug
 };

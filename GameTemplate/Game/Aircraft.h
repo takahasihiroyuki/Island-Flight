@@ -95,6 +95,9 @@ public:
 	Quaternion GetOrientation()const {
 		return m_state.orientation;
 	}
+
+	int GetWingCount() const { return static_cast<int>(WingType::Count); }
+
 	void SetControlInputs(
 		float mainLeftInput,
 		float mainRightInput,
@@ -103,6 +106,23 @@ public:
 		bool isBoostOn,
 		bool isThrottleCut
 	);
+
+	/// <summary>
+	/// 翼のモーメントアームをワールド座標で取得
+	/// </summary>
+	/// <param name="wingType"></param>
+	/// <returns></returns>
+	Vector3 GetWingMomentWorld(WingType wingType) const;
+
+	/// <summary>
+	/// 翼の力をワールド座標で取得
+	/// </summary>
+	/// <param name="wingType"></param>
+	/// <returns></returns>
+	Vector3 GetWingForceWorld(WingType wingType) const;
+
+	Vector3 GetWingMomentArmWorld(WingType wingType) const;
+
 
 private:
 	void InitLiftingSurface(

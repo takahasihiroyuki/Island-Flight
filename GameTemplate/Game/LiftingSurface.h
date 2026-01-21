@@ -125,10 +125,25 @@ public:
 
 	void UpdateOrientation(Quaternion orientation);
 
+	Vector3 GetWorldMoment() const 
+	{
+		return m_worldMomentArm;
+	}
+
 	Vector3 GetWorldMomentArm()const
 	{
 		return m_worldMomentArm;
 	}
+
+	Vector3 GetLocalMomentArm()const
+	{
+		return m_localMomentArm;
+	}
+
+	Vector3 GetWingChordDir() const {
+		return m_wingChordDir;
+	}
+
 private:
 
 	/// <summary>
