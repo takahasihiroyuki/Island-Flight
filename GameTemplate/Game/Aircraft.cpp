@@ -127,15 +127,30 @@ void Aircraft::Update()
 	//加速度を積分して速度を更新
 	AddLinearVelocity(m_accel * g_gameTime->GetFrameDeltaTime());
 
-	Vector3 debug = Vector3(0.0f, 0.0f, 0.0f);
-	//移動実行
-	m_position =
-		m_characterController
-		.AircraftExecute(
-			m_linearVelocity/*debug*/,
-			g_gameTime->GetFrameDeltaTime()
-		);
+	
+	//トランスレーションロックがonなら移動させない
+	if (m_lockTranslation) {
 
+		Vector3 debug = Vector3(0.0f, 0.0f, 0.0f);
+
+		//移動実行
+		m_position =
+			m_characterController
+			.AircraftExecute(
+				debug,
+				g_gameTime->GetFrameDeltaTime()
+			);
+
+	}
+	else{
+		//移動実行
+		m_position =
+			m_characterController
+			.AircraftExecute(
+				m_linearVelocity,
+				g_gameTime->GetFrameDeltaTime()
+			);
+	}
 
 	//モーメントの計算と姿勢の更新
 	ComputeMoment();
@@ -143,32 +158,6 @@ void Aircraft::Update()
 
 	//モデルの更新
 	UpdateModel();
-
-	//デバッグ用のUIを更新
-	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
-	{
-
-		//m_debugMomentUI[i]->UpdateTargetVec(m_wings[i]->ComputeMoment(m_state));
-		//m_debugMomentUI[i]->UpdatePosition(m_position);
-
-		//m_debugForceUI[i]->UpdateTargetVec(m_wings[i]->GetForce()+ m_engine->GetThrustForce());
-		//m_debugForceUI[i]->UpdatePosition(m_position);
-
-		//m_debugMomentArm[i]->UpdateTargetVec(m_wings[i]->GetWorldMomentArm());
-		//m_debugMomentArm[i]->UpdatePosition(m_position);
-
-	}
-
-
-
-	//デバッグ用UIの更新
-	for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
-	{
-
-		//m_debugMomentUI[i]->UpdateTargetVec(ComputeTotalMomentWorld());
-		//m_debugMomentUI[i]->UpdatePosition(m_position);
-
-	}
 
 	//BGMの位置更新
 	if (m_propellerSound) {
@@ -264,48 +253,14 @@ Vector3 Aircraft::ComputeForce()
 	Vector3 thrust = m_engine->GetThrustForce();
 
 	Vector3 wingsForce = Vector3::Zero;
-	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
-		//if (i == 3) {
-
+	for (int i = 0; i < static_cast<int>(WingType::Count); i++) 
+	{
 		m_wings[i]->ComputeForces(m_state);
 		wingsForce += m_wings[i]->GetForce();
-
-		//m_debugForceUI[i]->UpdateTargetVec(m_wings[i]->GetForce() /*+ m_engine->GetThrustForce()*/);
-
-		//switch (static_cast<WingType>(i))
-		//{
-		//case WingType::MainLeft:
-		//	m_debugForceUI[i]->UpdatePosition(m_position + Vector3(-200, 0, 0));
-		//	break;
-
-		//case WingType::MainRight:
-		//	m_debugForceUI[i]->UpdatePosition(m_position + Vector3(200, 0, 0));
-
-		//	break;
-
-		//case WingType::Tail:
-		//	m_debugForceUI[i]->UpdatePosition(m_position + Vector3(0, 0, -200));
-
-		//	break;
-
-		//case WingType::Vertical:
-		//	m_debugForceUI[i]->UpdatePosition(m_position + Vector3(0, 0, 200));
-
-		//	break;
-
-		//default:
-		//	break;
-		//}
-
-		//}
 	}
 
 	Vector3 force = thrust + wingsForce;
 	force += ComputeGravity();
-
-
-	//m_debugForceUI[0]->UpdateTargetVec(force /*+ m_engine->GetThrustForce()*/);
-	//m_debugForceUI[0]->UpdatePosition(m_position);
 
 	return force;
 }
@@ -380,11 +335,9 @@ Vector3 Aircraft::ComputeTotalMomentWorld()
 {
 	Vector3 totalMomentWorld = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++) {
-		//if (i == 3) {
 		if (m_wings[i]) {
 			totalMomentWorld += m_wings[i]->ComputeMoment(m_state);
 		}
-		//}
 	}
 	return totalMomentWorld;
 }

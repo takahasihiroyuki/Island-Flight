@@ -1,5 +1,8 @@
 #pragma once
 #include "ICameraController.h"
+namespace {
+	const Vector3 DEFAULT_STATIC_OFFSET = Vector3(0.0f, 100.0f, 500.0f);
+}
 
 class StaticController :public ICameraController
 {
@@ -13,9 +16,10 @@ public:
 
 	void UpdateState(const TargetSnapshot& m_targetSnapshot)override {
 
-		Vector3 pos = g_camera3D->GetPosition();
+		
 		Vector3 targetPos = Vector3::Zero;
 		m_targetSnapshot.GetPosition(targetPos);
+		Vector3 pos = targetPos+ DEFAULT_STATIC_OFFSET;
 		m_cameraState.pos = pos;
 		m_cameraState.targetPos = targetPos;
 	}

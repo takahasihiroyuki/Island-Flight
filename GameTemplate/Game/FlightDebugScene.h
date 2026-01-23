@@ -25,5 +25,6 @@ private:
 	std::vector<DebugArrowUI*> m_debugMomentUI;
 	std::vector<DebugArrowUI*> m_debugForceUI;
 	std::vector<DebugArrowUI*> m_debugMomentArmUI;
+	Ocean* m_ocean = nullptr;
 };
 

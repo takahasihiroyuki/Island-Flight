@@ -7,6 +7,7 @@
 namespace
 {
 	static constexpr float AIRCRAFT_BASE_THRUST = 10000.0f;
+	static const Vector3 INIT_POSITION = Vector3(0.0f,10000.0f,0.0f);
 }
 
 FlightDebugScene::~FlightDebugScene()
@@ -15,11 +16,14 @@ FlightDebugScene::~FlightDebugScene()
 
 bool FlightDebugScene::Start()
 {
+
 	//飛行機の初期化
 	{
 		//飛行機
 		m_aircraft = new Aircraft();
-		m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", Vector3::Zero, AIRCRAFT_BASE_THRUST);
+		m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", INIT_POSITION, AIRCRAFT_BASE_THRUST);
+		//場所をを固定
+		m_aircraft->SetLockTranslation(true);
 		m_aircraft->Start();
 	}
 
@@ -28,10 +32,9 @@ bool FlightDebugScene::Start()
 		const int wingsCount = m_aircraft->GetWingCount();
 
 		//翼の枚数文矢印を確保
-		m_debugMomentUI.reserve(wingsCount);
-		m_debugForceUI.reserve(wingsCount);
-		m_debugMomentArmUI.reserve(wingsCount);
-
+		m_debugMomentUI.resize(wingsCount);
+		m_debugForceUI.resize(wingsCount);
+		m_debugMomentArmUI.resize(wingsCount);
 
 		//デバッグ用のUIを登録
 		for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
@@ -68,7 +71,12 @@ bool FlightDebugScene::Start()
 		targetSnapshot.SetRotation(m_aircraft->GetOrientation());
 
 		CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
-		CameraManager::GetInstance().ChangeController(CameraControllerType::enSpringFollow);
+		CameraManager::GetInstance().ChangeController(CameraControllerType::enStatic);
+	}
+
+	//海
+	{
+		m_ocean = NewGO<Ocean>(0);
 	}
 
 	return true;
@@ -76,9 +84,14 @@ bool FlightDebugScene::Start()
 
 void FlightDebugScene::Update()
 {
-	PlayerInput();
+
 	//飛行機の更新
-	m_aircraft->Update();
+	{
+		m_aircraft->Update();
+
+		//プレイヤーの入力
+		PlayerInput();
+	}
 
 	//デバッグ用矢印UIの更新
 	{
@@ -86,7 +99,7 @@ void FlightDebugScene::Update()
 		for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
 		{
 			//モーメントUI
-			m_debugMomentUI[i]->UpdateTargetVec(m_aircraft->GetWingMomentWorld(static_cast<WingType>(i)));
+			m_debugMomentUI[i]->UpdateTargetVec(m_aircraft->GetWingMomentWorld(static_cast<WingType>(i))*1000);
 			m_debugMomentUI[i]->UpdatePosition(m_aircraft->GetPosition());
 			//フォースUI
 			m_debugForceUI[i]->UpdateTargetVec(m_aircraft->GetWingForceWorld(static_cast<WingType>(i)));
@@ -110,6 +123,7 @@ void FlightDebugScene::Update()
 void FlightDebugScene::Render(RenderContext& rc)
 {
 	m_aircraft->Render(rc);
+	m_ocean->Render(rc);
 }
 
 bool FlightDebugScene::RequestChangeScene(SceneType& type)

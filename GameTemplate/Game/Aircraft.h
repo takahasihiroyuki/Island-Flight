@@ -123,6 +123,10 @@ public:
 
 	Vector3 GetWingMomentArmWorld(WingType wingType) const;
 
+	void SetLockTranslation(bool isLock) 
+	{
+		m_lockTranslation = isLock;
+	}
 
 private:
 	void InitLiftingSurface(
@@ -239,5 +243,5 @@ private:
 	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugMomentArm;
 	Quaternion m_propellerSpin = Quaternion::Identity;
 	SoundSource* m_propellerSound = nullptr;
-
+	bool m_lockTranslation=false;		//ポジションを固定（デバッグ用の変数）
 };
