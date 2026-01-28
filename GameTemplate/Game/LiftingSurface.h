@@ -95,6 +95,7 @@ public:
 
 		Vector3 moment;
 		moment.Cross(m_worldMomentArm, m_force);
+		m_moment = moment;
 		return moment;
 	};
 
@@ -127,7 +128,7 @@ public:
 
 	Vector3 GetWorldMoment() const 
 	{
-		return m_worldMomentArm;
+		return m_moment;
 	}
 
 	Vector3 GetWorldMomentArm()const
@@ -211,5 +212,6 @@ private:
 	ControlSurface m_controlSurface;
 	Vector3 m_localMomentArm;				//モーメントを計算するための（重心から翼への距離）
 	Vector3 m_worldMomentArm;
+	Vector3 m_moment;                     //翼に働くモーメント（ワールド系）
 };
 

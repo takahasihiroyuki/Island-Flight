@@ -160,9 +160,11 @@ float LiftingSurface::ComputeLiftCoefficient(float angleOfAttack) const
 	float clMax = slope * stall;
 
 	// 迎角が-15度から15度の範囲でのみ揚力を発生させる
-	//cl = (cl > clMax) ? clMax :
-	//	(cl < -clMax) ? -clMax :
-	//	cl;
+	//これをしないと、衝突処理の際に迎角が大きくなりすぎて、
+	// 大きな揚力が発生してしまいクラッシュすることがある。
+	cl = (cl > clMax) ? clMax :
+		(cl < -clMax) ? -clMax :
+		cl;
 	return cl;
 }
 

@@ -104,6 +104,54 @@ namespace nsK2EngineLow {
 				return 0.0f;
 			}
 		};
+
+		struct SweepResultWall3D : public btCollisionWorld::ConvexResultCallback
+		{
+			bool isHit = false;
+			Vector3 hitPos = Vector3::Zero;
+			Vector3 hitNormal = Vector3::AxisY;
+			btCollisionObject* me = nullptr;
+
+			btScalar addSingleResult(btCollisionWorld::LocalConvexResult& r, bool normalInWorldSpace) override
+			{
+				// 自分・ゴーストは無視
+				if (r.m_hitCollisionObject == me ||
+					r.m_hitCollisionObject->getInternalType() == btCollisionObject::CO_GHOST_OBJECT)
+				{
+					return 1.0f;
+				}
+
+				// キャラ同士は無視
+				if (r.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Character)
+				{
+					return 1.0f;
+				}
+
+				// 一番手前のヒットだけ採用
+				if (r.m_hitFraction < m_closestHitFraction)
+				{
+					m_closestHitFraction = r.m_hitFraction;
+					isHit = true;
+
+					Vector3CopyFrom(hitPos, r.m_hitPointLocal);
+
+					// 法線をワールドに揃える
+					if (normalInWorldSpace)
+					{
+						Vector3CopyFrom(hitNormal, r.m_hitNormalLocal);
+					}
+					else
+					{
+						const btTransform& wt = r.m_hitCollisionObject->getWorldTransform();
+						btVector3 nWorld = wt.getBasis() * r.m_hitNormalLocal;
+						Vector3CopyFrom(hitNormal, nWorld);
+					}
+				}
+
+				return r.m_hitFraction;
+			}
+		};
+
 	}
 
 
@@ -321,12 +369,12 @@ namespace nsK2EngineLow {
 		return m_position;
 	}
 
-	const Vector3& CharacterController::AircraftExecute(Vector3& moveSpeed, float deltaTime)
+	const Vector3 CharacterController::AircraftExecute(const Vector3& moveSpeed, float deltaTime, SweepHit* sweepHit)
 	{
-		// 1. "本来" 行きたい先
+		// "本来" 行きたい先
 		Vector3 desiredNextPos = m_position + moveSpeed * deltaTime;
 
-		// 2. 今の位置 → desiredNextPos までをカプセル(または球)でスイープ
+		//今の位置 → desiredNextPos までをカプセルでスイープ
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
@@ -334,42 +382,56 @@ namespace nsK2EngineLow {
 		//距離チェック用の変数
 		Vector3 sweepVec = desiredNextPos - m_position;
 		float sweepLenSq = sweepVec.LengthSq();
-		const float kMinSweepDistSq = 1e-6f;  // お好みで調整
+		const float kMinSweepDistSq = 1e-6f;
 		Vector3 nextPos = desiredNextPos;
 
 		// 十分に移動するならスイープする
 		if (sweepLenSq > kMinSweepDistSq)
 		{
-			// カプセルの中心位置（今の位置）。必要なら高さオフセット足す
-			start.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
-			end.setOrigin(btVector3(desiredNextPos.x, desiredNextPos.y, desiredNextPos.z));
+			Vector3 center = m_position;
+			center.y += m_height * 0.5f + m_radius;
 
-			SweepResultWall cb;
+			Vector3 desiredCenter = desiredNextPos;
+			desiredCenter.y += m_height * 0.5f + m_radius;
+
+			// カプセルの中心位置（今の位置）。
+			start.setOrigin(btVector3(center.x, center.y, center.z));
+			end.setOrigin(btVector3(desiredCenter.x, desiredCenter.y, desiredCenter.z));
+
+			SweepResultWall3D cb;
 			cb.me = m_rigidBody.GetBody();
-			cb.startPos = m_position;
+			//cb.startPos = m_position;
 
 			PhysicsWorld::GetInstance()->ConvexSweepTest(
 				(const btConvexShape*)m_activeCollider->GetBody(),
 				start, end, cb
 			);
 
-			Vector3 nextPos = desiredNextPos;
 
 			if (cb.isHit) {
-				// 3. 当たった。ヒット位置まで戻して、少し押し出す
+
 				Vector3 hitPos = cb.hitPos;
 				Vector3 n = cb.hitNormal;
 				n.Normalize();
+				Vector3 d = desiredNextPos - m_position;   // 進行方向
+
+				// ヒット情報をセット
+				if (sweepHit) {
+					sweepHit->hit = true;
+					sweepHit->normal = n;
+					sweepHit->point = hitPos;
+				}
+
+				// 進行方向と同じ向きに法線が向いていたら、押し出しが「壁の中」になるので反転
+				if (d.Dot(n) > 0.0f) {
+					n *= -1.0f;
+				}
 
 				// カプセル半径ぶん＋ちょっとだけ押し出す
 				const float kSlop = 0.01f;
 				nextPos = hitPos + n * (m_radius + kSlop);
 
-				// 4. 速度から法線成分を削ってスライドさせる
-				float vn = moveSpeed.Dot(n);      // 法線方向成分
-				if (vn < 0.0f) {                 // 壁に向かっているときだけ削る
-					moveSpeed -= n * vn;          // v' = v - (v?n) n
-				}
+
 			}
 		}
 

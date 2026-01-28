@@ -16,6 +16,9 @@ FlightDebugScene::~FlightDebugScene()
 
 bool FlightDebugScene::Start()
 {
+	// デバッグワイヤーフレーム描画を有効にする。
+	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+
 
 	//飛行機の初期化
 	{
@@ -23,7 +26,7 @@ bool FlightDebugScene::Start()
 		m_aircraft = new Aircraft();
 		m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", INIT_POSITION, AIRCRAFT_BASE_THRUST);
 		//場所をを固定
-		m_aircraft->SetLockTranslation(true);
+		/*m_aircraft->SetLockTranslation(true);*/
 		m_aircraft->Start();
 	}
 
@@ -71,7 +74,7 @@ bool FlightDebugScene::Start()
 		targetSnapshot.SetRotation(m_aircraft->GetOrientation());
 
 		CameraManager::GetInstance().SetTargetInfo(targetSnapshot);
-		CameraManager::GetInstance().ChangeController(CameraControllerType::enStatic);
+		CameraManager::GetInstance().ChangeController(CameraControllerType::enSpringFollow);
 	}
 
 	//海
@@ -98,14 +101,31 @@ void FlightDebugScene::Update()
 		//翼の枚数分更新
 		for (int i = 0; i < DebugMomentArrowUIType::Count; i++)
 		{
+			if (i == 0 || i == 1||i==2)continue;//主翼は表示しない
+
+			Vector3 totalMoment;
+			Vector3 totalForce;
+
+			for (int j = 0; j < DebugMomentArrowUIType::Count; j++)
+			{
+				if (j == 0||j==1)continue;//垂直尾翼は表示しない
+				totalMoment+=m_aircraft->GetWingMomentWorld(static_cast<WingType>(j));
+			}
+
+			for (int j = 0; j < DebugMomentArrowUIType::Count; j++) 
+			{
+				//if (j == 0 || j == 1)continue;//垂直尾翼は表示しない
+				totalForce += m_aircraft->GetWingForceWorld(static_cast<WingType>(j));
+			}
+
 			//モーメントUI
-			m_debugMomentUI[i]->UpdateTargetVec(m_aircraft->GetWingMomentWorld(static_cast<WingType>(i))*1000);
+			m_debugMomentUI[i]->UpdateTargetVec(totalMoment);
 			m_debugMomentUI[i]->UpdatePosition(m_aircraft->GetPosition());
 			//フォースUI
-			m_debugForceUI[i]->UpdateTargetVec(m_aircraft->GetWingForceWorld(static_cast<WingType>(i)));
+			m_debugForceUI[i]->UpdateTargetVec(totalForce);
 			m_debugForceUI[i]->UpdatePosition(m_aircraft->GetPosition());
 			//モーメントアームUI
-			m_debugMomentArmUI[i]->UpdateTargetVec(m_aircraft->GetWingMomentArmWorld(static_cast<WingType>(i)));
+			m_debugMomentArmUI[i]->UpdateTargetVec(m_aircraft->GetWingMomentArmWorld(static_cast<WingType>(3)));
 			m_debugMomentArmUI[i]->UpdatePosition(m_aircraft->GetPosition());
 		}
 	}

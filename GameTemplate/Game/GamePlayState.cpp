@@ -88,7 +88,7 @@ void GamePlayState::Update()
 		break;
 	}
 	TargetSnapshot targetSnapshot;
-	targetSnapshot.SetPosition(m_context->aircraft->GetPosition()+Vector3(0,50,0));
+	targetSnapshot.SetPosition(m_context->aircraft->GetPosition());
 	targetSnapshot.SetVelocity(m_context->aircraft->GetLinearVelocity());
 	targetSnapshot.SetRotation(m_context->aircraft->GetOrientation());
 

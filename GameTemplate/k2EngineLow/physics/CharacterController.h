@@ -8,6 +8,13 @@
 #include "RigidBody.h"
 
 namespace nsK2EngineLow {
+
+	struct SweepHit {
+		bool hit = false;
+		Vector3 normal = Vector3::AxisY;
+		Vector3 point = Vector3::Zero;
+	};
+
 	/*!
 	* @brief	キャラクタコントローラー。
 	*@details
@@ -43,7 +50,7 @@ namespace nsK2EngineLow {
 			*/
 		const Vector3& Execute(Vector3& moveSpeed, float deltaTime);
 
-		const Vector3& AircraftExecute( Vector3& moveSpeed, float deltaTime);
+		const Vector3 AircraftExecute(const Vector3& moveSpeed, float deltaTime, SweepHit* sweepHit);
 		/*!
 			* @brief	座標を取得。
 			*/

@@ -5,7 +5,7 @@ class LiftingSurface;
 class Engine :public IGameObject
 {
 public:
-	Engine() {}
+	Engine(float baseThrust) :m_baseThrust(baseThrust){}
 	~Engine() {}
 	void Update() override {}
 
@@ -85,11 +85,11 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 
-	Vector3 GetPosition() const { return m_position; }
-	Vector3 GetLinearVelocity()const { return m_linearVelocity; }
+	Vector3 GetPosition() const { return m_state.position; }
+	Vector3 GetLinearVelocity()const { return m_state.linearVelocity; }
 
 	void SetPosition(const Vector3& position) {
-		m_position = position;
+		m_state.position = position;
 	}
 
 	Quaternion GetOrientation()const {
@@ -149,12 +149,11 @@ private:
 	/// アップデートの最後に呼ぶ
 	/// </summary>
 	void UpdateRelWind() {
-		m_state.relWind = m_linearVelocity * -1;
+		m_state.relWind = m_state.linearVelocity * -1;
 	}
 
 	void AddLinearVelocity(Vector3 linearVelocity)
 	{
-		m_linearVelocity += linearVelocity;
 		m_state.linearVelocity += linearVelocity;
 	}
 
@@ -204,12 +203,12 @@ private:
 		const float Iz = m_inertia.z;
 
 		// Iω（対角なら要素積）
-		Vector3 Iw(Ix * m_angularVelocity.x,
-			Iy * m_angularVelocity.y,
-			Iz * m_angularVelocity.z);
+		Vector3 Iw(Ix * m_state.angularVelocity.x,
+			Iy * m_state.angularVelocity.y,
+			Iz * m_state.angularVelocity.z);
 
 		// ジャイロ項
-		Vector3 gyro = Cross(m_angularVelocity, Iw);
+		Vector3 gyro = Cross(m_state.angularVelocity, Iw);
 
 		Vector3 rhs = momentObj - gyro;
 
@@ -222,9 +221,7 @@ private:
 	ModelRender m_propeller;
 
 	AircraftState m_state;
-	Vector3 m_position;
 	std::unique_ptr<Engine> m_engine;			// 所有権付きポインタ
-	Vector3 m_linearVelocity = Vector3::Zero;	//機体の並進速度ベクトル（ワールド座標）
 	Vector3 m_accel = Vector3::Zero;			//加速度ベクトル（ワールド座標）
 	const float m_mass = 10.0f;							//質量
 	std::array<LiftingSurface*, static_cast<size_t>(WingType::Count)> m_wings;
@@ -233,14 +230,10 @@ private:
 	// 飛行機の場合姿勢によってはほぼ変わらないので
 	// 各軸の慣性モーメントを定数として定義
 	Vector3 m_inertia = { 800.0f, 1000.0f, 900.0f }; //慣性モーメント
-	Vector3 m_angularVelocity = Vector3::Zero;
 
 	mutable Matrix m_world;							//ワールド行列
 	mutable bool m_worldDirty = true;				// ワールド行列が最新かどうか
 
-	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugMomentUI;
-	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugForceUI;
-	std::array<DebugArrowUI*, static_cast<int>(WingType::Count)> m_debugMomentArm;
 	Quaternion m_propellerSpin = Quaternion::Identity;
 	SoundSource* m_propellerSound = nullptr;
 	bool m_lockTranslation=false;		//ポジションを固定（デバッグ用の変数）
