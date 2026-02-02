@@ -44,8 +44,20 @@ public:
 		m_baseThrust = maxThrust;
 	}
 
+	float GetBaseThrust() const {
+		return m_baseThrust;
+	}
+
+	float GetThrustScale() const {
+		return m_thrustForce.Length();
+	}
+
+	bool GetIsBoostOn() const {
+		return m_isBoostOn;
+	}
+
 private:
-	float m_baseThrust = 2000.0f;				// 最大推力
+	float m_baseThrust = 2000.0f;				// 基本推力
 	float m_throttleRatio = 0.0f;				// スロットル割合
 	float m_throttleSmoothValue = 0.0f;			// 推力を滑らかにするための値
 	float m_boostMultiplier = 2.0f;				// ブースト時の推力倍率
@@ -144,6 +156,8 @@ private:
 
 	void UpdateModel();
 
+	void UpdatePropellerSound();
+
 	/// <summary>
 	/// 相対風を更新
 	/// アップデートの最後に呼ぶ
@@ -151,6 +165,8 @@ private:
 	void UpdateRelWind() {
 		m_state.relWind = m_state.linearVelocity * -1;
 	}
+
+	void PlayEffects();
 
 	void AddLinearVelocity(Vector3 linearVelocity)
 	{
@@ -215,6 +231,18 @@ private:
 		return Vector3(rhs.x / Ix, rhs.y / Iy, rhs.z / Iz);
 	}
 
+	/// <summary>
+	/// 衝突時に呼ばれる関数
+	/// </summary>
+	/// <param name="sweepHit">衝突情報</param>
+	void OnCollisionHit(const SweepHit& sweepHit);
+
+	/// <summary>
+	/// バウンド計算
+	/// </summary>
+	/// <param name="sweepHit">衝突情報</param>
+	void CalculateBounce(const SweepHit& sweepHit);
+
 private:
 	CharacterController m_characterController;
 	ModelRender m_model;					// モデル
@@ -237,4 +265,6 @@ private:
 	Quaternion m_propellerSpin = Quaternion::Identity;
 	SoundSource* m_propellerSound = nullptr;
 	bool m_lockTranslation=false;		//ポジションを固定（デバッグ用の変数）
+	float m_propellerSoundBaseVolume = 0.8f;// プロペラ音の基本音量
+	EffectEmitter* m_speedLineEffect = nullptr;
 };

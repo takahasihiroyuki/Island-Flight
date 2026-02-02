@@ -13,6 +13,7 @@ namespace nsK2EngineLow {
 	}
 	void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
+		EffectEngine::GetInstance()->Draw();
 
 		//ブルームの描画処理
 		OnRenderBloom(rc, mainRenderTarget);
@@ -28,7 +29,7 @@ namespace nsK2EngineLow {
 
 		//メインレンダーターゲットをPRESENTからRENDERTARGETへ。
 		rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-		EffectEngine::GetInstance()->Draw();
+
 		//メインレンダーターゲットをTARGETからPRESENTへ。
 		rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 

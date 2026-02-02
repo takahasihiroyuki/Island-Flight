@@ -25,6 +25,7 @@ TitleScene::~TitleScene()
 
 bool TitleScene::Start()
 {
+	m_aircraft->Start();
 	return true;
 }
 

@@ -45,10 +45,11 @@ void Coin::PlayCollectEffects()
 	se->Play(false);
 
 	//エフェクトの初期化
+	EffectEngine::GetInstance()->ResistEffect(enCoinGet, effectPath[enCoinGet]);
 	m_collectEffect = NewGO<EffectEmitter>(0);
 	m_collectEffect->Init(enCoinGet);
 	m_collectEffect->SetPosition(m_position);
-	m_collectEffect->SetScale(Vector3::One*100000);
+	m_collectEffect->SetScale(Vector3::One*10);
 	m_collectEffect->SetRotation(Quaternion::Identity);
 	m_collectEffect->Play();
 }

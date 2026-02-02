@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Aircraft.h"
 #include "LiftingSurface.h"
+#include"EffectType.h"
 
 namespace
 {
@@ -47,7 +48,12 @@ bool Aircraft::Start()
 	{
 		m_propellerSound = NewGO<SoundSource>(0);
 		m_propellerSound->Init(static_cast<int>(SoundID::enPropellerSE), true);
+		m_propellerSound->SetVolume(m_propellerSoundBaseVolume);
 		m_propellerSound->Play(true);
+	}
+	// スピードラインエフェクトの初期化
+	{
+		EffectEngine::GetInstance()->ResistEffect(enSpeedLine, effectPath[enSpeedLine]);
 	}
 	return true;
 }
@@ -120,7 +126,7 @@ void Aircraft::Update()
 	AddLinearVelocity(m_accel * g_gameTime->GetFrameDeltaTime());
 
 
-	SweepHit sweepHit=SweepHit();
+	SweepHit sweepHit = SweepHit();
 
 	//トランスレーションロックがonなら移動させない
 	if (m_lockTranslation) {
@@ -148,16 +154,9 @@ void Aircraft::Update()
 			);
 	}
 
-	if (sweepHit.hit) {// 衝突していたら反発処理
-		Vector3 n = sweepHit.normal;
-		if (n.LengthSq() > 1e-8f) {
-			n.Normalize();
-			float vn = m_state.linearVelocity.Dot(n);
-			if (vn < 0.0f) {
-				const float e = 0.6f;
-				m_state.linearVelocity -= n * ((1.0f + e) * vn);
-			}
-		}
+	//衝突処理
+	if (sweepHit.hit) {
+		OnCollisionHit(sweepHit);
 	}
 
 	//相対風の更新
@@ -170,10 +169,11 @@ void Aircraft::Update()
 	//モデルの更新
 	UpdateModel();
 
-	//BGMの位置更新
-	if (m_propellerSound) {
-		m_propellerSound->SetPosition(g_camera3D->GetPosition());
-	}
+	//プロペラ音の更新
+	UpdatePropellerSound();
+
+	PlayEffects();
+
 }
 void Aircraft::Render(RenderContext& rc)
 {
@@ -342,6 +342,38 @@ void Aircraft::UpdateModel()
 
 }
 
+void Aircraft::UpdatePropellerSound()
+{
+	if (m_propellerSound) {
+		//BGMの位置更新
+		m_propellerSound->SetPosition(g_camera3D->GetPosition());
+		//プロペラ音の音量更新
+		float thrustRatio = m_engine->GetThrustScale() / m_engine->GetBaseThrust();// 基本推力に対する現在の推力の割合
+		m_propellerSound->SetVolume(m_propellerSoundBaseVolume * thrustRatio);
+	}
+}
+
+void Aircraft::PlayEffects()
+{
+
+	if (m_engine->GetIsBoostOn()) {//ブースと状態なら
+		if (!m_speedLineEffect) {
+			m_speedLineEffect = NewGO<EffectEmitter>(0);
+			m_speedLineEffect->Init(enSpeedLine);
+		}
+		m_speedLineEffect->SetPosition(g_camera3D->GetPosition());
+		m_speedLineEffect->SetScale(Vector3::One * 1);
+		Quaternion CameraRotation=Quaternion::Identity;
+		Matrix RotationMat;
+		RotationMat = g_camera3D->GetCameraRotation();//カメラの回転行列を取得
+		CameraRotation.SetRotation(RotationMat);//行列からクォータニオンに変換
+		m_speedLineEffect->SetRotation(CameraRotation);
+		if (!m_speedLineEffect->IsPlay()) {//再生中じゃなければ再生する。
+			m_speedLineEffect->Play();
+		}
+	}
+}
+
 Vector3 Aircraft::ComputeTotalMomentWorld()
 {
 	Vector3 totalMomentWorld = Vector3::Zero;
@@ -351,6 +383,28 @@ Vector3 Aircraft::ComputeTotalMomentWorld()
 		}
 	}
 	return totalMomentWorld;
+}
+
+void Aircraft::OnCollisionHit(const SweepHit& sweepHit)
+{
+	//跳ね返り計算
+	CalculateBounce(sweepHit);
+}
+
+void Aircraft::CalculateBounce(const SweepHit& sweepHit)
+{
+	//ヒットしたオブジェクトの法線
+	Vector3 HitObjectNormal = sweepHit.normal;
+	if (HitObjectNormal.LengthSq() < 1e-8f) return;
+	HitObjectNormal.Normalize();
+	//法線方向の速度成分
+	float normalVelocity = m_state.linearVelocity.Dot(HitObjectNormal);
+
+	//法線方向に向かって移動していなければ跳ね返り計算しない
+	if (normalVelocity > 0.0f) return;
+
+	const float restitution = 0.3f;//反発係数(反発したときにどのくらい速度が減るか)
+	m_state.linearVelocity -= HitObjectNormal * ((1.0f + restitution) * normalVelocity);
 }
 
 Vector3 Aircraft::GetWingMomentWorld(WingType wingType) const

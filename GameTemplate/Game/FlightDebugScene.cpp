@@ -70,7 +70,7 @@ bool FlightDebugScene::Start()
 	{
 		TargetSnapshot targetSnapshot;
 		targetSnapshot.SetPosition(m_aircraft->GetPosition());
-		targetSnapshot.SetVelocity(m_aircraft->GetLinearVelocity());
+		//targetSnapshot.SetVelocity(m_aircraft->GetLinearVelocity());
 		targetSnapshot.SetRotation(m_aircraft->GetOrientation());
 
 		CameraManager::GetInstance().SetTargetInfo(targetSnapshot);

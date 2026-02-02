@@ -19,7 +19,7 @@ public:
 		
 		Vector3 targetPos = Vector3::Zero;
 		m_targetSnapshot.GetPosition(targetPos);
-		Vector3 pos = targetPos+ DEFAULT_STATIC_OFFSET;
+		Vector3 pos = g_camera3D->GetPosition();
 		m_cameraState.pos = pos;
 		m_cameraState.targetPos = targetPos;
 	}
