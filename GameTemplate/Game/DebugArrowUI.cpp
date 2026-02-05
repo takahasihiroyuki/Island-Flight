@@ -43,7 +43,7 @@ namespace
 	}
 }
 
-void DebugArrowUI::Update()
+void DebugArrowUI::OnUpdate()
 {
 	// ‚Ù‚Ú0‚È‚ç–îˆó‚ğo‚³‚È‚¢‚È‚Ç
 	if (m_targetVec.LengthSq() < 1e-6f) {
@@ -101,10 +101,10 @@ void DebugArrowUI::Init(collarType collar, float length, float scale)
 
 }
 
-void DebugArrowUI::Open()
+void DebugArrowUI::OnOpen()
 {
 }
 
-void DebugArrowUI::Close()
+void DebugArrowUI::OnClose()
 {
 }

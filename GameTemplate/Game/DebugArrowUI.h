@@ -14,11 +14,11 @@ public:
 	DebugArrowUI()
 	{}
 	~DebugArrowUI() {};
-	void Update()override;
+	void OnUpdate()override;
 	void Render(RenderContext& rc)override;
 	void Init(collarType collar, float length, float scale = 1.0f);
-	void Open();
-	void Close();
+	void OnOpen();
+	void OnClose();
 	void UpdateTargetVec(const Vector3& moment)
 	{
 		m_targetVec = moment;

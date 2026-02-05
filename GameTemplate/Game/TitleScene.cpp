@@ -51,7 +51,8 @@ void TitleScene::Update()
 			g_renderingEngine->GetPostEffect().SetFadeEnabled(true);
 			g_renderingEngine->GetPostEffect().StartFadeOut(m_outroFinishTime, FADE_COLLAR);
 
-			UIManager::GetInstance().HideScreen("TitleUI");
+			UIManager::GetInstance().CloseScreen("TitleUI");
+			UIManager::GetInstance().RequestUnregisterScreen("TitleUI");
 		}
 
 		break;
@@ -128,8 +129,8 @@ void TitleScene::Enter()
 	//UI
 	m_titleUI = std::make_unique<TitleUI>();
 	m_titleUI->Init();
-	m_titleUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("TitleUI", std::move(m_titleUI));
+	UIManager::GetInstance().ShowScreen("TitleUI");
 
 	//BGM
 	m_titleBGM = NewGO<SoundSource>(0);
@@ -170,6 +171,6 @@ void TitleScene::Enter()
 
 void TitleScene::Exit()
 {
-	UIManager::GetInstance().HideScreen("TitleUI");
+	UIManager::GetInstance().CloseScreen("TitleUI");
 	m_titleBGM->Stop();
 }

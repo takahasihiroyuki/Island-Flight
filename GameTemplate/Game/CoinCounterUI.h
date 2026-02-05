@@ -6,11 +6,11 @@ class CoinCounterUI :public UIScreen
 public:
 	CoinCounterUI() {};
 	~CoinCounterUI();
-	void Update()override;
+	void OnUpdate()override;
 	void Render(RenderContext& rc)override;
 	void Init();
-	void Open();
-	void Close();
+	void OnOpen();
+	void OnClose();
 
 private:
 

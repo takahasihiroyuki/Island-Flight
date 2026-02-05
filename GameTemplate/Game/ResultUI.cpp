@@ -35,7 +35,7 @@ ResultUI::~ResultUI()
 	DeleteGO(m_countUpSE);
 }
 
-void ResultUI::Update()
+void ResultUI::OnUpdate()
 {
 	//スコアを時間でカウントアップさせる。
 	float t = m_timer->GetElapsedTime();
@@ -110,10 +110,7 @@ void ResultUI::Init()
 	m_scoreSprite.Init("Assets/UI/Result/SCORE.DDS", SCORE_SPRITE_SIZE.x, SCORE_SPRITE_SIZE.y);
 	m_scoreSprite.SetPosition(SCORE_SPRITE_POSITION);
 	m_scoreSprite.Update();
-}
 
-void ResultUI::Open()
-{
 	//タイマーを動かす
 	m_timer = NewGO<Timer>(0);
 	m_timer->SetRunning(true);
@@ -123,9 +120,13 @@ void ResultUI::Open()
 	m_countUpSE->Play(false);
 }
 
-void ResultUI::Close()
+void ResultUI::OnOpen()
 {
-	UIManager::GetInstance().UnregisterScreen(GetName());
+}
+
+void ResultUI::OnClose()
+{
+	UIManager::GetInstance().RequestUnregisterScreen(GetName());
 	m_countUpSE->Stop();
 }
 

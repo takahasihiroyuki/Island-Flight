@@ -8,13 +8,15 @@ void UIManager::Update()
 		screen.second->Update();
 	}
 
+	// “o˜^‰ðœƒŠƒNƒGƒXƒg‚³‚ê‚Ä‚¢‚½‚à‚Ì‚ð“o˜^‰ðœ‚·‚é
+	FlushUnregisterRequests();
 }
 
 void UIManager::Render(RenderContext& rc)
 {
 	for (auto& screen : m_screens)
 	{
-		if (screen.second->IsDisplayed())
+		if (screen.second->IsRenderable())
 		{
 			screen.second->Render(rc);
 		}
@@ -26,15 +28,15 @@ void UIManager::ShowScreen(const std::string& name)
 	auto it = m_screens.find(name);
 	if (it != m_screens.end())
 	{
-		it->second->SetDisplayed(true);
+		it->second->Open();
 	}
 }
 
-void UIManager::HideScreen(const std::string& name)
+void UIManager::CloseScreen(const std::string& name)
 {
 	auto it = m_screens.find(name);
 	if (it != m_screens.end())
 	{
-		it->second->SetDisplayed(false);
+		it->second->Close();
 	}
 }

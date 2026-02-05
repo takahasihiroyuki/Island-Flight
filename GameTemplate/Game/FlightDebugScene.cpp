@@ -45,19 +45,19 @@ bool FlightDebugScene::Start()
 			//モーメントUI
 			auto debugMomentUI = std::make_unique<DebugArrowUI>();
 			debugMomentUI->Init(collarType::enYerrow, 0.001);
-			debugMomentUI->SetDisplayed(true);
+			UIManager::GetInstance().ShowScreen("DebugMomentArrowUI" + std::to_string(i));
 			m_debugMomentUI[i] = debugMomentUI.get();
 
 			//フォースUI
 			auto debugForceUI = std::make_unique<DebugArrowUI>();
 			debugForceUI->Init(collarType::enRed, 0.0005);
-			debugForceUI->SetDisplayed(true);
+			UIManager::GetInstance().ShowScreen("DebugForceArrowUI" + std::to_string(i));
 			m_debugForceUI[i] = debugForceUI.get();
 
 			//モーメントUI
 			auto debugMomentArmUI = std::make_unique<DebugArrowUI>();
 			debugMomentArmUI->Init(collarType::enBlue, 2.0f);
-			debugMomentArmUI->SetDisplayed(true);
+			UIManager::GetInstance().ShowScreen("DebugMomentArmUI" + std::to_string(i));
 			m_debugMomentArmUI[i] = debugMomentArmUI.get();
 
 			UIManager::GetInstance().RegisterScreen("DebugMomentArrowUI" + std::to_string(i), std::move(debugMomentUI));

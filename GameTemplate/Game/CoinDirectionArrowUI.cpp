@@ -8,7 +8,7 @@ namespace {
 	static const Vector3 ARROW_SCALE = Vector3{ 2,2,2 };
 }
 
-void CoinDirectionArrowUI::Update()
+void CoinDirectionArrowUI::OnUpdate()
 {
 	if (!m_coinManager && !m_player)return;
 
@@ -63,13 +63,12 @@ void CoinDirectionArrowUI::Init()
 
 }
 
-void CoinDirectionArrowUI::Open()
+void CoinDirectionArrowUI::OnOpen()
 {
 }
 
-void CoinDirectionArrowUI::Close()
+void CoinDirectionArrowUI::OnClose()
 {
-	UIManager::GetInstance().UnregisterScreen(GetName());
 }
 
 Vector3 CoinDirectionArrowUI::CalcArrowPosOffsetFromDir(const Vector3& playerToCoinDir, float radius)

@@ -100,9 +100,11 @@
     <ClCompile Include="StageOrbitCameraController.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
-    <ClCompile Include="CoinCounterUI.cpp" />
     <ClCompile Include="FlightDebugScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CoinCounterUI.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -201,10 +203,12 @@
     <ClInclude Include="StageOrbitCameraController.h">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="CoinCounterUI.h" />
     <ClInclude Include="EffectType.h" />
     <ClInclude Include="FlightDebugScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CoinCounterUI.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

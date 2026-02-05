@@ -14,11 +14,11 @@ public:
 		:m_coinManager(coinManager), m_player(player)
 	{}
 	~CoinDirectionArrowUI() {};
-	void Update()override;
+	void OnUpdate()override;
 	void Render(RenderContext& rc)override;
 	void Init();
-	void Open();
-	void Close();
+	void OnOpen();
+	void OnClose();
 
 
 private:

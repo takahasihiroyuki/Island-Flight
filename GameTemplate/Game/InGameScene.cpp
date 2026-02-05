@@ -35,7 +35,7 @@ bool InGameScene::Start()
 
 	//スカイキューブ
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
-	m_skyCube->SetLuminance(1.0f);
+	m_skyCube->SetLuminance(1.02f);
 	m_skyCube->SetScale(15000.0f);
 	m_skyCube->SetPosition({ 0.0f,0.0f,0.0f });
 	m_skyCube->SetType((EnSkyCubeType)enSkyCubeType_Day);

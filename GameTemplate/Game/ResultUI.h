@@ -9,11 +9,11 @@ public:
 	ResultUI(ScoreManager* scoreManager) :m_scoreManager(scoreManager) {};
 	ResultUI() {};
 	~ResultUI();
-	void Update()override;
+	void OnUpdate()override;
 	void Render(RenderContext& rc)override;
 	void Init();
-	void Open();
-	void Close();
+	void OnOpen();
+	void OnClose();
 
 
 public:

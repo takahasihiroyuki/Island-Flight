@@ -5,11 +5,11 @@ class TimerUI :public UIScreen
 {
 public:
 	TimerUI() {};
-	void Update()override;
+	void OnUpdate()override;
 	void Render(RenderContext& rc)override;
 	void Init(Timer* timer);
-	void Open();
-	void Close();
+	void OnOpen();
+	void OnClose();
 
 
 public:

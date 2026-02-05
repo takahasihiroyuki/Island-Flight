@@ -9,7 +9,7 @@
 
 namespace
 {
-	constexpr float TIMELIMIT = 100;
+	constexpr float TIMELIMIT = 1;
 	const Vector3 FADE_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
 }
 
@@ -43,18 +43,18 @@ void GamePlayState::OnEnter()
 	//É^ÉCÉ}Å[UIÇUImanagerÇ…ìoò^
 	m_timeUI = std::make_unique<TimerUI>();
 	m_timeUI->Init(m_timer);
-	m_timeUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("timerUI", std::move(m_timeUI));
+	UIManager::GetInstance().ShowScreen("timerUI");
 
 	m_coinArrowUI = std::make_unique<CoinDirectionArrowUI>(m_context->coinManager, m_context->aircraft);
 	m_coinArrowUI->Init();
-	m_coinArrowUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("coinArrowUI", std::move(m_coinArrowUI));
+	UIManager::GetInstance().ShowScreen("coinArrowUI");
 
 	m_coinCounterUI = std::make_unique<CoinCounterUI>();
 	m_coinCounterUI->Init();
-	m_coinCounterUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("coinCounterUI", std::move(m_coinCounterUI));
+	UIManager::GetInstance().ShowScreen("coinCounterUI");
 
 	//BGM
 	m_gamePlayBGM = NewGO<SoundSource>(0);
@@ -98,9 +98,9 @@ void GamePlayState::Update()
 
 void GamePlayState::Exit()
 {
-	UIManager::GetInstance().HideScreen("timerUI");
-	UIManager::GetInstance().HideScreen("coinArrowUI");
-	UIManager::GetInstance().HideScreen("coinCounterUI");
+	UIManager::GetInstance().RequestUnregisterScreen("timerUI");
+	UIManager::GetInstance().RequestUnregisterScreen("coinArrowUI");
+	UIManager::GetInstance().RequestUnregisterScreen("coinCounterUI");
 	m_gamePlayBGM->Stop();
 }
 

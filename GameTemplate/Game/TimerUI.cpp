@@ -5,8 +5,9 @@
 
 namespace
 {
-	const Vector3 SPRITE_BASE_POS = Vector3(650.0f, 360.0f, 0.0f);
-	constexpr float SPACING_X = 75.0f; // 数字の隙間（X方向）
+	const Vector3 SPRITE_BASE_POS = Vector3(700.0f, 360.0f, 0.0f);
+	constexpr float SPACING_X = 50.0f; // 数字の隙間（X方向）
+	const Vector3 SPRITE_SCALE = Vector3(0.7f, 0.7f, 0.7f);
 
 	// 秒の一の位（右端）
 	const Vector3 SEC_ONES_POS = Vector3(
@@ -50,7 +51,7 @@ namespace
 	);
 }
 
-void TimerUI::Update()
+void TimerUI::OnUpdate()
 {
 	//時間を適用させる。
 	ApplyTime(m_timer->GetRemainingTime());
@@ -86,6 +87,7 @@ void TimerUI::Init(Timer* timer)
 	{
 		m_minOnesSprite[i].Init(m_spritePaths[i], 100, 100);
 		m_minOnesSprite[i].SetPosition(MIN_ONES_POS);
+		m_minOnesSprite[i].SetScale(SPRITE_SCALE);
 		m_minOnesSprite[i].Update();
 	}
 
@@ -93,6 +95,7 @@ void TimerUI::Init(Timer* timer)
 	{
 		m_minTensSprite[i].Init(m_spritePaths[i], 100, 100);
 		m_minTensSprite[i].SetPosition(MIN_TENS_POS);
+		m_minTensSprite[i].SetScale(SPRITE_SCALE);
 		m_minTensSprite[i].Update();
 	}
 
@@ -100,6 +103,7 @@ void TimerUI::Init(Timer* timer)
 	{
 		m_secOnesSprite[i].Init(m_spritePaths[i], 100, 100);
 		m_secOnesSprite[i].SetPosition(SEC_ONES_POS);
+		m_secOnesSprite[i].SetScale(SPRITE_SCALE);
 		m_secOnesSprite[i].Update();
 	}
 
@@ -107,6 +111,7 @@ void TimerUI::Init(Timer* timer)
 	{
 		m_secTensSprite[i].Init(m_spritePaths[i], 100, 100);
 		m_secTensSprite[i].SetPosition(SEC_TENS_POS);
+		m_secTensSprite[i].SetScale(SPRITE_SCALE);
 		m_secTensSprite[i].Update();
 	}
 
@@ -120,13 +125,12 @@ void TimerUI::Init(Timer* timer)
 
 }
 
-void TimerUI::Open()
+void TimerUI::OnOpen()
 {
 }
 
-void TimerUI::Close()
+void TimerUI::OnClose()
 {
-	UIManager::GetInstance().UnregisterScreen(GetName());
 }
 
 void TimerUI::ApplyTime(float elapsedTime)

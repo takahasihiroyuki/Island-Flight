@@ -22,8 +22,8 @@ void ResoltState::OnEnter()
 	//UI
 	m_resultUI = std::make_unique<ResultUI>(m_context->scoreManager);
 	m_resultUI->Init();
-	m_resultUI->SetDisplayed(true);
 	UIManager::GetInstance().RegisterScreen("ResultUI", std::move(m_resultUI));
+	UIManager::GetInstance().ShowScreen("ResultUI");
 
 	//ƒTƒEƒ“ƒh
 	m_resultEnterSE = NewGO<SoundSource>(0);
@@ -49,7 +49,7 @@ void ResoltState::Update()
 
 void ResoltState::Exit()
 {
-	UIManager::GetInstance().HideScreen("ResultUI");
+	UIManager::GetInstance().CloseScreen("ResultUI");
 }
 
 bool ResoltState::RequestChangeState(InGameStateType& type)

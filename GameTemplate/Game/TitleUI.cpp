@@ -11,29 +11,37 @@ namespace {
 }
 
 
-TitleUI::~TitleUI()
+TitleUI::TitleUI()
 {
-
+	m_animDurationOpen = 5;	//UI表示時のアニメーションの時間
+	m_animDurationClose = 1;	//UI非表示時のアニメーションの時間
 }
 
-void TitleUI::Update()
+TitleUI::~TitleUI()
+{
+	DeleteGO(m_timer);
+}
+
+void TitleUI::OnUpdate()
 {
 	float t = m_timer->GetElapsedTime();
 
-	m_logoPos = m_logoPosBase;
-	m_logoPos.y = m_logoPosBase.y + 150 * abs(cos(t * 7)) * std::exp(-t * 0.9);
+	//m_logoPos = m_logoPosBase;
+	//m_logoPos.y = m_logoPosBase.y + 150 * abs(cos(t * 7)) * std::exp(-t * 0.9);
 
 	m_startScale = ScaleOffsetStart;
-	m_startScale += Vector3::One * 0.5 * abs(std::sin(t));
+	m_startScale += Vector3::One * 0.5 * abs(std::sin(t*4));
 
 
-	m_titleLogo.SetPosition(m_logoPos);
-	m_titleStart.SetPosition(m_startPosBase);
+	m_titleLogo.SetPosition(m_logoShownPos + m_logoOpenCloseAnimOffset);
 	m_titleLogo.SetScale(ScaleOffsetLogo);
-	m_titleStart.SetScale(m_startScale);
-	m_titleScreen.SetScale(ScaleOffsetScreen);
-	m_titleStart.Update();
 	m_titleLogo.Update();
+
+	m_titleStart.SetPosition(m_startPosBase + m_StartUIOpenCloseAnimOffset);
+	m_titleStart.SetScale(m_startScale);
+	m_titleStart.Update();
+
+	m_titleScreen.SetScale(ScaleOffsetScreen);
 	m_titleScreen.Update();
 }
 
@@ -55,17 +63,33 @@ void TitleUI::Init()
 	m_titleStart.Init("Assets/UI/Title/TitleStart.DDS", 100.0f, 100.0f);
 	m_titleStart.Update();
 
+	m_timer = NewGO<Timer>(0);
 }
 
-void TitleUI::Open()
+void TitleUI::OnOpen()
 {
-	m_timer = NewGO<Timer>(0);
 	//タイマーを動かす
 	m_timer->SetRunning(true);
 }
 
-void TitleUI::Close()
+void TitleUI::OnClose()
 {
-	DeleteGO(m_timer);
-	UIManager::GetInstance().UnregisterScreen(GetName());
+	UIManager::GetInstance().RequestUnregisterScreen(GetName());
+}
+
+void TitleUI::OnOpenAnimUpdate(float t)
+{
+
+	m_logoOpenCloseAnimOffset = m_logoShownPos;
+	m_logoOpenCloseAnimOffset.y = m_logoShownPos.y + 150 * abs(cos(t * 30)) * std::exp(-t * 5);
+	m_logoOpenCloseAnimOffset.y -= m_logoShownPos.y;
+}
+
+void TitleUI::OnCloseAnimUpdate(float t)
+{
+	float s = 1.70158f;
+	t = t * t * ((s + 1.0f) * t - s);;
+	// ロゴの非表示アニメーション
+	m_logoOpenCloseAnimOffset.Lerp(t, m_logoShownPos, m_logoHiddenPos);
+	m_logoOpenCloseAnimOffset.y -= m_logoShownPos.y;
 }
