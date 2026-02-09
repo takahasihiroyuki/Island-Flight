@@ -5,6 +5,7 @@
 
 namespace {
 	Vector3 CAMERA_TARGET_POS = { 0.0f,0.0f,0.0f };
+	Vector3 FADEOUT_COLLAR = { 0.0f,0.0f,0.0f };
 }
 
 ResoltState::ResoltState()
@@ -45,6 +46,24 @@ void ResoltState::OnEnter()
 
 void ResoltState::Update()
 {
+	switch (m_phase) {
+	case ResoltPhase::WaitingInput:
+		//Aボタンが押されたらフェーズを進める
+		if (g_pad[0]->IsTrigger(enButtonA)) {
+			m_phase = ResoltPhase::Outro;
+			g_renderingEngine->GetPostEffect().SetFadeEnabled(true);
+			g_renderingEngine->GetPostEffect().StartFadeOut(3, FADEOUT_COLLAR);
+			UIManager::GetInstance().CloseScreen("ResultUI");
+			UIManager::GetInstance().RequestUnregisterScreen("ResultUI");
+		}
+		break;
+	case ResoltPhase::Outro:
+		m_outroElapsedTime += g_gameTime->GetFrameDeltaTime();
+		if (m_outroFinishTime <= m_outroElapsedTime) {
+			m_phase = ResoltPhase::ToNextScene;
+		}
+		break;
+	}
 }
 
 void ResoltState::Exit()
@@ -54,7 +73,7 @@ void ResoltState::Exit()
 
 bool ResoltState::RequestChangeState(InGameStateType& type)
 {
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (m_phase == ResoltPhase::ToNextScene)
 	{
 		type = InGameStateType::enEnd;
 		return true;

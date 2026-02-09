@@ -5,7 +5,7 @@
 
 namespace {
 	const Vector3 ScaleOffsetLogo = Vector3(10.0f, 5.0f, 0.0f);
-	const Vector3 ScaleOffsetStart = Vector3(4.0f, 2.0f, 0.0f);
+	const Vector3 BaseScaleStartUI = Vector3(4.0f, 2.0f, 0.0f);
 	const Vector3 ScaleOffsetScreen = Vector3(20.0f, 15.0f, 0.0f);
 
 }
@@ -26,11 +26,8 @@ void TitleUI::OnUpdate()
 {
 	float t = m_timer->GetElapsedTime();
 
-	//m_logoPos = m_logoPosBase;
-	//m_logoPos.y = m_logoPosBase.y + 150 * abs(cos(t * 7)) * std::exp(-t * 0.9);
-
-	m_startScale = ScaleOffsetStart;
-	m_startScale += Vector3::One * 0.5 * abs(std::sin(t*4));
+	m_startScale = BaseScaleStartUI;
+	m_startScale += Vector3::One * 0.5 * abs(std::sin(t * 4));
 
 
 	m_titleLogo.SetPosition(m_logoShownPos + m_logoOpenCloseAnimOffset);
@@ -38,8 +35,14 @@ void TitleUI::OnUpdate()
 	m_titleLogo.Update();
 
 	m_titleStart.SetPosition(m_startPosBase + m_StartUIOpenCloseAnimOffset);
-	m_titleStart.SetScale(m_startScale);
+	if (m_state != UIState::enClosing) {
+		m_titleStart.SetScale(m_startScale);
+	}
+	else {
+		m_titleStart.SetScale(m_StartUICloseAnimScaleOffset);
+	}
 	m_titleStart.Update();
+
 
 	m_titleScreen.SetScale(ScaleOffsetScreen);
 	m_titleScreen.Update();
@@ -61,6 +64,7 @@ void TitleUI::Init()
 	m_titleScreen.Update();
 
 	m_titleStart.Init("Assets/UI/Title/TitleStart.DDS", 100.0f, 100.0f);
+	m_titleStart.SetPivot(Vector2(0.5f, 0.5f));
 	m_titleStart.Update();
 
 	m_timer = NewGO<Timer>(0);
@@ -88,8 +92,13 @@ void TitleUI::OnOpenAnimUpdate(float t)
 void TitleUI::OnCloseAnimUpdate(float t)
 {
 	float s = 1.70158f;
-	t = t * t * ((s + 1.0f) * t - s);;
+	float logoT = t * t * ((s + 1.0f) * t - s);
+	float startT = t * t * t * ((s + 1.0f) * t - s);
+
 	// ロゴの非表示アニメーション
-	m_logoOpenCloseAnimOffset.Lerp(t, m_logoShownPos, m_logoHiddenPos);
+	m_logoOpenCloseAnimOffset.Lerp(logoT, m_logoShownPos, m_logoHiddenPos);
 	m_logoOpenCloseAnimOffset.y -= m_logoShownPos.y;
+
+	// スタートUIの非表示アニメーション
+	m_StartUICloseAnimScaleOffset.Lerp(startT, BaseScaleStartUI, m_startHiddenScale);
 }

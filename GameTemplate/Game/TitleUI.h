@@ -25,6 +25,7 @@ private:
 	Timer* m_timer;
 	Vector3 m_logoPos;
 	Vector3 m_StartUIOpenCloseAnimOffset; // 表示、非表示アニメーション用の位置オフセット
+	Vector3 m_StartUICloseAnimScaleOffset; // 非表示アニメーション用のスケールオフセット
 	Vector3 m_logoOpenCloseAnimOffset; // 表示、非表示アニメーション用の位置オフセット
 	Vector3 m_startPos;
 
@@ -34,4 +35,5 @@ private:
 	Vector3 m_logoHiddenPos = Vector3(0.0f, 700.0f, 0.0f);			//非表示時のポジション
 	Vector3 m_startShownPos = Vector3{ 0.0f,-200.0f,0.0f };		//表示時のポジション
 	Vector3 m_startHiddenPos = Vector3(0.0f, -400.0f, 0.0f);		//非表示時のポジション
+	Vector3 m_startHiddenScale = Vector3{ 10.0f,0.0f,0.0f };		//非表示時のスケール
 };

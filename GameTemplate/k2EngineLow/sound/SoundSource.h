@@ -4,7 +4,6 @@
 #pragma once
 #include "WaveFile.h"
 #include "SoundEngine.h"
-
 namespace nsK2EngineLow {
 	/// <summary>
 	/// 音源クラス。
@@ -158,6 +157,9 @@ namespace nsK2EngineLow {
 		{
 			return &m_dspSettings;
 		}
+		//↓追加↓//
+		void SetFadeOut(float fadeTime);
+		//↑追加↑//
 	private:
 		/// <summary>
 		/// 初期化。
@@ -190,5 +192,8 @@ namespace nsK2EngineLow {
 		X3DAUDIO_DSP_SETTINGS			m_dspSettings;
 		bool							m_isSetPositionFirst = true;	//一番最初のsetPosition?
 		bool							m_isAvailable = false;			//インスタンスが利用可能？
+		bool							m_isFadeOut = false;			//フェードアウト中？
+		float 							m_fadeOutTime = 0.0f;			//フェードアウト時間。
+		float							m_fadeOutTimer = 0.0f;			//フェードアウトタイマー。
 	};
 }

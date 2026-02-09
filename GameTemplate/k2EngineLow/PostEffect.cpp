@@ -24,9 +24,6 @@ namespace nsK2EngineLow {
 		//六角形のブラーの描画
 		OnRenderHexagonBlur(rc, mainRenderTarget);
 
-		//フェード
-		OnRenderFade(rc, mainRenderTarget);
-
 		//メインレンダーターゲットをPRESENTからRENDERTARGETへ。
 		rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
 

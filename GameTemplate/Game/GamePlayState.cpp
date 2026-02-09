@@ -85,11 +85,11 @@ void GamePlayState::Update()
 			m_timer->SetRunning(true);
 			g_renderingEngine->GetPostEffect().SetFadeEnabled(true);
 			g_renderingEngine->GetPostEffect().StartFadeOut(m_outroFinishTime, FADE_COLLAR);
-
+			m_gamePlayBGM->SetFadeOut(m_outroFinishTime);
 		}
 		break;
 	case GamePlayPhase::Outro:
-		if(m_timer->GetElapsedTime() > m_outroFinishTime)
+		if (m_timer->GetElapsedTime() > m_outroFinishTime)
 		{
 			//I—¹ˆ—‚Ö
 			m_isChangeToResult = true;

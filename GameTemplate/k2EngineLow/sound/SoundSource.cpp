@@ -16,6 +16,12 @@ namespace nsK2EngineLow {
 	{
 		Release();
 	}
+	void SoundSource::SetFadeOut(float fadeTime)
+	{
+		m_fadeOutTime = fadeTime;
+		m_isFadeOut = true;
+		m_fadeOutTimer = 0.0f;
+	}
 	void SoundSource::InitCommon()
 	{
 		m_dspSettings.SrcChannelCount = INPUTCHANNELS;
@@ -126,6 +132,18 @@ namespace nsK2EngineLow {
 	{
 		if (m_isAvailable == false) {
 			return;
+		}
+		if (m_isFadeOut) {
+			m_fadeOutTimer += g_gameTime->GetFrameDeltaTime();
+			if (m_fadeOutTimer >= m_fadeOutTime) {
+				Stop();
+				m_isFadeOut = false;
+				m_fadeOutTimer = 0.0f;
+			}
+			else {
+				float vol = 1.0f - (m_fadeOutTimer / m_fadeOutTime);
+				SetVolume(vol);
+			}
 		}
 		//オンメモリ再生中の更新処理。
 		UpdateOnMemory();

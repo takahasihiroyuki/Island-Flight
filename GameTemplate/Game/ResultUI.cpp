@@ -13,10 +13,10 @@ namespace
 	const Vector3 HUNDREDS_SPLITE_POS = Vector3(SPRITE_BASE_POS.x - SPACING_X * 2, SPRITE_BASE_POS.y, 0.0f);
 	const Vector3 THOUSANDS_SPLITE_POS = Vector3(SPRITE_BASE_POS.x - SPACING_X * 3, SPRITE_BASE_POS.y, 0.0f);
 	const Vector2 SCORE_SPRITE_SIZE = Vector2(1000.0f, 200.0f * 1.3f);
-	const Vector3 SCORE_SPRITE_POSITION= Vector3(0.0f, 300.0f, 0.0f);
+	const Vector3 SCORE_SPRITE_POSITION = Vector3(0.0f, 300.0f, 0.0f);
 
 	/// <summary>
-	/// ê¨å`ï‚äÆ
+	/// ê¸å`ï‚äÆ
 	/// </summary>
 	/// <param name="a"></param>
 	/// <param name="b"></param>
@@ -68,10 +68,29 @@ void ResultUI::OnUpdate()
 void ResultUI::Render(RenderContext& rc)
 {
 	m_scoreSprite.Draw(rc);
-	OnesSprite[m_displayOnesNum].Draw(rc);
-	TensSprite[m_displayTensNum].Draw(rc);
-	HundredsSprite[m_displayHundredsNum].Draw(rc);
-	ThousandsSprite[m_displayThousandsNum].Draw(rc);
+
+	if (m_displayNumber >= 1000)
+	{
+		ThousandsSprite[m_displayThousandsNum].Draw(rc);
+		HundredsSprite[m_displayHundredsNum].Draw(rc);
+		TensSprite[m_displayTensNum].Draw(rc);
+		OnesSprite[m_displayOnesNum].Draw(rc);
+	}
+	else if (m_displayNumber >= 100)
+	{
+		HundredsSprite[m_displayHundredsNum].Draw(rc);
+		TensSprite[m_displayTensNum].Draw(rc);
+		OnesSprite[m_displayOnesNum].Draw(rc);
+	}
+	else if (m_displayNumber >= 10)
+	{
+		TensSprite[m_displayTensNum].Draw(rc);
+		OnesSprite[m_displayOnesNum].Draw(rc);
+	}
+	else
+	{
+		OnesSprite[m_displayOnesNum].Draw(rc);
+	}
 }
 
 void ResultUI::Init()

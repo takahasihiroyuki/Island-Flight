@@ -12,7 +12,9 @@ namespace
 	const Vector3 INIT_AIRCRAFT_POS = Vector3(0.0f, 50000.0f, 0.0f);
 	constexpr float AIRCRAFT_BASE_THRUST = 8000.0f;
 
-	const Vector3 FADE_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
+	const Vector3 FADEOUT_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
+	const Vector3 FADEIN_COLLAR = Vector3(0.0f, 0.0f, 0.0f);
+	const float FADEINTIME = 2.0f;
 }
 
 TitleScene::~TitleScene()
@@ -49,16 +51,18 @@ void TitleScene::Update()
 			CameraManager::GetInstance().ChangeController(CameraControllerType::enStatic);
 
 			g_renderingEngine->GetPostEffect().SetFadeEnabled(true);
-			g_renderingEngine->GetPostEffect().StartFadeOut(m_outroFinishTime, FADE_COLLAR);
+			g_renderingEngine->GetPostEffect().StartFadeOut(m_outroFinishTime, FADEOUT_COLLAR);
 
 			UIManager::GetInstance().CloseScreen("TitleUI");
 			UIManager::GetInstance().RequestUnregisterScreen("TitleUI");
+
+			//BGMフェードアウト
+			m_titleBGM->SetFadeOut(m_outroFinishTime);
 		}
 
 		break;
 	case TitlePhase::Outro:
 		OutroPhaseUpdate();
-
 		if (m_outroFinishTime <= m_elapsedTime) {
 			m_elapsedTime = 0;
 
@@ -125,6 +129,8 @@ bool TitleScene::RequestChangeScene(SceneType& type)
 
 void TitleScene::Enter()
 {
+	g_renderingEngine->GetPostEffect().SetFadeEnabled(true);
+	g_renderingEngine->GetPostEffect().StartFadeIn(FADEINTIME, FADEIN_COLLAR);
 
 	//UI
 	m_titleUI = std::make_unique<TitleUI>();

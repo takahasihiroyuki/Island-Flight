@@ -45,9 +45,6 @@ namespace nsK2EngineLow {
 		//インスタンシングするモデルレンダーを作成。
 		for (const auto& name : instancingModelNames)
 		{
-			if (name == "coin") {
-				float debug = 0;
-			}
 			m_modelRenders[name].Init(
 				instancingPaths[name].c_str(),
 				nullptr,

@@ -49,6 +49,10 @@ namespace nsK2EngineLow {
 			m_isVisible = isVisible;
 		}
 
+		void SetPivot(Vector2 pivot) {
+			m_pivot = pivot;
+		}
+
 	private:
 		//SpriteCB	m_spriteCB;
 		Sprite		m_sprite;								//SpriteƒNƒ‰ƒX
