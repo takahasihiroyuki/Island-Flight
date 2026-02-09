@@ -106,6 +106,7 @@
     <ClCompile Include="CoinCounterUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerAssistSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -210,5 +211,7 @@
     <ClInclude Include="CoinCounterUI.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerAssistSystem.h" />
+    <ClInclude Include="AssistWarpPoint.h" />
   </ItemGroup>
 </Project>

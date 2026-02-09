@@ -1,17 +1,16 @@
 #pragma once
+#include "AssistWarpPoint.h"
 
 class StageMeshObject;
 class CoinManager;
+class PlacementObject;
 class Stage :public IGameObject
 {
 public:
 	Stage() {
 		float debug = 0;
 	};
-	~Stage() {
-		DeleteGO(m_instancingManager);
-
-	};
+	~Stage();
 
 	void Init();
 	bool Start() override;
@@ -36,12 +35,18 @@ public:
 		g_renderingEngine->SetFogParams(collar, fogDistanceScale);
 	}
 
+	std::vector<AssistWarpPoint> GetAssistWarpPoints() {
+		return m_assistWarpPoint;
+	}
+
 private:
 	CoinManager* m_coinManager;
 	InstancingManager* m_instancingManager = nullptr;
 	Vector3 m_posOfset = Vector3::Zero;
 	Vector3 m_ScaleOfset;
 	Vector3 m_playerStartPos;
+	std::vector<PlacementObject*> m_stageObjects;
+	std::vector<AssistWarpPoint> m_assistWarpPoint;
 
 };
 

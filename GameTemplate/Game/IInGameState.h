@@ -16,6 +16,7 @@ public:
 	virtual void Update() = 0;
 	virtual void Exit() = 0;
 	virtual bool RequestChangeState(InGameStateType& type)=0;
+	virtual void Render(RenderContext& rc) {};
 
 protected:
 	InGameContext* m_context = nullptr;

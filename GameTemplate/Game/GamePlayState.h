@@ -1,5 +1,6 @@
 #pragma once
 #include"IInGameState.h"
+#include "PlayerAssistSystem.h"
 
 enum class GamePlayPhase
 {
@@ -12,6 +13,7 @@ class Timer;
 class TimerUI;
 class CoinDirectionArrowUI;
 class CoinCounterUI;
+class Aircraft;
 class GamePlayState :public IInGameState
 {
 public:
@@ -21,6 +23,7 @@ public:
 	void Update()override;
 	void Exit()override;
 	bool RequestChangeState(InGameStateType& type)override;
+	void PlayerInput();
 
 
 private:
@@ -32,5 +35,6 @@ private:
 	GamePlayPhase m_phase = GamePlayPhase::GamePlay;
 	bool m_isChangeToResult = false;
 	float m_outroFinishTime = 1.0f;
+	PlayerAssistSystem m_playerAssistSystem;
 };
 

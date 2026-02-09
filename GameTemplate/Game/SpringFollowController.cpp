@@ -2,7 +2,7 @@
 #include "SpringFollowController.h"
 namespace
 {
-	static constexpr float DAMPING_RATE = 0.8f*2;	//減衰率
+	static constexpr float DAMPING_RATE = 0.8f * 2;	//減衰率
 	static constexpr float DAMPING_C = 5.0f;	//減衰係数
 }
 
@@ -41,9 +41,9 @@ Vector3 SpringFollowController::CalcSpringMove(
 	snap.GetPosition(TargetPos);
 
 	//ターゲットの速度を取得。
-	Vector3 targetVel= Vector3::One;
+	Vector3 targetVel = Vector3::One;
 	snap.GetVelocity(targetVel);
-	
+
 	//カメラの速度
 	Vector3 camVel = m_cameraState.velocity;
 
@@ -58,7 +58,7 @@ Vector3 SpringFollowController::CalcSpringMove(
 	float SpringK = std::pow(dampingC / (2 * dampingRate), 2);
 
 	//相対的な速度（カメラから見たターゲットの速度）
-	Vector3 relVelocity = targetVel -camVel;
+	Vector3 relVelocity = targetVel - camVel;
 
 	//加速度
 	//ばねだから自分のポジションから
@@ -96,11 +96,11 @@ void SpringFollowController::UpdateState(const TargetSnapshot& snap)
 	snap.GetVelocity(targetVel);
 
 	//ターゲットの姿勢
-	Quaternion orientation=Quaternion::Identity;
+	Quaternion orientation = Quaternion::Identity;
 	snap.GetRotation(orientation);
 
 	//カメラのポジションのオフセットを求める。（ワールド座標）
-	Vector3 woldeCamOffsetPos=CalcWoldeCameraOffsetPos(orientation);
+	Vector3 woldeCamOffsetPos = CalcWoldeCameraOffsetPos(orientation);
 
 	//カメラの速度
 	m_cameraState.velocity = CalcSpringMove(DAMPING_C, DAMPING_RATE, snap, woldeCamOffsetPos);
@@ -117,4 +117,28 @@ void SpringFollowController::UpdateState(const TargetSnapshot& snap)
 
 
 
+}
+
+void SpringFollowController::OnTargetWarped(const TargetSnapshot& snap)
+{
+	if (!snap.GetValid()) return;
+
+	Vector3 targetPos = Vector3::Zero;
+	snap.GetPosition(targetPos);
+
+	Quaternion orientation = Quaternion::Identity;
+	snap.GetRotation(orientation);
+
+	// ワールドのオフセット
+	Vector3 worldOffset = CalcWoldeCameraOffsetPos(orientation);
+
+	//ばねの内部状態をリセット
+	m_cameraState.pos = targetPos + worldOffset;
+	m_cameraState.targetPos = targetPos;
+
+	Vector3 targetVel = Vector3::Zero;
+	snap.GetVelocity(targetVel);
+	m_cameraState.velocity = targetVel;
+
+	m_cameraState.up = g_camera3D->GetUp();
 }

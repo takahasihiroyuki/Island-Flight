@@ -40,6 +40,12 @@ public:
 
 	CameraState GetCameraState() const;
 
+	/// <summary>
+	/// ƒ[ƒv’Ê’m
+	/// </summary>
+	/// <param name="snap"></param>
+	void NotifyTargetWarped(const TargetSnapshot& snap);
+
 private:
 	CameraManager();
 	~CameraManager();

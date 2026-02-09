@@ -82,3 +82,12 @@ CameraState CameraManager::GetCameraState() const
 {
 	return CameraState();
 }
+
+void CameraManager::NotifyTargetWarped(const TargetSnapshot& snap)
+{
+	//
+	if (m_activeController)
+	{
+		m_activeController->OnTargetWarped(snap);
+	}
+}

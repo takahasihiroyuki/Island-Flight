@@ -8,6 +8,7 @@
 #include"CoinManager.h"
 #include "Coin.h"
 #include "PlacementObject.h"
+#include "PlacementObject.h"
 
 
 namespace
@@ -141,7 +142,8 @@ namespace
 		"WaterVase_3",
 		"WoodenLog",
 		"WoodenLog_2",
-		"Wooden_Box"
+		"Wooden_Box",
+		"stuckRecoveryPos"
 	};
 
 	/// <summary>
@@ -181,6 +183,15 @@ namespace
 };
 
 
+Stage::~Stage()
+{
+	DeleteGO(m_instancingManager);
+	for (auto* obj : m_stageObjects) {
+		DeleteGO(obj);
+	}
+	m_stageObjects.clear();
+}
+
 void Stage::Init()
 {
 	m_instancingManager = NewGO<InstancingManager>(0, "instancingManager");
@@ -188,7 +199,7 @@ void Stage::Init()
 	std::unordered_map<std::string, std::string> paths;
 	m_coinManager->SetInstancingManager(m_instancingManager);
 
-	LoadScene("Assets/Scene/SceneExport3.json", [&](const nlohmann::json& json)
+	LoadScene("Assets/Scene/SceneExport4.json", [&](const nlohmann::json& json)
 		{
 			//nlohmann::jsonはC++のライブラリでJSONデータを扱うためのものです。
 			//nlohmann::jsonはstd::mapのように動く。
@@ -232,6 +243,15 @@ void Stage::Init()
 					return true;
 				}
 
+				if (name == "stuckRecoveryPos")
+				{
+					AssistWarpPoint assistWarpPoint;
+					assistWarpPoint.position = pos;
+					assistWarpPoint.rotation = rot;
+					m_assistWarpPoint.push_back(assistWarpPoint);
+					return true;
+				}
+
 				else
 				{
 					//実際に使われたオブジェクト名を保存しておく。
@@ -241,6 +261,7 @@ void Stage::Init()
 
 					auto* object = NewGO<StageMeshObject>(0);
 					object->Init(paths[name].c_str(), pos, rot, scale, name.c_str());
+					m_stageObjects.push_back(object);
 
 					return true;
 				}

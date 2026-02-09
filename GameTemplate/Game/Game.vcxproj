@@ -244,6 +244,7 @@
     <ClCompile Include="LiftingSurface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlacementObject.cpp" />
+    <ClCompile Include="PlayerAssistSystem.cpp" />
     <ClCompile Include="ResoltState.cpp" />
     <ClCompile Include="ResultUI.cpp" />
     <ClCompile Include="SceneLoader\SceneLoader.cpp" />
@@ -272,6 +273,7 @@
   <ItemGroup>
     <ClInclude Include="Aircraft.h" />
     <ClInclude Include="AircraftState.h" />
+    <ClInclude Include="AssistWarpPoint.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CameraTypes.h" />
     <ClInclude Include="Coin.h" />
@@ -293,6 +295,7 @@
     <ClInclude Include="IScene.h" />
     <ClInclude Include="LiftingSurface.h" />
     <ClInclude Include="PlacementObject.h" />
+    <ClInclude Include="PlayerAssistSystem.h" />
     <ClInclude Include="ResoltState.h" />
     <ClInclude Include="ResultUI.h" />
     <ClInclude Include="SceneLoader\SceneLoader.h" />

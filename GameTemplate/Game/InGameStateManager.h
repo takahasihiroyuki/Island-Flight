@@ -19,6 +19,7 @@ public:
 	{
 		return m_isEnd;
 	}
+	void Render(RenderContext& rc) override;
 
 private:
 	IInGameState* m_currentState = nullptr;

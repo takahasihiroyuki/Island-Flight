@@ -10,7 +10,8 @@ public:
 	)
 		: m_cameraState(cameraState),
 		m_targetSnapshot(targetSnapshot)
-	{}
+	{
+	}
 	virtual void UpdateState(const TargetSnapshot& m_targetSnapshot) = 0;
 
 	virtual CameraState GetState() final
@@ -25,6 +26,13 @@ public:
 	virtual void OnEnter() {};
 
 	virtual void Initialize(int parameterSelect) {}
+
+	/// <summary>
+	/// targetがワープしたときに呼ばれる。
+	/// ワープするときに特殊な処理をしたい場合にオーバーライドする。
+	/// </summary>
+	/// <param name="snap"></param>
+	virtual void OnTargetWarped(const TargetSnapshot& snap) {}
 
 protected:
 	CameraState m_cameraState;

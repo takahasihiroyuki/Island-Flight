@@ -10,8 +10,6 @@ namespace {
 
 InGameStateManager::InGameStateManager()
 {
-	int debug = 0;
-
 }
 
 InGameStateManager::~InGameStateManager()
@@ -65,5 +63,12 @@ void InGameStateManager::Change(InGameStateType type)
 
 	if (m_currentState) {
 		m_currentState->Enter(m_inGameContext);
+	}
+}
+
+void InGameStateManager::Render(RenderContext& rc)
+{
+	if (m_currentState) {
+		m_currentState->Render(rc);
 	}
 }

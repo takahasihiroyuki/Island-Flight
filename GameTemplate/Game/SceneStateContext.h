@@ -8,9 +8,11 @@ struct ISceneStateContext {};
 class Aircraft;
 class CoinManager;
 class ScoreManager;
-struct InGameContext:ISceneStateContext
+class Stage;
+struct InGameContext :ISceneStateContext
 {
 	Aircraft* aircraft = nullptr;
 	CoinManager* coinManager = nullptr;
 	ScoreManager* scoreManager = nullptr;
+	Stage* stage = nullptr;
 };

@@ -34,6 +34,7 @@ private:
 
 	void UpdateState(const TargetSnapshot& snap)override;
 
+	void OnTargetWarped(const TargetSnapshot& snap)override;
 
 private:
 	Vector3 m_localCameraOffsetPos = Vector3(0.0f, 100.0f, -600.0f);

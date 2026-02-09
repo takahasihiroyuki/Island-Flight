@@ -140,6 +140,17 @@ public:
 		m_lockTranslation = isLock;
 	}
 
+	void RequestWarp(Vector3 position,Quaternion rotation)
+	{
+		m_state.position = position;
+		m_characterController.SetPosition(position);
+		m_state.orientation = rotation;
+		m_state.linearVelocity = Vector3::Zero;
+		m_state.angularVelocity = Vector3::Zero;
+		UpdateRelWind();
+		UpdateModel();
+	}
+
 private:
 	void InitLiftingSurface(
 		WingType wingsType,

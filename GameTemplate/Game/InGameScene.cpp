@@ -76,10 +76,6 @@ void InGameScene::Update()
 {
 	PlayerInput();
 
-	m_aircraft->Update();
-
-	m_coinManager->Update(*m_aircraft);
-
 	m_skyCube->SetPosition(g_camera3D->GetPosition());
 
 
@@ -112,6 +108,7 @@ void InGameScene::InitInGameContext()
 	m_context.aircraft = m_aircraft;
 	m_context.coinManager = m_coinManager;
 	m_context.scoreManager = m_scoreManager;
+	m_context.stage = m_stage;
 }
 
 void InGameScene::PlayerInput()

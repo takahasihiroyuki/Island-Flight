@@ -6,10 +6,13 @@
 #include "UIManager.h"
 #include "CoinDirectionArrowUI.h"
 #include "CoinCounterUI.h"
+#include "CoinManager.h"
+#include "Stage.h"
 
 namespace
 {
-	constexpr float TIMELIMIT = 1;
+	static constexpr float AIRCRAFT_BASE_THRUST = 10000.0f;
+	constexpr float TIMELIMIT = 100;
 	const Vector3 FADE_COLLAR = Vector3(1.0f, 1.0f, 1.0f);
 }
 
@@ -26,6 +29,10 @@ GamePlayState::~GamePlayState()
 
 void GamePlayState::OnEnter()
 {
+	//プレイヤーアシストシステム初期化
+	m_playerAssistSystem = PlayerAssistSystem(m_context->stage->GetAssistWarpPoints());
+
+
 	TargetSnapshot targetSnapshot;
 	targetSnapshot.SetPosition(m_context->aircraft->GetPosition());
 	targetSnapshot.SetVelocity(m_context->aircraft->GetLinearVelocity());
@@ -64,6 +71,10 @@ void GamePlayState::OnEnter()
 
 void GamePlayState::Update()
 {
+	PlayerInput();
+	m_playerAssistSystem.Update(*m_context->aircraft);
+	m_context->aircraft->Update();
+	m_context->coinManager->Update(*m_context->aircraft);
 	switch (m_phase)
 	{
 	case GamePlayPhase::GamePlay:
@@ -87,8 +98,9 @@ void GamePlayState::Update()
 	default:
 		break;
 	}
+
 	TargetSnapshot targetSnapshot;
-	targetSnapshot.SetPosition(m_context->aircraft->GetPosition()+Vector3(0.0f,50.0f,0.0f));
+	targetSnapshot.SetPosition(m_context->aircraft->GetPosition() + Vector3(0.0f, 50.0f, 0.0f));
 	targetSnapshot.SetVelocity(m_context->aircraft->GetLinearVelocity());
 	targetSnapshot.SetRotation(m_context->aircraft->GetOrientation());
 
@@ -112,4 +124,23 @@ bool GamePlayState::RequestChangeState(InGameStateType& type)
 		return true;
 	}
 	return false;
+}
+
+void GamePlayState::PlayerInput()
+{
+	float mainLeftInput = -g_pad[0]->IsPress(enButtonLB1);
+	float mainRightInput = g_pad[0]->IsPress(enButtonRB1);
+	float tailInput = g_pad[0]->GetLStickYF();
+	float verticalInput = g_pad[0]->GetLStickXF();
+	bool isBoostOn = g_pad[0]->IsPress(enButtonA);
+	bool isThrottleCut = g_pad[0]->IsPress(enButtonB);
+
+	m_context->aircraft->SetControlInputs(
+		mainLeftInput,
+		mainRightInput,
+		tailInput,
+		verticalInput,
+		isBoostOn,
+		isThrottleCut
+	);
 }
