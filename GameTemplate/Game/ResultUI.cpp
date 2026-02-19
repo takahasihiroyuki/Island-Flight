@@ -145,7 +145,6 @@ void ResultUI::OnOpen()
 
 void ResultUI::OnClose()
 {
-	UIManager::GetInstance().RequestUnregisterScreen(GetName());
 	m_countUpSE->Stop();
 }
 

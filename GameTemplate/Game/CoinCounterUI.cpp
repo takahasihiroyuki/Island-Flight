@@ -14,6 +14,12 @@ namespace
 }
 
 
+CoinCounterUI::CoinCounterUI()
+{
+	m_animDurationClose = 1.0f;
+	m_animDurationOpen = 1.0f;
+}
+
 CoinCounterUI::~CoinCounterUI()
 {
 	DeleteGO(m_coinManager);
@@ -26,6 +32,9 @@ void CoinCounterUI::OnUpdate()
 	m_displayOnesNum = m_displayNumber % 10;
 	m_displayTensNum = (m_displayNumber / 10) % 10;
 	m_displayHundredsNum = (m_displayNumber / 100) % 10;
+
+	// アニメーションのオフセットを適用
+	ApplyOffset();
 }
 
 void CoinCounterUI::Render(RenderContext& rc)
@@ -80,4 +89,45 @@ void CoinCounterUI::OnOpen()
 
 void CoinCounterUI::OnClose()
 {
+}
+
+void CoinCounterUI::OnOpenAnimUpdate(float t)
+{
+	float positionT = t;
+
+	// 非表示アニメーション
+	m_uiOpenCloseAnimOffset.Lerp(positionT, m_uiHiddenPos, SPRITE_BASE_POS);
+	m_uiOpenCloseAnimOffset -= SPRITE_BASE_POS;
+
+}
+
+void CoinCounterUI::OnCloseAnimUpdate(float t)
+{
+	float positionT = t;
+
+	// 非表示アニメーション
+	m_uiOpenCloseAnimOffset.Lerp(positionT, SPRITE_BASE_POS, m_uiHiddenPos);
+	m_uiOpenCloseAnimOffset -= SPRITE_BASE_POS;
+
+}
+
+void CoinCounterUI::ApplyOffset()
+{
+	const Vector3 offset = m_uiOpenCloseAnimOffset;
+
+	m_coinUI.SetPosition(COINUI_SPLITE_POS + offset);
+	m_coinUI.Update();
+
+	for (int i = 0; i < 10; i++)
+	{
+		OnesSprite[i].SetPosition(ONES_SPLITE_POS + offset);
+		OnesSprite[i].Update();
+
+		TensSprite[i].SetPosition(TENS_SPLITE_POS + offset);
+		TensSprite[i].Update();
+
+		HundredsSprite[i].SetPosition(HUNDREDS_SPLITE_POS + offset);
+		HundredsSprite[i].Update();
+	}
+
 }

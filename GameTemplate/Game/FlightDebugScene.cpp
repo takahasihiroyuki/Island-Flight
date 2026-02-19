@@ -7,7 +7,7 @@
 namespace
 {
 	static constexpr float AIRCRAFT_BASE_THRUST = 10000.0f;
-	static const Vector3 INIT_POSITION = Vector3(0.0f,10000.0f,0.0f);
+	static const Vector3 INIT_POSITION = Vector3(0.0f,100.0f,0.0f);
 }
 
 FlightDebugScene::~FlightDebugScene()
@@ -26,7 +26,7 @@ bool FlightDebugScene::Start()
 		m_aircraft = new Aircraft();
 		m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", INIT_POSITION, AIRCRAFT_BASE_THRUST);
 		//場所をを固定
-		/*m_aircraft->SetLockTranslation(true);*/
+		m_aircraft->SetLockPosition(true);
 		m_aircraft->Start();
 	}
 
@@ -45,24 +45,25 @@ bool FlightDebugScene::Start()
 			//モーメントUI
 			auto debugMomentUI = std::make_unique<DebugArrowUI>();
 			debugMomentUI->Init(collarType::enYerrow, 0.001);
-			UIManager::GetInstance().ShowScreen("DebugMomentArrowUI" + std::to_string(i));
 			m_debugMomentUI[i] = debugMomentUI.get();
 
 			//フォースUI
 			auto debugForceUI = std::make_unique<DebugArrowUI>();
 			debugForceUI->Init(collarType::enRed, 0.0005);
-			UIManager::GetInstance().ShowScreen("DebugForceArrowUI" + std::to_string(i));
 			m_debugForceUI[i] = debugForceUI.get();
 
 			//モーメントUI
 			auto debugMomentArmUI = std::make_unique<DebugArrowUI>();
 			debugMomentArmUI->Init(collarType::enBlue, 2.0f);
-			UIManager::GetInstance().ShowScreen("DebugMomentArmUI" + std::to_string(i));
 			m_debugMomentArmUI[i] = debugMomentArmUI.get();
 
 			UIManager::GetInstance().RegisterScreen("DebugMomentArrowUI" + std::to_string(i), std::move(debugMomentUI));
 			UIManager::GetInstance().RegisterScreen("DebugForceArrowUI" + std::to_string(i), std::move(debugForceUI));
 			UIManager::GetInstance().RegisterScreen("DebugMomentArmUI" + std::to_string(i), std::move(debugMomentArmUI));
+
+			UIManager::GetInstance().ShowScreen("DebugMomentArrowUI" + std::to_string(i));
+			UIManager::GetInstance().ShowScreen("DebugForceArrowUI" + std::to_string(i));
+			UIManager::GetInstance().ShowScreen("DebugMomentArmUI" + std::to_string(i));
 		}
 	}
 
@@ -158,6 +159,11 @@ bool FlightDebugScene::RequestChangeScene(SceneType& type)
 		return true;
 	}
 	return false;
+}
+
+void FlightDebugScene::Enter()
+{
+	g_renderingEngine->GetPostEffect().StartFadeIn(3);
 }
 
 void FlightDebugScene::PlayerInput()

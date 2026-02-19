@@ -30,7 +30,7 @@ GamePlayState::~GamePlayState()
 void GamePlayState::OnEnter()
 {
 	//プレイヤーアシストシステム初期化
-	m_playerAssistSystem = PlayerAssistSystem(m_context->stage->GetAssistWarpPoints());
+	m_playerAssistSystem.Init(m_context->stage->GetAssistWarpPoints());
 
 
 	TargetSnapshot targetSnapshot;
@@ -80,12 +80,21 @@ void GamePlayState::Update()
 	case GamePlayPhase::GamePlay:
 		if (m_timer->IsTimeUp())
 		{
+			//アウトロへ
 			m_phase = GamePlayPhase::Outro;
+			//タイマーをリセットして、アウトロの時間計測開始
 			m_timer->Reset();
 			m_timer->SetRunning(true);
+			//画面をフェードアウト
 			g_renderingEngine->GetPostEffect().SetFadeEnabled(true);
 			g_renderingEngine->GetPostEffect().StartFadeOut(m_outroFinishTime, FADE_COLLAR);
+			//BGMをフェードアウト
 			m_gamePlayBGM->SetFadeOut(m_outroFinishTime);
+			//UIを消す
+			UIManager::GetInstance().RequestUnregisterScreen("timerUI");
+			UIManager::GetInstance().RequestUnregisterScreen("coinArrowUI");
+			UIManager::GetInstance().RequestUnregisterScreen("coinCounterUI");
+			UIManager::GetInstance().RequestUnregisterScreen("PlayerAssistUI");
 		}
 		break;
 	case GamePlayPhase::Outro:
@@ -110,9 +119,6 @@ void GamePlayState::Update()
 
 void GamePlayState::Exit()
 {
-	UIManager::GetInstance().RequestUnregisterScreen("timerUI");
-	UIManager::GetInstance().RequestUnregisterScreen("coinArrowUI");
-	UIManager::GetInstance().RequestUnregisterScreen("coinCounterUI");
 	m_gamePlayBGM->Stop();
 }
 
