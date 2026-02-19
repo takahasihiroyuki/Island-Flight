@@ -12,15 +12,15 @@ public:
 		TargetSnapshot targetSnapshot
 	)
 		:ICameraController(cameraState, targetSnapshot)
-	{}
+	{
+	}
 
 	void UpdateState(const TargetSnapshot& m_targetSnapshot)override {
 
-		
+
 		Vector3 targetPos = Vector3::Zero;
 		m_targetSnapshot.GetPosition(targetPos);
-		Vector3 pos = g_camera3D->GetPosition();
-		m_cameraState.pos = pos;
+		m_cameraState.pos = m_cameraPos;
 		m_cameraState.targetPos = targetPos;
 	}
 
@@ -37,7 +37,13 @@ public:
 		//param.a;
 	}
 
+	void SetPosition(Vector3 position) override
+	{
+		m_cameraPos = position;
+	}
+
 private:
 	Vector3 m_targetOffset = Vector3(0.0f, 0.0, 500.0f);
+	Vector3 m_cameraPos = Vector3::Zero;
 };
 

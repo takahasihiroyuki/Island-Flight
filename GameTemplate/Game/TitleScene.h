@@ -30,6 +30,10 @@ public:
 
 
 private:
+	void  CameraTargetOffsetUpdate();
+
+
+private:
 	std::unique_ptr<TitleUI> m_titleUI;
 	SoundSource* m_titleBGM = nullptr;
 	Aircraft* m_aircraft = nullptr;
@@ -38,5 +42,7 @@ private:
 	float m_elapsedTime = 0.0f;
 	TitlePhase m_phase = TitlePhase::WaitingInput;
 	float m_outroFinishTime = 3.0f;
+	ModelRender m_groundModel;
+	Vector3 CameraTargetPosOffset;
 };
 

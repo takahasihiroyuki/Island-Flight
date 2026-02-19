@@ -28,6 +28,8 @@ public:
 	/// 登録解除をリクエストする。
 	/// スクリーンのアップデート中などに解除されないように、
 	/// リクエストをためておいて、後でまとめて解除する。
+	/// 各スクリーンクラスのクローズでは呼ばない。
+	/// スクリーンのオブジェクトを持っているクラスが呼ぶ。
 	/// </summary>
 	/// <param name=""></param>
 	void RequestUnregisterScreen(const std::string& name)

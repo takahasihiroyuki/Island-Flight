@@ -26,17 +26,17 @@ void TitleUI::OnUpdate()
 {
 	float t = m_timer->GetElapsedTime();
 
-	m_startScale = BaseScaleStartUI;
-	m_startScale += Vector3::One * 0.5 * abs(std::sin(t * 4));
+	m_startUIScale = BaseScaleStartUI;
+	m_startUIScale += Vector3::One * 0.5 * abs(std::sin(t * 4));
 
 
 	m_titleLogo.SetPosition(m_logoShownPos + m_logoOpenCloseAnimOffset);
 	m_titleLogo.SetScale(ScaleOffsetLogo);
 	m_titleLogo.Update();
 
-	m_titleStart.SetPosition(m_startPosBase + m_StartUIOpenCloseAnimOffset);
+	m_titleStart.SetPosition(m_startUIPosBase + m_StartUIOpenCloseAnimOffset);
 	if (m_state != UIState::enClosing) {
-		m_titleStart.SetScale(m_startScale);
+		m_titleStart.SetScale(m_startUIScale);
 	}
 	else {
 		m_titleStart.SetScale(m_StartUICloseAnimScaleOffset);
@@ -78,7 +78,6 @@ void TitleUI::OnOpen()
 
 void TitleUI::OnClose()
 {
-	UIManager::GetInstance().RequestUnregisterScreen(GetName());
 }
 
 void TitleUI::OnOpenAnimUpdate(float t)
@@ -100,5 +99,5 @@ void TitleUI::OnCloseAnimUpdate(float t)
 	m_logoOpenCloseAnimOffset.y -= m_logoShownPos.y;
 
 	// スタートUIの非表示アニメーション
-	m_StartUICloseAnimScaleOffset.Lerp(startT, BaseScaleStartUI, m_startHiddenScale);
+	m_StartUICloseAnimScaleOffset.Lerp(startT, BaseScaleStartUI, m_startUIHiddenScale);
 }
