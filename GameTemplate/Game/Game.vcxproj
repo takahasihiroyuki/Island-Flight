@@ -245,6 +245,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlacementObject.cpp" />
     <ClCompile Include="PlayerAssistSystem.cpp" />
+    <ClCompile Include="PlayerAssistUI.cpp" />
     <ClCompile Include="ResoltState.cpp" />
     <ClCompile Include="ResultUI.cpp" />
     <ClCompile Include="SceneLoader\SceneLoader.cpp" />
@@ -296,6 +297,7 @@
     <ClInclude Include="LiftingSurface.h" />
     <ClInclude Include="PlacementObject.h" />
     <ClInclude Include="PlayerAssistSystem.h" />
+    <ClInclude Include="PlayerAssistUI.h" />
     <ClInclude Include="ResoltState.h" />
     <ClInclude Include="ResultUI.h" />
     <ClInclude Include="SceneLoader\SceneLoader.h" />

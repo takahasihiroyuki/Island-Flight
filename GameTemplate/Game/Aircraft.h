@@ -5,7 +5,7 @@ class LiftingSurface;
 class Engine :public IGameObject
 {
 public:
-	Engine(float baseThrust) :m_baseThrust(baseThrust){}
+	Engine(float baseThrust) :m_baseThrust(baseThrust) {}
 	~Engine() {}
 	void Update() override {}
 
@@ -135,12 +135,17 @@ public:
 
 	Vector3 GetWingMomentArmWorld(WingType wingType) const;
 
-	void SetLockTranslation(bool isLock) 
+	void SetLockPosition(bool isLock)
 	{
-		m_lockTranslation = isLock;
+		m_lockPosition = isLock;
 	}
 
-	void RequestWarp(Vector3 position,Quaternion rotation)
+	void SetLockRotation(bool isLock)
+	{
+		m_lockPosition = isLock;
+	}
+
+	void RequestWarp(Vector3 position, Quaternion rotation)
 	{
 		m_state.position = position;
 		m_characterController.SetPosition(position);
@@ -149,6 +154,16 @@ public:
 		m_state.angularVelocity = Vector3::Zero;
 		UpdateRelWind();
 		UpdateModel();
+	}
+
+	void PropellerSoundStop() {
+		if (m_propellerSound) {
+			m_propellerSound->Stop();
+		}
+	}
+
+	void SetSoundFadeOut(float fadeTime) {
+		m_propellerSound->SetFadeOut(fadeTime);
 	}
 
 private:
@@ -275,7 +290,8 @@ private:
 
 	Quaternion m_propellerSpin = Quaternion::Identity;
 	SoundSource* m_propellerSound = nullptr;
-	bool m_lockTranslation=false;		//ポジションを固定（デバッグ用の変数）
-	float m_propellerSoundBaseVolume = 0.8f;// プロペラ音の基本音量
+	bool m_lockPosition = false;		//ポジションを固定（デバッグ用の変数）
+	bool m_lockRotation = false;		//回転を固定（デバッグ用の変数）
+	float m_propellerSoundBaseVolume = 0.6f;// プロペラ音の基本音量
 	EffectEmitter* m_speedLineEffect = nullptr;
 };

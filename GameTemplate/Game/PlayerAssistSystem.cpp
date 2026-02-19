@@ -2,7 +2,14 @@
 #include "PlayerAssistSystem.h"
 #include "Aircraft.h"
 #include "CameraManager.h"
+#include "UIManager.h"
 
+
+PlayerAssistSystem::~PlayerAssistSystem()
+{
+	m_playerAssistUI.reset();
+	UIManager::GetInstance().RequestUnregisterScreen("PlayerAssistUI");
+}
 
 void PlayerAssistSystem::Update(Aircraft& aircraft)
 {
@@ -22,6 +29,20 @@ void PlayerAssistSystem::Update(Aircraft& aircraft)
 		//カメラマネージャーにワープを通知
 		CameraManager::GetInstance().NotifyTargetWarped(targetSnapshot);
 	}
+}
+
+void PlayerAssistSystem::Init(std::vector<AssistWarpPoint> warpPoint)
+{
+	m_warpPoints = warpPoint;
+
+	// プレイヤーアシストUIの初期化
+	{
+		m_playerAssistUI = std::make_unique<PlayerAssistUI>();
+		m_playerAssistUI->Init();
+		UIManager::GetInstance().RegisterScreen("PlayerAssistUI", std::move(m_playerAssistUI));
+		UIManager::GetInstance().ShowScreen("PlayerAssistUI");
+	}
+
 }
 
 bool PlayerAssistSystem::ShouldAssist()

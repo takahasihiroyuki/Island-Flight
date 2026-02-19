@@ -107,6 +107,9 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="PlayerAssistSystem.cpp" />
+    <ClCompile Include="PlayerAssistUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -213,5 +216,8 @@
     </ClInclude>
     <ClInclude Include="PlayerAssistSystem.h" />
     <ClInclude Include="AssistWarpPoint.h" />
+    <ClInclude Include="PlayerAssistUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

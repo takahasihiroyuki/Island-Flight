@@ -91,3 +91,8 @@ void CameraManager::NotifyTargetWarped(const TargetSnapshot& snap)
 		m_activeController->OnTargetWarped(snap);
 	}
 }
+
+void CameraManager::SetPosition(Vector3 position)
+{
+	m_activeController->SetPosition(position);
+}

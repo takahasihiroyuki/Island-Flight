@@ -41,13 +41,17 @@ Aircraft::Aircraft()
 Aircraft::~Aircraft()
 {
 	DeleteGO(m_propellerSound);
+	if (m_speedLineEffect) {
+		m_speedLineEffect->Stop();
+		DeleteGO(m_speedLineEffect);
+	}
 }
 bool Aircraft::Start()
 {
 	// プロペラ音の初期化と再生
 	{
 		m_propellerSound = NewGO<SoundSource>(0);
-		m_propellerSound->Init(static_cast<int>(SoundID::enPropellerSE), true);
+		m_propellerSound->Init(static_cast<int>(SoundID::enPropellerSE), false);
 		m_propellerSound->SetVolume(m_propellerSoundBaseVolume);
 		m_propellerSound->Play(true);
 	}
@@ -129,7 +133,7 @@ void Aircraft::Update()
 	SweepHit sweepHit = SweepHit();
 
 	//トランスレーションロックがonなら移動させない
-	if (m_lockTranslation) {
+	if (m_lockPosition) {
 
 		Vector3 debug = Vector3(0.0f, 0.0f, 0.0f);
 
@@ -278,6 +282,7 @@ Vector3 Aircraft::ComputeForce()
 
 void Aircraft::ComputeMoment()
 {
+	if (m_lockPosition)return;
 	//全ての翼のモーメント（world系）を合計
 	Vector3 totalMomentWold = ComputeTotalMomentWorld();
 
@@ -345,8 +350,6 @@ void Aircraft::UpdateModel()
 void Aircraft::UpdatePropellerSound()
 {
 	if (m_propellerSound) {
-		//BGMの位置更新
-		m_propellerSound->SetPosition(g_camera3D->GetPosition());
 		//プロペラ音の音量更新
 		float thrustRatio = m_engine->GetThrustScale() / m_engine->GetBaseThrust();// 基本推力に対する現在の推力の割合
 		m_propellerSound->SetVolume(m_propellerSoundBaseVolume * thrustRatio);
@@ -363,7 +366,7 @@ void Aircraft::PlayEffects()
 		}
 		m_speedLineEffect->SetPosition(g_camera3D->GetPosition());
 		m_speedLineEffect->SetScale(Vector3::One * 1);
-		Quaternion CameraRotation=Quaternion::Identity;
+		Quaternion CameraRotation = Quaternion::Identity;
 		Matrix RotationMat;
 		RotationMat = g_camera3D->GetCameraRotation();//カメラの回転行列を取得
 		CameraRotation.SetRotation(RotationMat);//行列からクォータニオンに変換
@@ -371,6 +374,11 @@ void Aircraft::PlayEffects()
 		if (!m_speedLineEffect->IsPlay()) {//再生中じゃなければ再生する。
 			m_speedLineEffect->Play();
 		}
+	}
+	else {
+		if (!m_speedLineEffect)return;
+		DeleteGO(m_speedLineEffect);
+		m_speedLineEffect = nullptr;
 	}
 }
 

@@ -31,7 +31,6 @@ public:
 	/// ターゲットが動く場合は毎フレームセットする。
 	/// それをそのままターゲットやポジションとして使うわけではなく
 	/// ターゲットを参考にしてコントローラーを動かす。
-	/// どう使うか（使わないか）決めるのはコントローラー側。
 	/// </summary>
 	/// <param name="info"></param>
 	void SetTargetInfo(const TargetSnapshot& info);
@@ -45,6 +44,8 @@ public:
 	/// </summary>
 	/// <param name="snap"></param>
 	void NotifyTargetWarped(const TargetSnapshot& snap);
+
+	void SetPosition(Vector3 position);
 
 private:
 	CameraManager();
