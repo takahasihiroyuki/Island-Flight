@@ -15,7 +15,7 @@ namespace nsK2EngineLow {
 
 			//反射の割合の下限値、必ずこの値以上は反射する。
 			//（真上から見た反射率）
-			float baseReflectance=0.0f; // 基本反射率
+			float baseReflectance = 0.0f; // 基本反射率
 
 			float waveScroll = 0.0f; // 波のスクロール値
 		};
@@ -29,12 +29,17 @@ namespace nsK2EngineLow {
 		void InitOceanSprite();
 		void Update()override;
 		void Render(RenderContext& rc)override;
+		void SetWaveSpeed(float speed)
+		{
+			m_waveSpeed = speed;
+		}
+
 
 	private:
 		void UpdateWaveOffset()
 		{
-			float deltaTime =g_gameTime->GetFrameDeltaTime();
-			m_constantBuffer.waveScroll+= deltaTime * m_waveSpeed;
+			float deltaTime = g_gameTime->GetFrameDeltaTime();
+			m_constantBuffer.waveScroll += deltaTime * m_waveSpeed;
 		}
 
 		/// <summary>
@@ -78,10 +83,10 @@ namespace nsK2EngineLow {
 
 		void SetConstatntBuffer(
 			const Matrix& vpMatrix,
-			const Light& inLight, 
+			const Light& inLight,
 			Vector3 cameraPos,
 			float baseReflectance
-			) {
+		) {
 			m_constantBuffer.ReflectionCameraVP = vpMatrix;
 			m_constantBuffer.light = inLight;
 			m_constantBuffer.light.cameraEyePos = cameraPos;

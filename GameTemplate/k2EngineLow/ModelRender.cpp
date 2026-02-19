@@ -47,11 +47,11 @@ namespace nsK2EngineLow {
 		// アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationCrips, enModelUpAxis);
 
-		//影を受ける側じゃないなら。
-		if (!isShadowReciever) {
+		////影を受ける側じゃないなら。
+		//if (!isShadowReciever) {
 			// シャドウキャスター用のモデルを初期化。
 			InitShadowModel(filePath, enModelUpAxis);
-		}
+		//}
 
 		// GBuffer描画用のモデルを初期化
 		InitModelOnRenderGBuffer(filePath, enModelUpAxis, isShadowReciever);

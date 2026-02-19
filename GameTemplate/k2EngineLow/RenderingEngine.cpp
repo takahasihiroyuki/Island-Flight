@@ -316,7 +316,8 @@ namespace nsK2EngineLow
 		//GBufferへのレンダリング
 		RenderToGBuffer(rc);
 
-		m_shadow.Execute(rc, m_deferredModelList);
+		//シャドウマップのレンダリング
+		//m_shadow.Execute(rc, m_deferredModelList);
 
 
 		//ディファードライティング

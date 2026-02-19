@@ -50,7 +50,8 @@ namespace nsK2EngineLow
 		lightCameraPosition = mainCameraPosition - lightDir * m_shadowDistance;
 		g_renderingEngine->GetLightCamera().SetPosition(lightCameraPosition);
 		g_renderingEngine->GetLightCamera().SetTarget(mainCameraPosition);
-		g_renderingEngine->GetLightCamera().SetFar(m_shadowDistance*2);
+		g_renderingEngine->GetLightCamera().SetFar(m_shadowDistance*2000);
+		g_renderingEngine->GetLightCamera().SetViewAngle(0.5);
 	}
 }
 

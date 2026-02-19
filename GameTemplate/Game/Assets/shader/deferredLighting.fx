@@ -94,9 +94,7 @@ float4 PSMain(PSIn psIn) : SV_Target0
     finalColor.xyz *= lig;
     
     finalColor.xyz *= shadowPow;
-    //finalColor.xyz = dirLight;
-    
-
+    //finalColor.xyz = lig;
     return finalColor;
 
 }
@@ -140,16 +138,14 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
 //////////////////////////////////////////////////////////////////////////////////
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv)
 {
-	//反射ベクトルを求める
-    float3 refVec = reflect(lightDirection, normal);
-    refVec = normalize(refVec);
+    float3 lightIncidentDir = -lightDirection; // 光→面（入射）
+    float3 reflectDir = reflect(lightIncidentDir, normal);
     
-	//光が当たったサーフェイス(表面)から視点に伸びるベクトルを求める
-    float3 toEye = eyepos - worldPos;
-    toEye = normalize(toEye);
+    // 面 → 視点（カメラ）方向ベクトル
+    float3 toViewDir = normalize(eyepos - worldPos);
 
 	//鏡面反射の強さを求める
-    float t = -dot(refVec, toEye);
+    float t = dot(reflectDir, toViewDir);
 
 	//鏡面反射の強さを0~1にする
     t = max(0.0f, t);
@@ -169,12 +165,19 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 //////////////////////////////////////////////////////////////////////////////////
 float3 CalcLigFromDrectionLight(PSIn psIn, float3 normal, float3 worldPos)
 {
+    
+    float3 worldNormal = normalize(normal);
+
+    // 面 → 光 方向ベクトル
+    float3 toLightDir = normalize(-directionLight.direction);
+    toLightDir = normalize(toLightDir);
+    
 	//拡散反射
     float3 diffDirection = CalcLambertDiffuse(
-		directionLight.direction, directionLight.color, normal);
+		toLightDir, directionLight.color, worldNormal);
 	//鏡面反射
     float3 specDirection = CalcPhongSpecular(
-		directionLight.direction, directionLight.color, worldPos, normal, psIn.uv);
+		toLightDir, directionLight.color, worldPos, worldNormal, psIn.uv);
     
 	//最終的な光
     return diffDirection + specDirection;
