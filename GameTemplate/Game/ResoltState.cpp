@@ -2,6 +2,7 @@
 #include "ResoltState.h"
 #include "ResultUI.h"
 #include "UIManager.h"
+#include"Aircraft.h"
 
 namespace {
 	Vector3 CAMERA_TARGET_POS = { 0.0f,0.0f,0.0f };
@@ -30,6 +31,8 @@ void ResoltState::OnEnter()
 	m_resultEnterSE = NewGO<SoundSource>(0);
 	m_resultEnterSE->Init(static_cast<int>(SoundID::enResultEnterSE));
 	m_resultEnterSE->Play(false);
+
+	m_context->aircraft->PropellerSoundStop();
 
 	//カメラのターゲット情報を渡す。
 	TargetSnapshot targetSnapshot;
