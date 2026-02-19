@@ -34,6 +34,9 @@ public:
 	/// <param name="snap"></param>
 	virtual void OnTargetWarped(const TargetSnapshot& snap) {}
 
+	virtual void SetPosition(Vector3 position) {}
+
+
 protected:
 	CameraState m_cameraState;
 	TargetSnapshot m_targetSnapshot;

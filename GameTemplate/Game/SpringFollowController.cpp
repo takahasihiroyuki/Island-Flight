@@ -77,10 +77,12 @@ Vector3 SpringFollowController::CalcSpringMove(
 	return camVel;
 }
 
-Vector3 SpringFollowController::CalcWoldeCameraOffsetPos(Quaternion orientation)
+Vector3 SpringFollowController::CalcWoldeCameraOffsetPos(Quaternion orientation, float dt)
 {
+	//ターゲットの姿勢をカメラのオフセットに適用する。
 	Vector3 woldeCameraOffsetPos = m_localCameraOffsetPos;
 	orientation.Apply(woldeCameraOffsetPos);
+
 	return woldeCameraOffsetPos;
 }
 
@@ -100,7 +102,7 @@ void SpringFollowController::UpdateState(const TargetSnapshot& snap)
 	snap.GetRotation(orientation);
 
 	//カメラのポジションのオフセットを求める。（ワールド座標）
-	Vector3 woldeCamOffsetPos = CalcWoldeCameraOffsetPos(orientation);
+	Vector3 woldeCamOffsetPos = CalcWoldeCameraOffsetPos(orientation, deltaTime);
 
 	//カメラの速度
 	m_cameraState.velocity = CalcSpringMove(DAMPING_C, DAMPING_RATE, snap, woldeCamOffsetPos);
@@ -108,6 +110,20 @@ void SpringFollowController::UpdateState(const TargetSnapshot& snap)
 	//速度を積分
 	//変位を足す。
 	m_cameraState.pos += m_cameraState.velocity * deltaTime;
+
+	//右スティックの入力に応じてカメラを回転させる。
+	{
+		Vector3 targetPos = Vector3::Zero;
+		snap.GetPosition(targetPos);
+
+		//回転の差分を求める。
+		Quaternion qOrbitDelta = MakeOrbitQuaternionByRightStick(deltaTime, orientation);
+		//カメラから見たターゲットの位置を回転させる。
+		Vector3 cameraRelativePos = m_cameraState.pos - targetPos;
+		qOrbitDelta.Apply(cameraRelativePos);
+		//回転させた位置をカメラの新しい位置とする。
+		m_cameraState.pos = targetPos + cameraRelativePos;
+	}
 
 	Vector3 targetPositon = Vector3::One;
 	snap.GetPosition(targetPositon);
@@ -129,8 +145,11 @@ void SpringFollowController::OnTargetWarped(const TargetSnapshot& snap)
 	Quaternion orientation = Quaternion::Identity;
 	snap.GetRotation(orientation);
 
+	//デルタ
+	float deltaTime = g_gameTime->GetFrameDeltaTime();
+
 	// ワールドのオフセット
-	Vector3 worldOffset = CalcWoldeCameraOffsetPos(orientation);
+	Vector3 worldOffset = CalcWoldeCameraOffsetPos(orientation, deltaTime);
 
 	//ばねの内部状態をリセット
 	m_cameraState.pos = targetPos + worldOffset;
@@ -141,4 +160,39 @@ void SpringFollowController::OnTargetWarped(const TargetSnapshot& snap)
 	m_cameraState.velocity = targetVel;
 
 	m_cameraState.up = g_camera3D->GetUp();
+}
+
+Quaternion SpringFollowController::MakeOrbitQuaternionByRightStick(float dt, Quaternion targetOrientation)
+{
+	//右スティックの入力を取得
+	float rightStickXInput = g_pad[0]->GetRStickXF();
+	float rightStickYInput = g_pad[0]->GetRStickYF();
+
+	const float horizontalSpeed = 0.5f;
+	const float verticalSpeed = 0.5f;
+
+	//右スティックの入力に応じてカメラの回転角を更新
+	m_orbitHorizontalAngle = -rightStickXInput * horizontalSpeed * dt;
+	m_orbitVerticalAngle = rightStickYInput * verticalSpeed * dt;
+
+	////回転角をクランプ
+	//m_orbitVerticalAngle = std::clamp(m_orbitVerticalAngle, -XM_PIDIV2 + 0.1f, XM_PIDIV2 - 0.1f);
+
+	//横回転と縦回転のクォータニオン
+	Quaternion qHorizontal;
+	Quaternion qVertical;
+	//ターゲットの姿勢をカメラの回転に適用するために、ワールド座標でのローカルの軸を求める。
+	Vector3 upAxisWorld = Vector3::Up;
+	Vector3 rightAxisWorld = Vector3::Right;
+	targetOrientation.Apply(upAxisWorld);
+	targetOrientation.Apply(rightAxisWorld);
+	//右スティックの入力に応じて、ワールド座標でのローカルの軸を回転軸としてクォータニオンを作成
+	qHorizontal.SetRotation(upAxisWorld, m_orbitHorizontalAngle);
+	qVertical.SetRotation(rightAxisWorld, m_orbitVerticalAngle);
+
+	//横回転と縦回転のクォータニオンを掛け合わせて、最終的なカメラの回転クォータニオンを作成
+	Quaternion qOrbit = qVertical *qHorizontal;
+
+	return qOrbit;
+
 }
