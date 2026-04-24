@@ -180,7 +180,7 @@ namespace nsK2EngineLow
 		spriteInitData.m_textures[enGBufferShadow] = &m_shadow.GetShadowTarget().GetRenderTargetTexture();
 
 
-		spriteInitData.m_fxFilePath = "Assets/shader/deferredLighting.fx";
+		spriteInitData.m_fxFilePath = "Assets/shader/MyCode/deferredLighting.fx";
 
 		spriteInitData.m_expandConstantBuffer = &GetSceneLight().GetLight();
 		spriteInitData.m_expandConstantBufferSize = sizeof(GetSceneLight().GetLight());
@@ -317,7 +317,7 @@ namespace nsK2EngineLow
 		RenderToGBuffer(rc);
 
 		//シャドウマップのレンダリング
-		//m_shadow.Execute(rc, m_deferredModelList);
+		m_shadow.Execute(rc, m_deferredModelList);
 
 
 		//ディファードライティング

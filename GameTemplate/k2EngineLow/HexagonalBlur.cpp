@@ -53,7 +53,7 @@ void nsK2EngineLow::HexagonalBlur::InitVertDiagonalBlurSprite(RenderTarget& main
 	vertDiagonalBlurSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
 	vertDiagonalBlurSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth() / m_downSampleRate;
 	vertDiagonalBlurSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight() / m_downSampleRate;
-	vertDiagonalBlurSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
+	vertDiagonalBlurSpriteInitData.m_fxFilePath = "Assets/shader/MyCode/postEffect.fx";
 	vertDiagonalBlurSpriteInitData.m_psEntryPoinFunc = "PSVerticalDiagonalBlur";
 	vertDiagonalBlurSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	vertDiagonalBlurSpriteInitData.m_colorBufferFormat[1] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -67,7 +67,7 @@ void nsK2EngineLow::HexagonalBlur::InitRhomboidBlurSprite(RenderTarget& mainRend
 	phomboidBlurSpriteInitData.m_textures[1] = &m_rtDiagonalBlur.GetRenderTargetTexture();
 	phomboidBlurSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth() / m_downSampleRate;
 	phomboidBlurSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight() / m_downSampleRate;
-	phomboidBlurSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
+	phomboidBlurSpriteInitData.m_fxFilePath = "Assets/shader/MyCode/postEffect.fx";
 	phomboidBlurSpriteInitData.m_psEntryPoinFunc = "PSRhomboidBlur";
 	phomboidBlurSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	m_rhomboidBlurSprite.Init(phomboidBlurSpriteInitData);
@@ -83,7 +83,7 @@ void nsK2EngineLow::HexagonalBlur::InitCombineBokeImageSprite(Texture& bokeTextu
 	//combineBokeImageSpriteInitData.m_expandShaderResoruceView[1] = &depthTexture;
 	combineBokeImageSpriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
 	combineBokeImageSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
-	combineBokeImageSpriteInitData.m_fxFilePath = "Assets/shader/BlendBokehByDepth.fx";
+	combineBokeImageSpriteInitData.m_fxFilePath = "Assets/shader/MyCode/BlendBokehByDepth.fx";
 	combineBokeImageSpriteInitData.m_psEntryPoinFunc = "PSMain";
 	combineBokeImageSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	// 距離を利用してボケ画像をアルファブレンディングするので、半透明合成モードにする。

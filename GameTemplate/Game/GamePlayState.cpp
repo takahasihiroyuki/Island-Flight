@@ -138,8 +138,8 @@ void GamePlayState::PlayerInput()
 	float mainRightInput = g_pad[0]->IsPress(enButtonRB1);
 	float tailInput = g_pad[0]->GetLStickYF();
 	float verticalInput = g_pad[0]->GetLStickXF();
-	bool isBoostOn = g_pad[0]->IsPress(enButtonA);
-	bool isThrottleCut = g_pad[0]->IsPress(enButtonB);
+	bool isBoostOn = g_pad[0]->IsPress(enButtonB);
+	bool isThrottleCut = g_pad[0]->IsPress(enButtonA);
 
 	m_context->aircraft->SetControlInputs(
 		mainLeftInput,

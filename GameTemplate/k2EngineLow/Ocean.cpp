@@ -28,7 +28,7 @@ namespace nsK2EngineLow {
 		//tkmファイルのファイルパスを指定する。
 		initData.m_tkmFilePath = "Assets/modelData/Stylize Water Texture/Textures/ocean.tkm";
 		//シェーダーファイルのファイルパスを指定する。
-		initData.m_fxFilePath = "Assets/shader/Ocean.fx";
+		initData.m_fxFilePath = "Assets/shader/MyCode/Ocean.fx";
 		initData.m_vsEntryPointFunc = "VSMain";
 		initData.m_psEntryPointFunc = "PSMain";
 

@@ -23,7 +23,6 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Aircraft.cpp" />
     <ClCompile Include="LiftingSurface.cpp" />
     <ClCompile Include="PlacementObject.cpp" />
@@ -116,7 +115,6 @@
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Aircraft.h" />
     <ClInclude Include="LiftingSurface.h" />
     <ClInclude Include="AircraftState.h" />

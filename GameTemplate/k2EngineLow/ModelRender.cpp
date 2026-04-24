@@ -274,7 +274,7 @@ namespace nsK2EngineLow {
 
 		ModelInitData modelInitData;
 		modelInitData.m_tkmFilePath = tkmFilePath;
-		modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
+		modelInitData.m_fxFilePath = "Assets/shader/MyCode/ZPrepass.fx";
 		modelInitData.m_modelUpAxis = modelUpAxis;
 
 		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
@@ -339,7 +339,7 @@ namespace nsK2EngineLow {
 	void ModelRender::InitModelOnRenderGBuffer(const char* tkmFilePath, EnModelUpAxis enModelUpAxis, bool isShadowReciever)
 	{
 		ModelInitData modelInitData;
-		modelInitData.m_fxFilePath = "Assets/shader/RenderToGBuffer.fx";
+		modelInitData.m_fxFilePath = "Assets/shader/MyCode/RenderToGBuffer.fx";
 		modelInitData.m_psEntryPointFunc = "PSMain";
 
 		//アニメーションがあるならVSSkinMainを指定。
@@ -389,7 +389,7 @@ namespace nsK2EngineLow {
 	{
 		ModelInitData shadowInitData;
 		shadowInitData.m_tkmFilePath = filePath;
-		shadowInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
+		shadowInitData.m_fxFilePath = "Assets/shader/MyCode/DrawShadowMap.fx";
 		shadowInitData.m_vsEntryPointFunc = "VSMain";
 		shadowInitData.m_psEntryPointFunc = "PSShadowCaster";
 		if (m_animationClips != nullptr) {
@@ -410,7 +410,7 @@ namespace nsK2EngineLow {
 	{
 		ModelInitData reflectionInitData;
 		reflectionInitData.m_tkmFilePath = filePath;
-		reflectionInitData.m_fxFilePath = "Assets/shader/DrawReflection.fx";
+		reflectionInitData.m_fxFilePath = "Assets/shader/MyCode/DrawReflection.fx";
 
 		reflectionInitData.m_psEntryPointFunc = "PSMain";
 

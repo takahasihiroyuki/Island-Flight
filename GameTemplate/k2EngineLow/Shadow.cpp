@@ -33,8 +33,8 @@ namespace nsK2EngineLow
 		// ‚Ü‚Æ‚ß‚Ä‰eƒ‚ƒfƒ‹ƒŒƒ“ƒ_[‚ð•`‰æ
 		for (auto MobjData : obj)
 		{
-			//‰eƒ‚ƒfƒ‹‚Ì•`‰æ
-			MobjData->OnRenderShadowMap(rc, g_renderingEngine->GetLightCamera());
+			////‰eƒ‚ƒfƒ‹‚Ì•`‰æ
+			//MobjData->OnRenderShadowMap(rc, g_renderingEngine->GetLightCamera());
 		}
 
 		rc.WaitUntilFinishDrawingToRenderTarget(shadowMapTarget);

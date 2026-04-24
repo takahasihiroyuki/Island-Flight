@@ -57,7 +57,7 @@ void nsK2EngineLow::Bloom::InitLuminanceSprite(RenderTarget& mainRenderTarget)
 	//初期化情報作成
 	SpriteInitData luminanceSpriteInitData;
 	//輝度摘出用のシェーダーのファイルを指定する
-	luminanceSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
+	luminanceSpriteInitData.m_fxFilePath = "Assets/shader/MyCode/postEffect.fx";
 	//頂点シェーダーのエントリーポイントを指定する
 	luminanceSpriteInitData.m_vsEntryPointFunc = "VSMain";
 	//ピクセルシェーダーのエントリーポイントを指定する
@@ -88,7 +88,7 @@ void nsK2EngineLow::Bloom::InitFinalSprite(RenderTarget& mainRenderTarget)
 	finalSpriteInitData.m_height = mainRenderTarget.GetHeight();
 
 	//ボケ画像を合成するので専用シェーダーを使用する
-	finalSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
+	finalSpriteInitData.m_fxFilePath = "Assets/shader/MyCode/postEffect.fx";
 	finalSpriteInitData.m_psEntryPoinFunc = "PSBloomFinal";
 
 	//ただし、加算合成で描画するので、アルファブレンディングモードを加算する

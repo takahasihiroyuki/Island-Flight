@@ -103,7 +103,7 @@ void nsK2EngineLow::FadeOut::InitFinalSprite()
 	finalSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
 
 	//ボケ画像を合成するので専用シェーダーを使用する
-	finalSpriteInitData.m_fxFilePath = "Assets/shader/Fade.fx";
+	finalSpriteInitData.m_fxFilePath = "Assets/shader/MyCode/Fade.fx";
 	finalSpriteInitData.m_psEntryPoinFunc = "PSMain";
 
 	finalSpriteInitData.m_expandConstantBuffer = &m_fadeCB;

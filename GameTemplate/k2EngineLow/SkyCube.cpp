@@ -86,7 +86,7 @@ namespace nsK2EngineLow
 		//tkmファイルのファイルパスを指定する。
 		initData.m_tkmFilePath = "Assets/modelData/preset/sky.tkm";
 		//シェーダーファイルのファイルパスを指定する。
-		initData.m_fxFilePath = "Assets/shader/skyCube.fx";
+		initData.m_fxFilePath = "Assets/shader/MyCode/skyCube.fx";
 		initData.m_vsEntryPointFunc = "VSMain";
 		initData.m_psEntryPointFunc = "PSMain";
 
@@ -108,7 +108,7 @@ namespace nsK2EngineLow
 		//tkmファイルのファイルパスを指定する。
 		initData.m_tkmFilePath = "Assets/modelData/preset/sky.tkm";
 		//シェーダーファイルのファイルパスを指定する。
-		initData.m_fxFilePath = "Assets/shader/skyCube.fx";
+		initData.m_fxFilePath = "Assets/shader/MyCode/skyCube.fx";
 		initData.m_vsEntryPointFunc = "VSReflectionMain";
 		initData.m_psEntryPointFunc = "PSMain";
 

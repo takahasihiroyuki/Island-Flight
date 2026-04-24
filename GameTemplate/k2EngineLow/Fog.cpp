@@ -30,7 +30,7 @@ void nsK2EngineLow::Fog::InitFinalSprite(Texture& depthTexture)
 	finalSpriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
 
 	//ボケ画像を合成するので専用シェーダーを使用する
-	finalSpriteInitData.m_fxFilePath = "Assets/shader/Fog.fx";
+	finalSpriteInitData.m_fxFilePath = "Assets/shader/MyCode/Fog.fx";
 	finalSpriteInitData.m_psEntryPoinFunc = "PSMain";
 
 	finalSpriteInitData.m_expandConstantBuffer = &m_fogCB;
