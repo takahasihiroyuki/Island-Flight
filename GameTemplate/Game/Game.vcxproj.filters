@@ -109,6 +109,8 @@
     <ClCompile Include="PlayerAssistUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="ComboSystem.cpp" />
+    <ClCompile Include="GameTuningSettings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -217,5 +219,7 @@
     <ClInclude Include="PlayerAssistUI.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="ComboSystem.h" />
+    <ClInclude Include="GameTuningSettings.h" />
   </ItemGroup>
 </Project>

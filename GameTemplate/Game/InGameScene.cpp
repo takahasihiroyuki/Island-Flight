@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "InGameScene.h"
 #include "Aircraft.h"
-#include"PlacementObject.h"
-#include"CoinManager.h"
+#include "PlacementObject.h"
+#include "CoinManager.h"
 #include "Coin.h"
 #include "ScoreManager.h"
-#include"Stage.h"
-#include"InGameStateManager.h"
+#include "Stage.h"
+#include "InGameStateManager.h"
+#include "GameTuningSettings.h"
 
 namespace
 {
@@ -32,6 +33,9 @@ InGameScene::~InGameScene()
 
 bool InGameScene::Start()
 {
+	//ゲームチューニングの初期化
+	GameTuning::GameTuningSettings tuningSettings = GameTuning::CreateDefaultGameTuningSettings();
+
 
 	//スカイキューブ
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
@@ -45,6 +49,7 @@ bool InGameScene::Start()
 
 	//スコアマネージャー
 	m_scoreManager = NewGO<ScoreManager>(0, "ScoreManager");
+	m_scoreManager->Init(tuningSettings.scoreManager);
 
 	//コインマネージャー
 	m_coinManager = NewGO<CoinManager>(0, "coinManager");

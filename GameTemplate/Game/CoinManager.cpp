@@ -191,7 +191,7 @@ void CoinManager::ProcessCollectedCoins(const Aircraft& player)
 		m_coinCount++;
 
 		//スコアを加算
-		m_scoreManager->AddScore(m_score);
+		m_scoreManager->OnCoinCollected(m_score);
 		//コイン取得時のエフェクト
 		m_coins[index]->PlayCollectEffects();
 

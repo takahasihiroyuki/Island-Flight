@@ -231,10 +231,12 @@
     <ClCompile Include="CoinDirectionArrowUI.cpp" />
     <ClCompile Include="CoinGetUI.cpp" />
     <ClCompile Include="CoinManager.cpp" />
+    <ClCompile Include="ComboSystem.cpp" />
     <ClCompile Include="DebugArrowUI.cpp" />
     <ClCompile Include="FlightDebugScene.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GamePlayState.cpp" />
+    <ClCompile Include="GameTuningSettings.cpp" />
     <ClCompile Include="ICameraController.cpp" />
     <ClCompile Include="IInGameState.cpp" />
     <ClCompile Include="InGameScene.cpp" />
@@ -281,11 +283,13 @@
     <ClInclude Include="CoinDirectionArrowUI.h" />
     <ClInclude Include="CoinGetUI.h" />
     <ClInclude Include="CoinManager.h" />
+    <ClInclude Include="ComboSystem.h" />
     <ClInclude Include="DebugArrowUI.h" />
     <ClInclude Include="EffectType.h" />
     <ClInclude Include="FlightDebugScene.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GamePlayState.h" />
+    <ClInclude Include="GameTuningSettings.h" />
     <ClInclude Include="ICameraController.h" />
     <ClInclude Include="IInGameState.h" />
     <ClInclude Include="InGameScene.h" />

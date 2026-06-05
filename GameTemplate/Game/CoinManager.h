@@ -2,7 +2,6 @@
 
 class Aircraft;
 class Coin;
-class CoinDesc;
 class ScoreManager;
 class CoinManager :public IGameObject
 {
