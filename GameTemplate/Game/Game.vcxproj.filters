@@ -111,6 +111,13 @@
     </ClCompile>
     <ClCompile Include="ComboSystem.cpp" />
     <ClCompile Include="GameTuningSettings.cpp" />
+    <ClCompile Include="ComboUI.cpp" />
+    <ClCompile Include="ScorePopupScreen.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComboCounterScreen.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -221,5 +228,12 @@
     </ClInclude>
     <ClInclude Include="ComboSystem.h" />
     <ClInclude Include="GameTuningSettings.h" />
+    <ClInclude Include="ComboUI.h" />
+    <ClInclude Include="ScorePopupScreen.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComboCounterScreen.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

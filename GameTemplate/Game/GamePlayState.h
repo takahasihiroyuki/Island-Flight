@@ -14,6 +14,8 @@ class TimerUI;
 class CoinDirectionArrowUI;
 class CoinCounterUI;
 class Aircraft;
+class ScorePopupScreen;
+class ComboCounterScreen;
 class GamePlayState :public IInGameState
 {
 public:
@@ -28,9 +30,13 @@ public:
 
 private:
 	Timer* m_timer = nullptr;
+
 	std::unique_ptr<TimerUI> m_timeUI;
 	std::unique_ptr<CoinDirectionArrowUI> m_coinArrowUI = nullptr;
 	std::unique_ptr<CoinCounterUI> m_coinCounterUI = nullptr;
+	ScorePopupScreen* m_scorePopupScreen = nullptr;
+	ComboCounterScreen* m_comboCounterScreen = nullptr;
+
 	SoundSource* m_gamePlayBGM = nullptr;
 	GamePlayPhase m_phase = GamePlayPhase::GamePlay;
 	bool m_isChangeToResult = false;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -231,7 +231,9 @@
     <ClCompile Include="CoinDirectionArrowUI.cpp" />
     <ClCompile Include="CoinGetUI.cpp" />
     <ClCompile Include="CoinManager.cpp" />
+    <ClCompile Include="ComboCounterScreen.cpp" />
     <ClCompile Include="ComboSystem.cpp" />
+    <ClCompile Include="ComboUI.cpp" />
     <ClCompile Include="DebugArrowUI.cpp" />
     <ClCompile Include="FlightDebugScene.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -253,6 +255,7 @@
     <ClCompile Include="SceneLoader\TransformHelper.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
+    <ClCompile Include="ScorePopupScreen.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SpringFollowController.cpp" />
     <ClCompile Include="Stage.cpp" />
@@ -283,7 +286,9 @@
     <ClInclude Include="CoinDirectionArrowUI.h" />
     <ClInclude Include="CoinGetUI.h" />
     <ClInclude Include="CoinManager.h" />
+    <ClInclude Include="ComboCounterScreen.h" />
     <ClInclude Include="ComboSystem.h" />
+    <ClInclude Include="ComboUI.h" />
     <ClInclude Include="DebugArrowUI.h" />
     <ClInclude Include="EffectType.h" />
     <ClInclude Include="FlightDebugScene.h" />
@@ -308,6 +313,7 @@
     <ClInclude Include="SceneStateContext.h" />
     <ClInclude Include="SceneType.h" />
     <ClInclude Include="ScoreManager.h" />
+    <ClInclude Include="ScorePopupScreen.h" />
     <ClInclude Include="SoundID.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SpringFollowController.h" />

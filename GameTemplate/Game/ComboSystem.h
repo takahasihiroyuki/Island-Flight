@@ -40,11 +40,60 @@ public:
 		return m_scoreMaxMultiplier;
 	}
 
+	/// <summary>
+	/// コンボ中か？
+	/// </summary>
+	/// <returns></returns>
+	bool IsComboActive() const
+	{
+		return m_comboCount > 0 && m_comboTimer.IsRunning();
+	}
+
+	/// <summary>
+	/// コンボが切れるまでの残り時間を返す。
+	/// </summary>
+	/// <returns></returns>
+	float GetComboRemainingTime() const
+	{
+		if (!IsComboActive())
+		{
+			return 0.0f;
+		}
+
+		float remainingTime = m_comboDuration - m_comboTimer.GetElapsedTime();
+
+		if (remainingTime < 0.0f)
+		{
+			remainingTime = 0.0f;
+		}
+
+		return remainingTime;
+	}
+
+	/// <summary>
+	/// コンボが切れるまでの残り時間の割合を返す。0.0f～1.0fの範囲で返す。
+	/// </summary>
+	/// <returns></returns>
+	float GetComboRemainingRate() const
+	{
+		if (!IsComboActive())
+		{
+			return 0.0f;
+		}
+
+		if (m_comboDuration <= 0.0f)
+		{
+			return 0.0f;
+		}
+
+		return GetComboRemainingTime() / m_comboDuration;
+	}
+
 private:
 	float CalculateMultiplier() const
 	{
 		// コンボ数に応じてスコア倍率を計算
-		float currentMultiplier = 1.0f + (m_comboCount * 0.5f); //コンボ数が増えるごとに倍率が増加
+		float currentMultiplier = 1.0f + ((m_comboCount - 1) * 0.5f); //コンボ数が増えるごとに倍率が増加
 		if (currentMultiplier > m_scoreMaxMultiplier) {
 			currentMultiplier = m_scoreMaxMultiplier; //最大倍率を超えないようにする
 		}

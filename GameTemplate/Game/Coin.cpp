@@ -23,6 +23,10 @@ void Coin::OnStart()
 	m_coinGetSE = NewGO<SoundSource>(0);
 	m_coinGetSE->Init(static_cast<int>(SoundID::enCoinGetSE), false);
 	m_coinGetSE->Stop();
+
+	//エフェクトの初期化
+	EffectEngine::GetInstance()->ResistEffect(enCoinGet, effectPath[enCoinGet]);
+
 }
 
 void Coin::OnUpdate()
@@ -44,12 +48,12 @@ void Coin::PlayCollectEffects()
 	se->Init(static_cast<int>(SoundID::enCoinGetSE), false);
 	se->Play(false);
 
-	//エフェクトの初期化
-	EffectEngine::GetInstance()->ResistEffect(enCoinGet, effectPath[enCoinGet]);
+	// コイン取得エフェクト再生
 	m_collectEffect = NewGO<EffectEmitter>(0);
 	m_collectEffect->Init(enCoinGet);
 	m_collectEffect->SetPosition(m_position);
-	m_collectEffect->SetScale(Vector3::One*10);
+	m_collectEffect->SetScale(Vector3::One * 10);
 	m_collectEffect->SetRotation(Quaternion::Identity);
 	m_collectEffect->Play();
+
 }

@@ -8,6 +8,8 @@
 #include "CoinCounterUI.h"
 #include "CoinManager.h"
 #include "Stage.h"
+#include"ScorePopupScreen.h"
+#include "ComboCounterScreen.h"
 
 namespace
 {
@@ -62,6 +64,46 @@ void GamePlayState::OnEnter()
 	m_coinCounterUI->Init();
 	UIManager::GetInstance().RegisterScreen("coinCounterUI", std::move(m_coinCounterUI));
 	UIManager::GetInstance().ShowScreen("coinCounterUI");
+
+	//スコアポップアップUIをUImanagerに登録
+	{
+		auto scoreAddPopupUI = std::make_unique<ScorePopupScreen>();
+		scoreAddPopupUI->Init();
+
+		m_scorePopupScreen = scoreAddPopupUI.get();
+
+		UIManager::GetInstance().RegisterScreen(
+			"scorePopupScreen",
+			std::move(scoreAddPopupUI)
+		);
+
+		UIManager::GetInstance().ShowScreen("scorePopupScreen");
+
+		// CoinManagerにScorePopupScreenを渡す
+		auto* coinManager = m_context->coinManager;
+
+		if (coinManager != nullptr)
+		{
+			coinManager->SetScorePopupScreen(m_scorePopupScreen);
+		}
+	}
+
+	{
+		auto comboCounterScreen = std::make_unique<ComboCounterScreen>();
+
+		auto* scoreManager = m_context->scoreManager;
+
+		comboCounterScreen->Init(scoreManager);
+
+		m_comboCounterScreen = comboCounterScreen.get();
+
+		UIManager::GetInstance().RegisterScreen(
+			"comboCounterScreen",
+			std::move(comboCounterScreen)
+		);
+
+		UIManager::GetInstance().ShowScreen("comboCounterScreen");
+	}
 
 	//BGM
 	m_gamePlayBGM = NewGO<SoundSource>(0);
@@ -120,6 +162,15 @@ void GamePlayState::Update()
 void GamePlayState::Exit()
 {
 	m_gamePlayBGM->Stop();
+
+	if (m_context->coinManager != nullptr)
+	{
+		m_context->coinManager->SetScorePopupScreen(nullptr);
+	}
+
+	UIManager::GetInstance().RequestUnregisterScreen("scorePopupScreen");
+	UIManager::GetInstance().RequestUnregisterScreen("comboCounterScreen");
+	m_comboCounterScreen = nullptr;
 }
 
 bool GamePlayState::RequestChangeState(InGameStateType& type)

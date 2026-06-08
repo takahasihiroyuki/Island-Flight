@@ -3,6 +3,7 @@
 class Aircraft;
 class Coin;
 class ScoreManager;
+class ScorePopupScreen;
 class CoinManager :public IGameObject
 {
 public:
@@ -15,6 +16,11 @@ public:
 	void SetScoreManager(ScoreManager* scoreManager) {
 		assert(scoreManager != nullptr);
 		m_scoreManager = scoreManager;
+	}
+
+	void SetScorePopupScreen(ScorePopupScreen* scorePopupScreen)
+	{
+		m_scorePopupScreen = scorePopupScreen;
 	}
 
 	/// <summary>
@@ -86,9 +92,10 @@ private:
 	float m_pickupRadius = 3000.0f;		//コインの取得範囲
 	std::vector<Coin*> m_coins;
 	std::vector<Coin*> m_pendingCoins;	//
-	ScoreManager* m_scoreManager;
+	ScoreManager* m_scoreManager = nullptr;
 	InstancingManager* m_instancingManager = nullptr;
 	std::vector<size_t> m_hitIndices;//取られたコインのインデックス
-	float m_score = 100.0f;
-	size_t m_coinCount;
+	float m_coinBaseScore = 100.0f;
+	size_t m_coinCount = 0;
+	ScorePopupScreen* m_scorePopupScreen = nullptr;
 };

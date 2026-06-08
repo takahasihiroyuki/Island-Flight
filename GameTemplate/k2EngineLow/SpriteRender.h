@@ -27,6 +27,16 @@ namespace nsK2EngineLow {
 			m_scale = scale;
 		}
 
+		void SetMulColor(const Vector4& mulColor)
+		{
+			m_sprite.SetMulColor(mulColor);
+		}
+
+		const Vector4& GetMulColor() const
+		{
+			return m_sprite.GetMulColor();
+		}
+
 		void Update()
 		{
 			m_sprite.Update(

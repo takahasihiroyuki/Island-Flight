@@ -4,12 +4,14 @@
 #include "CoinManager.h"
 #include "Coin.h"
 #include "Aircraft.h"
-#include"ScoreManager.h"
+#include "ScoreManager.h"
+#include "ScorePopupScreen.h"
 
 namespace {
 	static const char* COIN_FILEPATH = "Assets/modelData/coin.tkm";
 	static const char* COIN_MODELNAME = "Coin";
 	static constexpr size_t INITIAL_COIN_COUNT = 15;			//コインの初期枚数
+	const Vector3 SCORE_POPUP_POS = Vector3(300.0f, 100.0f, 0.0f);
 
 	float RandomFloat(float min, float max)
 	{
@@ -168,12 +170,16 @@ bool CoinManager::CheckCoinPickup(const Aircraft& player)
 	m_hitIndices.reserve(m_coins.size());
 
 	for (size_t i = 0; i < m_coins.size(); ++i) {
+
+		//非アクティブなコインはスキップ
 		if (!m_coins[i]->IsActive()) continue;
+
 		Vector3 coinpos = m_coins[i]->GetPosition();
 		Vector3 playerToCoinVector = player.GetPosition() - coinpos;
 		float coinDist = playerToCoinVector.Length();
 		float radius = m_pickupRadius;
-		if (coinDist <= radius) {
+
+		if (coinDist <= radius) {//コインが取られた
 			m_hitIndices.push_back(i);
 			isGet = true;
 		}
@@ -191,12 +197,21 @@ void CoinManager::ProcessCollectedCoins(const Aircraft& player)
 		m_coinCount++;
 
 		//スコアを加算
-		m_scoreManager->OnCoinCollected(m_score);
+		float addScore = m_scoreManager->OnCoinCollected(m_coinBaseScore);
 		//コイン取得時のエフェクト
 		m_coins[index]->PlayCollectEffects();
 
 		//アクティブじゃないコインを1つ選んでアクティブにする
 		SelectActive(player.GetPosition(), player.GetLinearVelocity());
+
+		//スコアポップアップを表示
+		if (m_scorePopupScreen != nullptr)
+		{
+			m_scorePopupScreen->ShowAddScore(
+				static_cast<int>(addScore),
+				SCORE_POPUP_POS
+			);
+		}
 
 		m_coins[index]->Deactivate();
 
