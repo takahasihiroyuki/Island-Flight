@@ -67,6 +67,18 @@ public:
 		return remainingTime;
 	}
 
+	void AddLimitTime(float addTime)
+	{
+		if (!m_hasLimitTime) return;
+
+		m_limitTime += addTime;
+
+		if (m_limitTime < 0.0f)
+		{
+			m_limitTime = 0.0f;
+		}
+	}
+
 private:
 	float m_limitTime = 0;
 	float m_elapsedTime = 0;

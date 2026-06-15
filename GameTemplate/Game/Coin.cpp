@@ -41,6 +41,12 @@ void Coin::OnUpdate()
 	m_coinSE->SetPosition(GetPosition());
 }
 
+void Coin::OnCollected()
+{
+		PlayCollectEffects();
+
+}
+
 void Coin::PlayCollectEffects()
 {
 	// ƒRƒCƒ“æ“¾‰¹Ä¶

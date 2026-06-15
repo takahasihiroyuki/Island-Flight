@@ -7,7 +7,7 @@
 #include "ScoreManager.h"
 #include "Stage.h"
 #include "InGameStateManager.h"
-#include "GameTuningSettings.h"
+#include "BonusItemManager.h"
 
 namespace
 {
@@ -28,6 +28,7 @@ InGameScene::~InGameScene()
 	DeleteGO(m_inGameStateManeger);
 	DeleteGO(m_coinManager);
 	DeleteGO(m_skyCube);
+	DeleteGO(m_bonusItemManager);
 
 }
 
@@ -55,9 +56,13 @@ bool InGameScene::Start()
 	m_coinManager = NewGO<CoinManager>(0, "coinManager");
 	m_coinManager->SetScoreManager(m_scoreManager);
 
+	//ボーナスアイテムマネージャー
+	m_bonusItemManager = NewGO<BonusItemManager>(0, "bonusItemManager");
+
 	//ステージ
 	m_stage = NewGO<Stage>(0);
-	m_stage->GetCoinManager(m_coinManager);
+	m_stage->SetCoinManager(m_coinManager);
+	m_stage->SetBonusItemManager(m_bonusItemManager);
 	m_stage->Init();
 	m_stage->SetFogParams(FOG_COLLAR, FOG_DISTANCE_SCALE);
 
@@ -65,6 +70,8 @@ bool InGameScene::Start()
 	m_aircraft = new Aircraft();
 	m_aircraft->Init("Assets/modelData/Plane/Plane.tkm", m_stage->GetPlayerStartPos(), AIRCRAFT_BASE_THRUST);
 	m_aircraft->Start();
+
+	m_bonusItemManager->SetGameplayDependencies(m_aircraft, m_scoreManager);
 
 	//インゲームステートmanager
 	InitInGameContext();
@@ -108,12 +115,17 @@ void InGameScene::Enter()
 	g_renderingEngine->GetPostEffect().StartFadeIn(3);
 }
 
+void InGameScene::Exit()
+{
+	PlacementObject::ClearInstancingTables();
+};
 void InGameScene::InitInGameContext()
 {
 	m_context.aircraft = m_aircraft;
 	m_context.coinManager = m_coinManager;
 	m_context.scoreManager = m_scoreManager;
 	m_context.stage = m_stage;
+	m_context.bonusItemManager = m_bonusItemManager;
 }
 
 void InGameScene::PlayerInput()

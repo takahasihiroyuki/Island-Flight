@@ -1,7 +1,8 @@
 #pragma once
 #include"PlacementObject.h"
 class Timer;
-class Coin : public ItemMeshObject
+class ScoreManager;
+class Coin : public CollectibleObject
 {
 public:
 	Coin();
@@ -17,9 +18,8 @@ public:
 		}
 	}
 
-	void Deactivate() override
+	void OnDeactivate() override
 	{
-		PlacementObject::Deactivate();
 		if (m_coinSE) {
 			m_coinSE->Stop();
 		}
@@ -28,13 +28,22 @@ public:
 		}
 	}
 
+	void OnCollected();
+
 	void PlayCollectEffects();
+
+	void SetBaseScore(float score)
+	{
+		m_baseScore = score;
+	}
 
 private:
 	SoundSource* m_coinSE = nullptr;
 	SoundSource* m_coinGetSE = nullptr;
 	Timer* m_timer = nullptr;
 	float m_rotateSpeed = 300.0f;
+	float m_baseScore = 100.0f;
 	EffectEmitter* m_collectEffect = nullptr;
+
 };
 

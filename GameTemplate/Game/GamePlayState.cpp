@@ -10,6 +10,7 @@
 #include "Stage.h"
 #include"ScorePopupScreen.h"
 #include "ComboCounterScreen.h"
+#include"BonusItemManager.h"
 
 namespace
 {
@@ -47,6 +48,14 @@ void GamePlayState::OnEnter()
 	m_timer = NewGO<Timer>(0);
 	m_timer->SetLimitTime(TIMELIMIT);
 	m_timer->SetRunning(true);
+
+	//ボーナスアイテムマネージャーに依存関係を渡す
+	if (m_context->bonusItemManager != nullptr)
+	{
+		m_context->bonusItemManager->SetGameTimer(
+			m_timer
+		);
+	}
 
 	//UI
 	//タイマーUIをUImanagerに登録
@@ -115,8 +124,13 @@ void GamePlayState::Update()
 {
 	PlayerInput();
 	m_playerAssistSystem.Update(*m_context->aircraft);
+	if (m_context->bonusItemManager != nullptr)
+	{
+		m_context->bonusItemManager->Update();
+	}
 	m_context->aircraft->Update();
 	m_context->coinManager->Update(*m_context->aircraft);
+
 	switch (m_phase)
 	{
 	case GamePlayPhase::GamePlay:
@@ -166,6 +180,13 @@ void GamePlayState::Exit()
 	if (m_context->coinManager != nullptr)
 	{
 		m_context->coinManager->SetScorePopupScreen(nullptr);
+	}
+
+	if (m_context->bonusItemManager != nullptr)
+	{
+		m_context->bonusItemManager->SetGameTimer(
+			nullptr
+		);
 	}
 
 	UIManager::GetInstance().RequestUnregisterScreen("scorePopupScreen");

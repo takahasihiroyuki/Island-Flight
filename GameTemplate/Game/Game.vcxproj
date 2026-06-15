@@ -224,7 +224,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddTimeItem.cpp" />
     <ClCompile Include="Aircraft.cpp" />
+    <ClCompile Include="BonusItemManager.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="CoinCounterUI.cpp" />
@@ -240,6 +242,7 @@
     <ClCompile Include="GamePlayState.cpp" />
     <ClCompile Include="GameTuningSettings.cpp" />
     <ClCompile Include="ICameraController.cpp" />
+    <ClCompile Include="IGameTimeController.cpp" />
     <ClCompile Include="IInGameState.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="InGameStateManager.cpp" />
@@ -254,6 +257,8 @@
     <ClCompile Include="SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="SceneLoader\TransformHelper.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ScoreBoostEffect.cpp" />
+    <ClCompile Include="ScoreBoostItem.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="ScorePopupScreen.cpp" />
     <ClCompile Include="SoundManager.cpp" />
@@ -276,9 +281,13 @@
     <ClCompile Include="UIScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddTimeItem.h" />
     <ClInclude Include="Aircraft.h" />
     <ClInclude Include="AircraftState.h" />
     <ClInclude Include="AssistWarpPoint.h" />
+    <ClInclude Include="BonusItemEffectContext.h" />
+    <ClInclude Include="BonusItemManager.h" />
+    <ClInclude Include="BonusItemType.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CameraTypes.h" />
     <ClInclude Include="Coin.h" />
@@ -296,6 +305,7 @@
     <ClInclude Include="GamePlayState.h" />
     <ClInclude Include="GameTuningSettings.h" />
     <ClInclude Include="ICameraController.h" />
+    <ClInclude Include="IGameTimeController.h" />
     <ClInclude Include="IInGameState.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="InGameStateManager.h" />
@@ -312,6 +322,8 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneStateContext.h" />
     <ClInclude Include="SceneType.h" />
+    <ClInclude Include="ScoreBoostEffect.h" />
+    <ClInclude Include="ScoreBoostItem.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="ScorePopupScreen.h" />
     <ClInclude Include="SoundID.h" />

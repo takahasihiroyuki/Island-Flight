@@ -8,7 +8,7 @@
 #include"CoinManager.h"
 #include "Coin.h"
 #include "PlacementObject.h"
-#include "PlacementObject.h"
+#include "BonusItemManager.h"
 
 
 namespace
@@ -143,7 +143,9 @@ namespace
 		"WoodenLog",
 		"WoodenLog_2",
 		"Wooden_Box",
-		"stuckRecoveryPos"
+		"stuckRecoveryPos",
+		"AddTimeItem",
+		"ScoreBoostItem",
 	};
 
 	/// <summary>
@@ -198,8 +200,9 @@ void Stage::Init()
 	std::unordered_set<std::string> usedStageObjectNameSet;
 	std::unordered_map<std::string, std::string> paths;
 	m_coinManager->SetInstancingManager(m_instancingManager);
+	m_bonusItemManager->SetInstancingManager(m_instancingManager);
 
-	LoadScene("Assets/Scene/SceneExport4.json", [&](const nlohmann::json& json)
+	LoadScene("Assets/Scene/SceneExport.json", [&](const nlohmann::json& json)
 		{
 			//nlohmann::jsonはC++のライブラリでJSONデータを扱うためのものです。
 			//nlohmann::jsonはstd::mapのように動く。
@@ -229,12 +232,25 @@ void Stage::Init()
 				scale *= OBJECT_SCALE_OFFSET; // スケール
 
 
-
-				//コインだったら
-				if (name == "Coin") {
-					m_coinManager->Spawn(pos, rot, scale);
-					return true;
+				if (m_coinManager != nullptr)
+				{
+					//コインだったら
+					if (name == "Coin") {
+						m_coinManager->Spawn(pos, rot, scale);
+						return true;
+					}
 				}
+
+
+				if (m_bonusItemManager != nullptr)
+				{
+					// ボーナスアイテムだったら
+					if (m_bonusItemManager->SpawnItem(name, pos))
+					{
+						return true;
+					}
+				}
+
 
 				//startポジションだったら
 				if (name == "StartPosition")
@@ -288,6 +304,12 @@ void Stage::Init()
 		maxInstanceTable);
 
 	m_coinManager->RegisterCoinInstancingModel();
+
+
+	if (m_bonusItemManager != nullptr)
+	{
+		m_bonusItemManager->RegisterBonusItemInstancingModels();
+	}
 
 	m_coinManager->ActivateInitialCoins();
 

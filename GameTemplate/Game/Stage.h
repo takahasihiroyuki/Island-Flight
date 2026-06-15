@@ -4,6 +4,7 @@
 class StageMeshObject;
 class CoinManager;
 class PlacementObject;
+class BonusItemManager;
 class Stage :public IGameObject
 {
 public:
@@ -14,16 +15,17 @@ public:
 
 	void Init();
 	bool Start() override;
-	void GetCoinManager(CoinManager* coinManager)
-	{
-		m_coinManager = coinManager;
-	}
+
 	void Update() {
 	}
 
 	Vector3 GetPlayerStartPos() const
 	{
 		return m_playerStartPos;
+	}
+
+	std::vector<AssistWarpPoint> GetAssistWarpPoints() {
+		return m_assistWarpPoint;
 	}
 
 	/// <summary>
@@ -35,12 +37,22 @@ public:
 		g_renderingEngine->SetFogParams(collar, fogDistanceScale);
 	}
 
-	std::vector<AssistWarpPoint> GetAssistWarpPoints() {
-		return m_assistWarpPoint;
+	void SetCoinManager(CoinManager* coinManager)
+	{
+		m_coinManager = coinManager;
 	}
+
+	void SetBonusItemManager(BonusItemManager* bonusItemManager)
+	{
+		m_bonusItemManager = bonusItemManager;
+	}
+
+
+
 
 private:
 	CoinManager* m_coinManager;
+	BonusItemManager* m_bonusItemManager = nullptr;
 	InstancingManager* m_instancingManager = nullptr;
 	Vector3 m_posOfset = Vector3::Zero;
 	Vector3 m_ScaleOfset;

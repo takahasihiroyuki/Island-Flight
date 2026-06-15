@@ -16,6 +16,7 @@ class CoinCounterUI;
 class Aircraft;
 class ScorePopupScreen;
 class ComboCounterScreen;
+class BonusItemManager;
 class GamePlayState :public IInGameState
 {
 public:
@@ -43,4 +44,3 @@ private:
 	float m_outroFinishTime = 1.0f;
 	PlayerAssistSystem m_playerAssistSystem;
 };
-

@@ -7,17 +7,20 @@ std::unordered_map<std::string, bool>   PlacementObject::m_isInstancingTable{};
 
 PlacementObject::~PlacementObject()
 {
-	m_maxInstance.clear();
-	m_isInstancingTable.clear();
 }
 
 bool PlacementObject::Start()
 {
 	//インスタンシングするか決める。
 	DecideInstancingUsage(m_modelName);
-	if (m_isInstancingTable[m_modelName])
+
+
+	if (m_isInstancingTable[m_modelName])//インスタンシング描画するなら
 	{
+		//インスタンシングマネージャーを見つける。
 		m_instancingManager = FindGO<InstancingManager>("instancingManager");
+
+		//インスタンシングマネージャーにインスタンシングデータを登録する。
 		if (m_instancingManager)
 		{
 			m_instancingManager->UpdateInstancingData(
@@ -29,14 +32,17 @@ bool PlacementObject::Start()
 			);
 		}
 	}
-	else {
+	else {//インスタンシング描画しないなら通常のモデルレンダーで描画する。
 		m_modelRender.Init(m_modelPath.c_str());
 		m_modelRender.SetPosition(m_position);
 		m_modelRender.SetRotation(m_rotation);
 		m_modelRender.SetScale(m_scale);
 		m_modelRender.Update();
 	}
+
+	//当たり判定オブジェクトを作成
 	CreatePhysicsObject();
+
 	OnStart();
 	return true;
 }
@@ -97,7 +103,7 @@ void StageMeshObject::Update()
 {
 }
 
-void ItemMeshObject::Update()
+void CollectibleObject::Update()
 {
 	OnUpdate();
 	//イン単シング描画するなら
@@ -112,4 +118,3 @@ void ItemMeshObject::Update()
 		);
 	}
 }
-

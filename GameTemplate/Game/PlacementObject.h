@@ -1,5 +1,8 @@
 #pragma once
+#include"BonusItemType.h"
+#include"BonusItemEffectContext.h"
 
+class Timer;
 class PlacementObject : public IGameObject
 {
 public:
@@ -11,9 +14,13 @@ public:
 	/// インスタンシングする場合
 	/// モデルのポジションを見えない場所に置く
 	/// </summary>
-	void Deactivate()override
+	void Deactivate()override final
 	{
 		IGameObject::Deactivate();
+
+		OnDeactivate();
+
+		//インスタンシングしている場合は見えない場所に移動させる。
 		if (m_isInstancingTable[m_modelName])
 		{
 			m_instancingManager->UpdateInstancingData(
@@ -24,9 +31,21 @@ public:
 				Vector3::One * 0.0000001f
 			);
 		}
+
+		//当たり判定オブジェクトを解放する。
 		m_physicsStaticObject.Release();
 	};
 
+	virtual void OnDeactivate() {}
+
+	/// <summary>
+	/// インスタンシングテーブルをクリアする
+	/// </summary>
+	static void ClearInstancingTables()
+	{
+		m_maxInstance.clear();
+		m_isInstancingTable.clear();
+	}
 
 public:
 	using TransformTuple = std::tuple<Vector3, Quaternion, Vector3>;
@@ -136,16 +155,85 @@ public:
 	}
 };
 
-class ItemMeshObject : public PlacementObject
+class CollectibleObject : public PlacementObject
 {
 private:
 	using SuperClass = PlacementObject;
 
 public:
 
-	virtual void OnStart() override
+	void Update() override final;
+
+	/// <summary>
+	/// オブジェクトを回収する。
+	/// 回収された場合はtrueを返す。すでに回収されている場合はfalseを返す。
+	/// </summary>
+	/// <returns></returns>
+	bool Collect()
 	{
+		if (m_isCollected)
+		{
+			return false;
+		}
+
+		m_isCollected = true;
+
+		OnCollected();
+		Deactivate();
+
+		return true;
 	}
-	virtual void Update() override final;
+
+protected:
 	virtual void OnUpdate() {};
+	virtual void OnCollected() {};
+	virtual void OnDeactivate() {};
+private:
+	bool m_isCollected = false;
+};
+
+class BonusItemObject : public CollectibleObject
+{
+public:
+	void SetEffectContext(
+		const BonusItemEffectContext* context)
+	{
+		m_effectContext = context;
+	}
+
+	/// <summary>
+	/// インスタンシング登録に使用するモデル名
+	/// </summary>
+	/// <returns></returns>
+	virtual const char* GetItemModelName() const = 0;
+
+	/// <summary>
+	/// インスタンシング登録に使用するモデルパス
+	/// </summary>
+	virtual const char* GetItemModelPath() const = 0;
+
+
+	/// <summary>
+	/// アイテムの効果を適用する。
+	/// </summary>
+	virtual void ApplyEffect(const BonusItemEffectContext& context) = 0;
+
+
+private:
+
+	/// <summary>
+	/// 取得されたときの処理
+	/// </summary>
+	void OnCollected() override final
+	{
+		if (m_effectContext == nullptr)
+		{
+			return;
+		}
+
+		ApplyEffect(*m_effectContext);
+	}
+
+private:
+	const BonusItemEffectContext* m_effectContext = nullptr;
 };

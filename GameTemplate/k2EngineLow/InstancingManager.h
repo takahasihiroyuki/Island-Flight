@@ -56,8 +56,6 @@ namespace nsK2EngineLow {
 			return m_modelRenders.at(modelName);
 		}
 
-	public:
-
 		void UpdateInstancingData(
 			int instanceNo,
 			std::string instanceName,

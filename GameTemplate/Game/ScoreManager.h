@@ -1,5 +1,8 @@
 #pragma once
 #include"ComboSystem.h"
+#include "GameTuningSettings.h"
+#include "ScoreBoostEffect.h"
+
 class ScoreManager :public IGameObject
 {
 public:
@@ -13,6 +16,10 @@ public:
 		m_comboSystem.Update();
 	}
 
+	void StartScoreBoost(float multiplier, float duration) {
+		m_scoreBoostEffect.Start(multiplier, duration);
+	}
+
 	/// <summary>
 	/// コインを取ったときのスコア加算処理。
 	/// </summary>
@@ -20,10 +27,15 @@ public:
 	float OnCoinCollected(float baseScore)
 	{
 		m_comboSystem.AddCombo();
+
 		// コンボ倍率を取得
-		float comboMultiplier = m_comboSystem.GetComboMultiplier();
-		m_score += baseScore * comboMultiplier;
-		return baseScore * comboMultiplier;
+		const float comboMultiplier = m_comboSystem.GetComboMultiplier();
+
+		// スコアブーストの倍率を取得
+		const float scoreBoostMultiplier = m_scoreBoostEffect.GetMultiplier();
+
+		m_score += baseScore * comboMultiplier * scoreBoostMultiplier;
+		return baseScore * comboMultiplier * scoreBoostMultiplier;
 	}
 
 	float GetScore() {
@@ -60,5 +72,6 @@ public:
 private:
 	float m_score = 0;
 	ComboSystem m_comboSystem;
+	ScoreBoostEffect m_scoreBoostEffect;
 };
 

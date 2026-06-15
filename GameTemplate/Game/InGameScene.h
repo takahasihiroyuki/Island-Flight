@@ -12,6 +12,7 @@ class Aircraft;
 class ScoreManager;
 class Stage;
 class InGameStateManager;
+class BonusItemManager;
 class InGameScene : public IScene
 {
 public:
@@ -22,7 +23,7 @@ public:
 	void Render(RenderContext& rc) override;
 	bool RequestChangeScene(SceneType& type)override;
 	void Enter();
-	void Exit() {};
+	void Exit();
 
 private:
 	void InitInGameContext();
@@ -38,10 +39,10 @@ private:
 	Aircraft* m_aircraft = nullptr;
 	CoinManager* m_coinManager = nullptr;
 	ScoreManager* m_scoreManager = nullptr;
+	BonusItemManager* m_bonusItemManager = nullptr;
 	PhysicsStaticObject m_ground;
 	Stage* m_stage = nullptr;
 	InGameStateManager* m_inGameStateManeger = nullptr;
 	InGameContext m_context;
-	Timer m_timer;
 };
 

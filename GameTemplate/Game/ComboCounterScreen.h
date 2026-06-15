@@ -50,7 +50,7 @@ private:
 	int m_displayComboCount = 0;
 	float m_alpha = 0.0f;
 
-	Vector3 m_basePos = Vector3(0.0f, 180.0f, 0.0f);
+	Vector3 m_basePos = Vector3(-150.0f, -230.0f, 0.0f);
 	Vector3 m_baseScale = Vector3(0.75f, 0.75f, 0.75f);
 
 	float m_digitSpacing = 55.0f;

@@ -10,7 +10,7 @@
 namespace {
 	static const char* COIN_FILEPATH = "Assets/modelData/coin.tkm";
 	static const char* COIN_MODELNAME = "Coin";
-	static constexpr size_t INITIAL_COIN_COUNT = 15;			//コインの初期枚数
+	static constexpr size_t INITIAL_COIN_COUNT = 50;			//コインの初期枚数
 	const Vector3 SCORE_POPUP_POS = Vector3(300.0f, 100.0f, 0.0f);
 
 	float RandomFloat(float min, float max)
@@ -198,8 +198,8 @@ void CoinManager::ProcessCollectedCoins(const Aircraft& player)
 
 		//スコアを加算
 		float addScore = m_scoreManager->OnCoinCollected(m_coinBaseScore);
-		//コイン取得時のエフェクト
-		m_coins[index]->PlayCollectEffects();
+		//コイン取得時の処理を書く
+		m_coins[index]->OnCollected();
 
 		//アクティブじゃないコインを1つ選んでアクティブにする
 		SelectActive(player.GetPosition(), player.GetLinearVelocity());

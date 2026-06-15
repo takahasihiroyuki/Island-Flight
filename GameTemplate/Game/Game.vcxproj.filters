@@ -16,6 +16,9 @@
     <Filter Include="UI">
       <UniqueIdentifier>{b3a067bf-01d0-474c-85bc-0a1a7631422d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BounusItemObject">
+      <UniqueIdentifier>{66ee20d8-15e8-4028-bff9-ced4957777ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -117,6 +120,15 @@
     </ClCompile>
     <ClCompile Include="ComboCounterScreen.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="BonusItemManager.cpp" />
+    <ClCompile Include="ScoreBoostItem.cpp">
+      <Filter>BounusItemObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreBoostEffect.cpp" />
+    <ClCompile Include="IGameTimeController.cpp" />
+    <ClCompile Include="AddTimeItem.cpp">
+      <Filter>BounusItemObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,5 +247,16 @@
     <ClInclude Include="ComboCounterScreen.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="BonusItemManager.h" />
+    <ClInclude Include="BonusItemType.h" />
+    <ClInclude Include="AddTimeItem.h">
+      <Filter>BounusItemObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreBoostItem.h">
+      <Filter>BounusItemObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreBoostEffect.h" />
+    <ClInclude Include="IGameTimeController.h" />
+    <ClInclude Include="BonusItemEffectContext.h" />
   </ItemGroup>
 </Project>
