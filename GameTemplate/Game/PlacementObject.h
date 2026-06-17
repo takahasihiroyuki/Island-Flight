@@ -192,9 +192,47 @@ private:
 	bool m_isCollected = false;
 };
 
+#include "PlacementObject.h"
+#include "BonusItemMover.h"
+
+/// <summary>
+/// ボーナスアイテムオブジェクト
+/// BonusItemWaypointSetの情報をもとに移動するアイテムオブジェクト。
+/// プレイヤーが回収するとBonusItemEffectContextの内容に従って効果を発動させる。
+/// </summary>
+class BonusItemWaypointSet;
 class BonusItemObject : public CollectibleObject
 {
 public:
+
+	void OnUpdate() override
+	{
+		const float deltaTime = g_gameTime->GetFrameDeltaTime();
+
+		m_mover.Update(deltaTime);
+
+		m_position = m_mover.GetPosition();
+
+		m_rotation = m_mover.GetRotation();
+
+	}
+
+	/// <summary>
+	/// ボーナスアイテムの移動を初期化する。
+	/// </summary>
+	/// <param name="waypointSet"></param>
+	/// <param name="previousPointIndex"></param>
+	/// <param name="currentPointIndex"></param>
+	/// <param name="nextPointIndex"></param>
+	/// <param name="afterNextPointIndex"></param>
+	/// <param name="moveDuration"></param>
+	/// <returns></returns>
+	bool InitMovement(
+		const BonusItemWaypointSet* waypointSet,
+		const Vector3& startPosition,
+		float moveDuration
+	);
+
 	void SetEffectContext(
 		const BonusItemEffectContext* context)
 	{
@@ -236,4 +274,5 @@ private:
 
 private:
 	const BonusItemEffectContext* m_effectContext = nullptr;
+	BonusItemMover m_mover;
 };

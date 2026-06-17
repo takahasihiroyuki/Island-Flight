@@ -56,7 +56,7 @@ public:
 	/// 残り時間を返す
 	/// カウントダウンをしないなら0を返す。
 	/// </summary>
-	float GetRemainingTime()
+	float GetRemainingTime() const
 	{
 		if (!m_hasLimitTime) return 0.0f;
 

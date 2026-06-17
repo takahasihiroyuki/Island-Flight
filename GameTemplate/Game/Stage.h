@@ -1,5 +1,7 @@
 #pragma once
 #include "AssistWarpPoint.h"
+#include "BonusItemEffectContext.h"
+#include "BonusItemWaypointSet.h"
 
 class StageMeshObject;
 class CoinManager;
@@ -47,6 +49,11 @@ public:
 		m_bonusItemManager = bonusItemManager;
 	}
 
+	const BonusItemWaypointSet* GetBonusItemWaypointSet() const
+	{
+		return &m_bonusItemWaypointSet;
+	}
+
 
 
 
@@ -59,6 +66,6 @@ private:
 	Vector3 m_playerStartPos;
 	std::vector<PlacementObject*> m_stageObjects;
 	std::vector<AssistWarpPoint> m_assistWarpPoint;
-
+	BonusItemWaypointSet m_bonusItemWaypointSet;
 };
 

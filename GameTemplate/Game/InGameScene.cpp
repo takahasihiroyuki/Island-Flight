@@ -8,6 +8,9 @@
 #include "Stage.h"
 #include "InGameStateManager.h"
 #include "BonusItemManager.h"
+#include "ScoreBoostUIScreen.h"
+#include "UIManager.h"
+
 
 namespace
 {
@@ -51,6 +54,15 @@ bool InGameScene::Start()
 	//スコアマネージャー
 	m_scoreManager = NewGO<ScoreManager>(0, "ScoreManager");
 	m_scoreManager->Init(tuningSettings.scoreManager);
+
+	//スコアブースとUI
+	auto scoreUi = std::make_unique<ScoreBoostUIScreen>();
+	scoreUi->Init(m_scoreManager);
+
+	UIManager::GetInstance().RegisterScreen(
+		"ScoreBoostUIScreen",
+		std::move(scoreUi)
+	);
 
 	//コインマネージャー
 	m_coinManager = NewGO<CoinManager>(0, "coinManager");

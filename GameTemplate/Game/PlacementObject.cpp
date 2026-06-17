@@ -118,3 +118,15 @@ void CollectibleObject::Update()
 		);
 	}
 }
+
+bool BonusItemObject::InitMovement(
+	const BonusItemWaypointSet* waypointSet,
+	const Vector3& startPosition,
+	float moveDuration)
+{
+	return m_mover.Init(
+		waypointSet,
+		startPosition,
+		moveDuration
+	);
+}

@@ -7,6 +7,9 @@
 #include "AddTimeItem.h"
 #include "ScoreBoostItem.h"
 
+namespace {
+	const float MOVE_DURATION = 10.0f;
+}
 
 BonusItemManager::BonusItemManager()
 {
@@ -27,7 +30,7 @@ BonusItemManager::~BonusItemManager()
 bool BonusItemManager::Start()
 {
 
-	return false;
+	return true;
 }
 
 void BonusItemManager::Update()
@@ -51,6 +54,9 @@ void BonusItemManager::Update()
 	}
 
 	DeleteCollectedItems();
+
+	//削除後の個数を調べて不足していれば生成する
+	MaintainItemCounts();
 }
 
 bool BonusItemManager::SpawnItem(const std::string& objectName, const Vector3& position)
@@ -76,6 +82,11 @@ bool BonusItemManager::SpawnItem(const std::string& objectName, const Vector3& p
 	m_bonusItemModelPaths[modelName] = modelPath;
 
 	return true;
+}
+
+void BonusItemManager::SpawnInitialItems()
+{
+	MaintainItemCounts();
 }
 
 void BonusItemManager::RegisterBonusItemInstancingModels()
@@ -105,6 +116,13 @@ void BonusItemManager::RegisterBonusItemInstancingModels()
 		instancingFlags,
 		maxInstanceTable
 	);
+}
+
+bool BonusItemManager::IsSupportedItemName(const std::string& objectName)
+{
+	return
+		objectName == AddTimeItem::GetObjectName() ||
+		objectName == ScoreBoostItem::GetObjectName();
 }
 
 bool BonusItemManager::IsInCollectRange(const BonusItemObject* item) const
@@ -146,7 +164,10 @@ BonusItemObject* BonusItemManager::CreateItem(const std::string& objectName, con
 
 		item->InitItem(
 			position,
-			m_config.addTime
+			m_config.addTime,
+			m_waypointSet,
+			position,
+			MOVE_DURATION
 		);
 
 		return item;
@@ -159,11 +180,104 @@ BonusItemObject* BonusItemManager::CreateItem(const std::string& objectName, con
 
 		item->InitItem(
 			position,
-			m_config.scoreBoost
+			m_config.scoreBoost,
+			m_waypointSet,
+			position,
+			MOVE_DURATION
 		);
 
 		return item;
 	}
 
 	return nullptr;
+}
+
+void BonusItemManager::MaintainItemCounts()
+{
+	ReplenishItems(
+		"AddTimeItem",
+		m_config.addTime.itemActiveCount
+	);
+
+	ReplenishItems(
+		"ScoreBoostItem",
+		m_config.scoreBoost.itemActiveCount
+	);
+}
+
+int BonusItemManager::CountActiveItems(const std::string& itemName) const
+{
+	int activeItemCount = 0;
+
+	for (const BonusItemObject* item : m_items)
+	{
+		if (item == nullptr)
+		{
+			continue;
+		}
+
+		if (itemName == item->GetItemModelName())
+		{
+			activeItemCount++;
+		}
+	}
+
+	return activeItemCount;
+}
+
+const BonusItemSpawnPoint* BonusItemManager::FindSpawnPoint(const std::string& itemName) const
+{
+	//スポーン可能なポイントの候補
+	std::vector<const BonusItemSpawnPoint*> candidates;
+
+	for (const BonusItemSpawnPoint& spawnPoint : m_bonusItemSpawnPoints)
+	{
+		//スポーン地点とアイテムネームがあっていれば候補に入れる
+		if (spawnPoint.name == itemName)
+		{
+			candidates.push_back(&spawnPoint);
+		}
+
+	}
+
+	if (candidates.empty())
+	{
+		return nullptr;
+	}
+
+	const size_t randomIndex = static_cast<size_t>(std::rand()) % candidates.size();
+
+	//候補の中からランダムで選ぶ
+	return candidates[randomIndex];
+}
+
+void BonusItemManager::ReplenishItems(const std::string& itemName, int targetCount)
+{
+	//今の存在しているアイテム数
+	int currentCount = CountActiveItems(itemName);
+
+	while (currentCount < targetCount)
+	{
+		const BonusItemSpawnPoint* spawnPoint = FindSpawnPoint(itemName);
+
+		if (spawnPoint == nullptr)
+		{
+			// 対応するスポーン地点が登録されていない。
+			break;
+		}
+
+		const bool isSpawned =
+			SpawnItem(
+				itemName,
+				spawnPoint->position
+			);
+
+		if (!isSpawned)
+		{
+			// アイテムの生成に失敗した。
+			break;
+		}
+
+		currentCount++;
+	}
 }

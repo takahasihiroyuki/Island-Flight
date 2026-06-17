@@ -38,6 +38,7 @@ public:
 
 	/// <summary>
 	/// 非表示状態にするときに呼ばれれる
+	/// UI自体は消さないが非表示にするときにも呼ぶ
 	/// </summary>
 	virtual void Close()final {
 		m_state = UIState::enClosing;
@@ -143,12 +144,12 @@ public:
 		return m_state != UIState::enHidden;
 	}
 
-	void SetName(const char* name)
+	void SetName(std::string name)
 	{
 		m_name = name;
 	}
 
-	const char* GetName() const
+	std::string GetName() const
 	{
 		return m_name;
 	}
@@ -170,7 +171,7 @@ public:
 	}
 
 protected:
-	const char* m_name = nullptr;	//スクリーンの名前
+	std::string m_name;	//スクリーンの名前
 	UIState m_state;
 	float m_animTimer = 0;			//アニメーション用タイマー
 	float m_animDurationOpen = 0;	//UI表示時のアニメーションの時間（0ならアニメーションしない）

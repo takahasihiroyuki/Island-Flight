@@ -11,6 +11,7 @@
 #include"ScorePopupScreen.h"
 #include "ComboCounterScreen.h"
 #include"BonusItemManager.h"
+#include"AddTimePopupUI.h"
 
 namespace
 {
@@ -26,7 +27,6 @@ GamePlayState::GamePlayState()
 GamePlayState::~GamePlayState()
 {
 	DeleteGO(m_timer);
-	m_timeUI.reset();
 	DeleteGO(m_gamePlayBGM);
 }
 
@@ -54,25 +54,43 @@ void GamePlayState::OnEnter()
 	{
 		m_context->bonusItemManager->SetGameTimer(
 			m_timer
-		);
+		);;
 	}
 
 	//UI
-	//タイマーUIをUImanagerに登録
-	m_timeUI = std::make_unique<TimerUI>();
-	m_timeUI->Init(m_timer);
-	UIManager::GetInstance().RegisterScreen("timerUI", std::move(m_timeUI));
-	UIManager::GetInstance().ShowScreen("timerUI");
+	{
+		//タイマーUIをUImanagerに登録
+		auto timeUI = std::make_unique<TimerUI>();
+		timeUI->Init(m_timer);
+		UIManager::GetInstance().RegisterScreen("timerUI", std::move(timeUI));
+		UIManager::GetInstance().ShowScreen("timerUI");
 
-	m_coinArrowUI = std::make_unique<CoinDirectionArrowUI>(m_context->coinManager, m_context->aircraft);
-	m_coinArrowUI->Init();
-	UIManager::GetInstance().RegisterScreen("coinArrowUI", std::move(m_coinArrowUI));
-	UIManager::GetInstance().ShowScreen("coinArrowUI");
+		auto coinArrowUI = std::make_unique<CoinDirectionArrowUI>(m_context->coinManager, m_context->aircraft);
+		coinArrowUI->Init();
+		UIManager::GetInstance().RegisterScreen("coinArrowUI", std::move(coinArrowUI));
+		UIManager::GetInstance().ShowScreen("coinArrowUI");
 
-	m_coinCounterUI = std::make_unique<CoinCounterUI>();
-	m_coinCounterUI->Init();
-	UIManager::GetInstance().RegisterScreen("coinCounterUI", std::move(m_coinCounterUI));
-	UIManager::GetInstance().ShowScreen("coinCounterUI");
+		auto coinCounterUI = std::make_unique<CoinCounterUI>();
+		coinCounterUI->Init();
+		UIManager::GetInstance().RegisterScreen("coinCounterUI", std::move(coinCounterUI));
+		UIManager::GetInstance().ShowScreen("coinCounterUI");
+		auto addTimeUi = std::make_unique<AddTimePopupUI>();
+		addTimeUi->Init();
+
+		AddTimePopupUI* addTimePopupUI = addTimeUi.get();
+
+		UIManager::GetInstance().RegisterScreen(
+			"AddTimePopupUI",
+			std::move(addTimeUi)
+		);
+
+		//AddTimePopupUIをbonusItemManagerにセットする
+		if (m_context->bonusItemManager != nullptr)
+		{
+			m_context->bonusItemManager->SetAddTimePopupUI(addTimePopupUI);
+		}
+
+	}
 
 	//スコアポップアップUIをUImanagerに登録
 	{
@@ -191,6 +209,7 @@ void GamePlayState::Exit()
 
 	UIManager::GetInstance().RequestUnregisterScreen("scorePopupScreen");
 	UIManager::GetInstance().RequestUnregisterScreen("comboCounterScreen");
+	UIManager::GetInstance().RequestUnregisterScreen("AddTimePopupUI");
 	m_comboCounterScreen = nullptr;
 }
 

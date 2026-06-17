@@ -15,11 +15,13 @@ namespace GameTuning
 
 	struct AddTimeItemConfig
 	{
+		int itemActiveCount = 2;	//ゲーム中にアクティブにする数
 		float addSeconds = 10.0f;
 	};
 
 	struct ScoreBoostItemConfig
 	{
+		int itemActiveCount = 2;	//ゲーム中にアクティブにする数
 		float multiplier = 2.0f;
 		float duration = 10.0f;
 	};

@@ -14,7 +14,12 @@ public:
 
 	void InitItem(
 		const Vector3& position,
-		const GameTuning::AddTimeItemConfig& addTimeConfig)
+		const GameTuning::AddTimeItemConfig& addTimeConfig,
+		const BonusItemWaypointSet* waypointSet,
+		const Vector3& startPosition,
+		float moveDuration
+
+	)
 	{
 		m_addSeconds = addTimeConfig.addSeconds;
 
@@ -25,6 +30,8 @@ public:
 			Vector3::One,
 			"AddTimeItem"
 		);
+
+		InitMovement(waypointSet, startPosition, moveDuration);
 	}
 
 	const char* GetItemModelName() const override

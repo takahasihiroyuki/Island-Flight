@@ -14,6 +14,7 @@ public:
 	void Update() override
 	{
 		m_comboSystem.Update();
+		m_scoreBoostEffect.Update();
 	}
 
 	void StartScoreBoost(float multiplier, float duration) {
@@ -67,6 +68,31 @@ public:
 	bool IsComboActive() const
 	{
 		return m_comboSystem.IsComboActive();
+	}
+
+	bool IsScoreBoostActive() const
+	{
+		return m_scoreBoostEffect.IsScoreBoostActive();
+	}
+
+	float GetScoreBoostMultiplier() const
+	{
+		return m_scoreBoostEffect.GetScoreBoostRemainingTime();
+	}
+
+	float GetScoreBoostRemainingTime() const
+	{
+		return m_scoreBoostEffect.GetScoreBoostRemainingTime();
+	}
+
+	float GetScoreBoostRemainingRate() const
+	{
+		return m_scoreBoostEffect.GetScoreBoostRemainingRate();
+	}
+
+	std::uint32_t GetScoreBoostActivationVersion() const
+	{
+		return m_scoreBoostEffect.GetScoreBoostActivationVersion();
 	}
 
 private:

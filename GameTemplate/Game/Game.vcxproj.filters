@@ -130,6 +130,13 @@
     <ClCompile Include="AddTimeItem.cpp">
       <Filter>BounusItemObject</Filter>
     </ClCompile>
+    <ClCompile Include="SplineMath.cpp" />
+    <ClCompile Include="BonusItemWaypointSet.cpp" />
+    <ClCompile Include="BonusItemMover.cpp" />
+    <ClCompile Include="ScoreBoostUIScreen.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AddTimePopupUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -258,5 +265,12 @@
     <ClInclude Include="ScoreBoostEffect.h" />
     <ClInclude Include="IGameTimeController.h" />
     <ClInclude Include="BonusItemEffectContext.h" />
+    <ClInclude Include="SplineMath.h" />
+    <ClInclude Include="BonusItemWaypointSet.h" />
+    <ClInclude Include="BonusItemMover.h" />
+    <ClInclude Include="ScoreBoostUIScreen.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="AddTimePopupUI.h" />
   </ItemGroup>
 </Project>

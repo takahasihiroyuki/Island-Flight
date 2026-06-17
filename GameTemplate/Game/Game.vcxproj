@@ -225,8 +225,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AddTimeItem.cpp" />
+    <ClCompile Include="AddTimePopupUI.cpp" />
     <ClCompile Include="Aircraft.cpp" />
     <ClCompile Include="BonusItemManager.cpp" />
+    <ClCompile Include="BonusItemMover.cpp" />
+    <ClCompile Include="BonusItemWaypointSet.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="CoinCounterUI.cpp" />
@@ -259,9 +262,11 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScoreBoostEffect.cpp" />
     <ClCompile Include="ScoreBoostItem.cpp" />
+    <ClCompile Include="ScoreBoostUIScreen.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="ScorePopupScreen.cpp" />
     <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="SplineMath.cpp" />
     <ClCompile Include="SpringFollowController.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageOrbitCameraController.cpp" />
@@ -282,12 +287,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddTimeItem.h" />
+    <ClInclude Include="AddTimePopupUI.h" />
     <ClInclude Include="Aircraft.h" />
     <ClInclude Include="AircraftState.h" />
     <ClInclude Include="AssistWarpPoint.h" />
     <ClInclude Include="BonusItemEffectContext.h" />
     <ClInclude Include="BonusItemManager.h" />
+    <ClInclude Include="BonusItemMover.h" />
     <ClInclude Include="BonusItemType.h" />
+    <ClInclude Include="BonusItemWaypointSet.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CameraTypes.h" />
     <ClInclude Include="Coin.h" />
@@ -324,10 +332,12 @@
     <ClInclude Include="SceneType.h" />
     <ClInclude Include="ScoreBoostEffect.h" />
     <ClInclude Include="ScoreBoostItem.h" />
+    <ClInclude Include="ScoreBoostUIScreen.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="ScorePopupScreen.h" />
     <ClInclude Include="SoundID.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="SplineMath.h" />
     <ClInclude Include="SpringFollowController.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageOrbitCameraController.h" />

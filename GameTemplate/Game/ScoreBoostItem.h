@@ -12,7 +12,10 @@ public:
 
 	void InitItem(
 		const Vector3& position,
-		const GameTuning::ScoreBoostItemConfig& config)
+		const GameTuning::ScoreBoostItemConfig& config,
+		const BonusItemWaypointSet* waypointSet,
+		const Vector3& startPosition,
+		float moveDuration)
 	{
 		m_multiplier = config.multiplier;
 		m_duration = config.duration;
@@ -24,6 +27,8 @@ public:
 			Vector3::One,
 			"ScoreBoostItem"
 		);
+
+		InitMovement(waypointSet, startPosition, moveDuration);
 	}
 
 	const char* GetItemModelName() const override

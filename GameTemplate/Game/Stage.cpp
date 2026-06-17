@@ -146,6 +146,7 @@ namespace
 		"stuckRecoveryPos",
 		"AddTimeItem",
 		"ScoreBoostItem",
+		"BonusItemWaypoint"
 	};
 
 	/// <summary>
@@ -202,6 +203,7 @@ void Stage::Init()
 	m_coinManager->SetInstancingManager(m_instancingManager);
 	m_bonusItemManager->SetInstancingManager(m_instancingManager);
 
+
 	LoadScene("Assets/Scene/SceneExport.json", [&](const nlohmann::json& json)
 		{
 			//nlohmann::jsonはC++のライブラリでJSONデータを扱うためのものです。
@@ -245,12 +247,19 @@ void Stage::Init()
 				if (m_bonusItemManager != nullptr)
 				{
 					// ボーナスアイテムだったら
-					if (m_bonusItemManager->SpawnItem(name, pos))
+					if (BonusItemManager::IsSupportedItemName(name))
 					{
+						BonusItemSpawnPoint spawnPoint = { name,pos };
+						m_bonusItemManager->SetBonusItemSpawnPoint(spawnPoint);
 						return true;
 					}
 				}
 
+				if (name == "BonusItemWaypoint")
+				{
+					m_bonusItemWaypointSet.AddPoint(pos);
+					return true;
+				}
 
 				//startポジションだったら
 				if (name == "StartPosition")
@@ -283,6 +292,18 @@ void Stage::Init()
 				}
 			}
 		});
+
+	if (m_bonusItemManager != nullptr)
+	{
+		// Stageが所有するウェイポイント集合をManagerへ渡す。
+		m_bonusItemManager->SetWaypointSet(
+			&m_bonusItemWaypointSet
+		);
+
+		// 目標数まで初期アイテムを生成する。
+		m_bonusItemManager->SpawnInitialItems();
+	}
+
 	std::unordered_map<std::string, bool> instancingFlags;
 	std::unordered_map<std::string, size_t> maxInstanceTable;
 

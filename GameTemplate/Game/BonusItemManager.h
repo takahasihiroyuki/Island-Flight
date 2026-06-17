@@ -3,19 +3,25 @@
 #include "GameTuningSettings.h"
 #include"BonusItemEffectContext.h"
 
+struct BonusItemSpawnPoint
+{
+	std::string name;
+	Vector3 position = Vector3::Zero;
+};
+
 class CollectibleObject;
 class Aircraft;
 class ScoreManager;
 class Timer;
 class BonusItemObject;
+class BonusItemWaypointSet;
 class BonusItemManager :public IGameObject
 {
 public:
 	BonusItemManager();
 	~BonusItemManager();
 
-	void Init(
-		const GameTuning::BonusItemManagerConfig& config)
+	void Init(const GameTuning::BonusItemManagerConfig& config)
 	{
 		m_config = config;
 	}
@@ -29,13 +35,20 @@ public:
 		const Vector3& position
 	);
 
+	void SpawnInitialItems();
+
 	void SetGameplayDependencies(
 		Aircraft* aircraft,
 		ScoreManager* scoreManager
 	)
 	{
 		m_aircraft = aircraft;
-		m_scoreManager = scoreManager;
+		m_effectContext.scoreManager = scoreManager;
+	}
+
+	void SetAddTimePopupUI(AddTimePopupUI* addTimePopupUI)
+	{
+		m_effectContext.addTimePopupUI = addTimePopupUI;
 	}
 
 	void SetInstancingManager(InstancingManager* instancingManager)
@@ -43,12 +56,29 @@ public:
 		m_instancingManager = instancingManager;
 	}
 
+	/// <summary>
+	/// ボーナスアイテムのモデルをインスタンシングマネージャーに登録する
+	/// </summary>
 	void RegisterBonusItemInstancingModels();
 
 	void SetGameTimer(Timer* gameTimer)
 	{
 		m_effectContext.gameTimer = gameTimer;
 	}
+
+	void SetWaypointSet(const BonusItemWaypointSet* waypointSet)
+	{
+		m_waypointSet = waypointSet;
+	}
+
+	void SetBonusItemSpawnPoint(const BonusItemSpawnPoint& spawnPoint)
+	{
+		m_bonusItemSpawnPoints.push_back(spawnPoint);
+	}
+
+	static bool IsSupportedItemName(
+		const std::string& objectName
+	);
 
 private:
 
@@ -73,10 +103,33 @@ private:
 		const std::string& objectName,
 		const Vector3& position);
 
+	/// <summary>
+	/// アイテムごとの決められた存在数を維持する
+	/// </summary>
+	void MaintainItemCounts();
+
+	/// <summary>
+	/// していされたアイテムのスポーン地点を探す
+	/// </summary>
+	/// <param name="itemName"></param>
+	/// <returns></returns>
+	int CountActiveItems(const std::string& itemName) const;
+
+	/// <summary>
+	/// 使用可能なスポーン地点を探す。
+	/// </summary>
+	const BonusItemSpawnPoint* FindSpawnPoint(const std::string& itemName) const;
+
+	/// <summary>
+	/// 指定されたアイテムを目標数まで補充する。
+	/// </summary>
+	/// <param name="itemName"></param>
+	/// <param name="targetCount"></param>
+	void ReplenishItems(const std::string& itemName, int targetCount);
+
 
 private:
 	Aircraft* m_aircraft = nullptr;
-	ScoreManager* m_scoreManager = nullptr;
 	InstancingManager* m_instancingManager = nullptr;
 
 
@@ -86,5 +139,7 @@ private:
 	std::unordered_map<std::string, std::string> m_bonusItemModelPaths;
 	GameTuning::BonusItemManagerConfig m_config;
 	BonusItemEffectContext m_effectContext;
+	const BonusItemWaypointSet* m_waypointSet = nullptr;
+	std::vector<BonusItemSpawnPoint> m_bonusItemSpawnPoints;
 };
 
