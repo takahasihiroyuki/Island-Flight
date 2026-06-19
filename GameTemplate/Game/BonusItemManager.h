@@ -15,6 +15,15 @@ class ScoreManager;
 class Timer;
 class BonusItemObject;
 class BonusItemWaypointSet;
+
+/// <summary>
+/// ボーナスアイテムを管理するか浦須
+/// シーンから登録されたスポーン地点をもとにボーナスアイテムを生成または補充する
+/// 最初に必要数スポーンし、取られたら非アクティブにする
+/// リスポーン時はアクティブにして再利用する
+/// 取得されたアイテムには BonusItemEffectContext を渡して効果を発動させる
+/// また、生成済みアイテムのモデル情報を InstancingManager に登録する
+/// </summary>
 class BonusItemManager :public IGameObject
 {
 public:
@@ -34,6 +43,23 @@ public:
 		const std::string& objectName,
 		const Vector3& position
 	);
+
+	/// <summary>
+	/// アクティブじゃないアイテムを探して返す
+	/// </summary>
+	/// <param name="itemName"></param>
+	/// <returns></returns>
+	BonusItemObject* FindInactiveItem(const std::string& itemName) const;
+
+
+	/// <summary>
+	/// アイテムをアクティブにして指定された場所に置く
+	/// </summary>
+	/// <param name="itemName"></param>
+	/// <param name="position"></param>
+	bool ActivateItemAt(
+		const std::string& itemName,
+		const Vector3& position);
 
 	void SpawnInitialItems();
 
@@ -87,12 +113,6 @@ private:
 	/// </summary>
 	bool IsInCollectRange(const BonusItemObject* item) const;
 
-
-	/// <summary>
-	/// 取得済みアイテムを削除する。
-	/// </summary>
-	void DeleteCollectedItems();
-
 	/// <summary>
 	/// 指定された種類のボーナスアイテムを生成する
 	/// </summary>
@@ -109,7 +129,7 @@ private:
 	void MaintainItemCounts();
 
 	/// <summary>
-	/// していされたアイテムのスポーン地点を探す
+	/// していされたアイテムのアクティブになっている数を出す
 	/// </summary>
 	/// <param name="itemName"></param>
 	/// <returns></returns>
@@ -134,7 +154,6 @@ private:
 
 
 	std::vector<BonusItemObject*> m_items;
-	std::vector<BonusItemObject*> m_deleteRequestItems;
 	std::unordered_set<std::string> m_usedBonusItemNameSet;
 	std::unordered_map<std::string, std::string> m_bonusItemModelPaths;
 	GameTuning::BonusItemManagerConfig m_config;

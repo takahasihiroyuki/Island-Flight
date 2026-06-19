@@ -23,12 +23,11 @@ BonusItemManager::~BonusItemManager()
 		DeleteGO(item);
 	}
 	m_items.clear();
-
-	m_deleteRequestItems.clear();
 }
 
 bool BonusItemManager::Start()
 {
+
 
 	return true;
 }
@@ -46,16 +45,11 @@ void BonusItemManager::Update()
 		if (!IsInCollectRange(item))continue;
 
 		//アイテムを取得する。
-		if (item->Collect())
-		{
-			m_deleteRequestItems.push_back(item);
-		}
+		item->Collect();
 
 	}
 
-	DeleteCollectedItems();
-
-	//削除後の個数を調べて不足していれば生成する
+	//アクティブになっている個数を調べて不足していればアクティブにする
 	MaintainItemCounts();
 }
 
@@ -80,6 +74,45 @@ bool BonusItemManager::SpawnItem(const std::string& objectName, const Vector3& p
 	// インスタンシング登録用に記録する
 	m_usedBonusItemNameSet.insert(modelName);
 	m_bonusItemModelPaths[modelName] = modelPath;
+
+	return true;
+}
+
+BonusItemObject* BonusItemManager::FindInactiveItem(const std::string& itemName) const
+{
+	for (BonusItemObject* item : m_items)
+	{
+		if (item == nullptr)
+		{
+			continue;
+		}
+
+		if (!item->IsActive() && itemName == item->GetItemModelName())
+		{
+			return item;
+		}
+	}
+
+	return nullptr;
+}
+
+
+bool BonusItemManager::ActivateItemAt(const std::string& itemName, const Vector3& position)
+{
+	BonusItemObject* item = FindInactiveItem(itemName);
+
+	if (item == nullptr)
+	{
+		return false;
+	}
+
+	item->SetPosition(position);
+	item->InitMovement(
+		m_waypointSet,
+		position,
+		MOVE_DURATION
+	);
+	item->Activate();
 
 	return true;
 }
@@ -136,22 +169,6 @@ bool BonusItemManager::IsInCollectRange(const BonusItemObject* item) const
 	const float distanceSq = toItem.LengthSq();
 
 	return distanceSq <= m_config.collectRadius * m_config.collectRadius;
-}
-
-void BonusItemManager::DeleteCollectedItems()
-{
-	for (BonusItemObject* deleteItem : m_deleteRequestItems)
-	{
-		auto it = std::find(m_items.begin(), m_items.end(), deleteItem);
-
-		if (it != m_items.end())
-		{
-			DeleteGO(*it);
-			m_items.erase(it);
-		}
-	}
-
-	m_deleteRequestItems.clear();
 }
 
 BonusItemObject* BonusItemManager::CreateItem(const std::string& objectName, const Vector3& position)
@@ -216,7 +233,7 @@ int BonusItemManager::CountActiveItems(const std::string& itemName) const
 			continue;
 		}
 
-		if (itemName == item->GetItemModelName())
+		if (item->IsActive() && itemName == item->GetItemModelName())
 		{
 			activeItemCount++;
 		}
@@ -258,6 +275,7 @@ void BonusItemManager::ReplenishItems(const std::string& itemName, int targetCou
 
 	while (currentCount < targetCount)
 	{
+		//スポーンポイントを探す
 		const BonusItemSpawnPoint* spawnPoint = FindSpawnPoint(itemName);
 
 		if (spawnPoint == nullptr)
@@ -266,11 +284,15 @@ void BonusItemManager::ReplenishItems(const std::string& itemName, int targetCou
 			break;
 		}
 
-		const bool isSpawned =
-			SpawnItem(
-				itemName,
-				spawnPoint->position
-			);
+		//生成済みで非アクティブのものがあれば使いまわす
+		if (ActivateItemAt(itemName, spawnPoint->position))
+		{
+			currentCount++;
+			continue;
+		}
+
+		//新しくスポーンする
+		const bool isSpawned = SpawnItem(itemName, spawnPoint->position);
 
 		if (!isSpawned)
 		{

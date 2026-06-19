@@ -238,7 +238,6 @@
     <ClCompile Include="CoinManager.cpp" />
     <ClCompile Include="ComboCounterScreen.cpp" />
     <ClCompile Include="ComboSystem.cpp" />
-    <ClCompile Include="ComboUI.cpp" />
     <ClCompile Include="DebugArrowUI.cpp" />
     <ClCompile Include="FlightDebugScene.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -305,7 +304,6 @@
     <ClInclude Include="CoinManager.h" />
     <ClInclude Include="ComboCounterScreen.h" />
     <ClInclude Include="ComboSystem.h" />
-    <ClInclude Include="ComboUI.h" />
     <ClInclude Include="DebugArrowUI.h" />
     <ClInclude Include="EffectType.h" />
     <ClInclude Include="FlightDebugScene.h" />

@@ -198,8 +198,9 @@ void CoinManager::ProcessCollectedCoins(const Aircraft& player)
 
 		//スコアを加算
 		float addScore = m_scoreManager->OnCoinCollected(m_coinBaseScore);
+		int comboCount = m_scoreManager->GetComboCount();
 		//コイン取得時の処理を書く
-		m_coins[index]->OnCollected();
+		m_coins[index]->OnCollected(comboCount);
 
 		//アクティブじゃないコインを1つ選んでアクティブにする
 		SelectActive(player.GetPosition(), player.GetLinearVelocity());

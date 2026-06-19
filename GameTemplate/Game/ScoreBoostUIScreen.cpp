@@ -5,7 +5,7 @@
 namespace
 {
 	const Vector3 SCORE_BOOST_POSITION =
-		Vector3(0.0f, 260.0f, 0.0f);
+		Vector3(0.0f, -260.0f, 0.0f);
 
 	const Vector3 SCORE_BOOST_BASE_SCALE =
 		Vector3(1.0f, 1.0f, 1.0f);
@@ -13,8 +13,8 @@ namespace
 	constexpr float BLINK_START_SECONDS = 3.0f;
 
 	constexpr float BLINK_INTERVAL = 0.15f;
-	constexpr int SCORE_BOOST_SPRITE_WIDTH = 400;
-	constexpr int SCORE_BOOST_SPRITE_HEIGHT = 120;
+	constexpr int SCORE_BOOST_SPRITE_WIDTH = 810;
+	constexpr int SCORE_BOOST_SPRITE_HEIGHT = 100;
 }
 
 ScoreBoostUIScreen::ScoreBoostUIScreen()
@@ -31,7 +31,7 @@ void ScoreBoostUIScreen::Init(const ScoreManager* scoreManager)
 	m_scoreManager = scoreManager;
 
 	m_scoreBoostSprite.Init(
-		"Assets/UI/Numbers/timelimit_zero.DDS",
+		"Assets/UI/ScreBoost/ScreBoost.DDS",
 		SCORE_BOOST_SPRITE_WIDTH,
 		SCORE_BOOST_SPRITE_HEIGHT
 	);

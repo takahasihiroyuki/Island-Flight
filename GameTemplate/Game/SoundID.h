@@ -12,5 +12,8 @@ enum class SoundID
 	enEngineSE,
 	enAnbientSE,
 	enPropellerSE,
+	enAddTimeLimitItemSE,
+	enAddTimeLimitItemGetSE,
+	enScoreBoostItemGetSE,
 	enMax,
 };

@@ -41,17 +41,17 @@ void Coin::OnUpdate()
 	m_coinSE->SetPosition(GetPosition());
 }
 
-void Coin::OnCollected()
+void Coin::OnCollected(int comboCount)
 {
-		PlayCollectEffects();
-
+	PlayCollectEffects(comboCount);
 }
 
-void Coin::PlayCollectEffects()
+void Coin::PlayCollectEffects(int comboCount)
 {
 	// コイン取得音再生
 	auto* se = NewGO<nsK2EngineLow::SoundSource>(0, "CoinGetSE");
 	se->Init(static_cast<int>(SoundID::enCoinGetSE), false);
+	se->SetFrequencyRatio(GetCollectSEFrequencyRatio(comboCount));
 	se->Play(false);
 
 	// コイン取得エフェクト再生
@@ -61,5 +61,21 @@ void Coin::PlayCollectEffects()
 	m_collectEffect->SetScale(Vector3::One * 10);
 	m_collectEffect->SetRotation(Quaternion::Identity);
 	m_collectEffect->Play();
+}
 
+float Coin::GetCollectSEFrequencyRatio(int comboCount) const
+{
+	if (comboCount >= 5) {
+		return 1.32f;
+	}
+	if (comboCount >= 4) {
+		return 1.24f;
+	}
+	if (comboCount >= 3) {
+		return 1.16f;
+	}
+	if (comboCount >= 2) {
+		return 1.08f;
+	}
+	return 1.0f;
 }

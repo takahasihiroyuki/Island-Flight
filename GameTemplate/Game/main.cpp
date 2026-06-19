@@ -44,8 +44,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enCountUpSE), "Assets/sound/SE/CountUp.wav");
 	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enResultEnterSE), "Assets/sound/SE/ResultEnter.wav");
 	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enPropellerSE), "Assets/sound/SE/Aircraft/propeller_spin.wav");
+	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enAddTimeLimitItemGetSE), "Assets/sound/SE/AddLimitTimePickupSE.wav");
+	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enAddTimeLimitItemSE), "Assets/sound/SE/AddTimeLimitItemSE.wav");
+	g_soundEngine->ResistWaveFileBank(static_cast<int>(SoundID::enScoreBoostItemGetSE), "Assets/sound/SE/ScoreBoostItemPickupSE.wav");
 
-	
 
 
 

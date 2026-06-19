@@ -1,11 +1,11 @@
 #pragma once
 class Timer;
 class ScoreManager;
-class AdddTimePopupUI;
+class AddTimePopupUI;
 struct BonusItemEffectContext
 {
 	Timer* gameTimer = nullptr;
 	ScoreManager* scoreManager = nullptr;
-	class AddTimePopupUI* addTimePopupUI = nullptr;
+	AddTimePopupUI* addTimePopupUI = nullptr;
 
 };

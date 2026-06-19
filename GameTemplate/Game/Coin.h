@@ -28,14 +28,17 @@ public:
 		}
 	}
 
-	void OnCollected();
+	void OnCollected(int comboCount);
 
-	void PlayCollectEffects();
+	void PlayCollectEffects(int comboCount);
 
 	void SetBaseScore(float score)
 	{
 		m_baseScore = score;
 	}
+
+private:
+	float GetCollectSEFrequencyRatio(int comboCount) const;
 
 private:
 	SoundSource* m_coinSE = nullptr;

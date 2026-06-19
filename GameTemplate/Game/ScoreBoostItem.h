@@ -1,6 +1,11 @@
 #pragma once
 #include"PlacementObject.h"
 #include "GameTuningSettings.h"
+#include"EffectType.h"
+
+namespace {
+	Vector3 AURAEFFECT_SCALE = Vector3{ 30,30,120 };
+}
 
 class ScoreBoostItem final : public BonusItemObject
 {
@@ -29,6 +34,14 @@ public:
 		);
 
 		InitMovement(waypointSet, startPosition, moveDuration);
+
+		StartAuraEffect();
+	}
+
+	void Activate() override
+	{
+		BonusItemObject::Activate();
+		StartAuraEffect();
 	}
 
 	const char* GetItemModelName() const override
@@ -42,11 +55,59 @@ public:
 	}
 
 
-protected:
+private:
+	void OnUpdate() override
+	{
+		BonusItemObject::OnUpdate();
+
+		if (m_auraEffect)
+		{
+			//アイテムの向きと逆向きのクォータニオンを作る
+			Quaternion reverseRot;
+			reverseRot.SetRotationY(Math::PI);
+			Quaternion auraRot;
+			auraRot.Multiply(reverseRot, GetRotation());
+
+			m_auraEffect->SetPosition(GetPosition());
+			m_auraEffect->SetRotation(auraRot);
+		}
+	}
+
+	void OnDeactivate() override
+	{
+		if (m_auraEffect)
+		{
+			m_auraEffect->Stop();
+			DeleteGO(m_auraEffect);
+			m_auraEffect = nullptr;
+		}
+	}
+
 	void ApplyEffect(const BonusItemEffectContext& context) override;
+
+	void StartAuraEffect()
+	{
+		//エフェクトを登録
+		EffectEngine::GetInstance()->ResistEffect(
+			enScoreBoostAuraEffect,
+			effectPath[enScoreBoostAuraEffect]
+		);
+
+		if (m_auraEffect == nullptr)
+		{
+			m_auraEffect = NewGO<EffectEmitter>(0);
+			m_auraEffect->Init(enScoreBoostAuraEffect);
+			m_auraEffect->SetScale(AURAEFFECT_SCALE);
+			m_auraEffect->SetRotation(Quaternion::Identity);
+			m_auraEffect->Play();
+		}
+
+		m_auraEffect->SetPosition(GetPosition());
+	}
 
 private:
 
 	float m_multiplier = 1.0f;
 	float m_duration = 0.0f;
+	EffectEmitter* m_auraEffect = nullptr;
 };

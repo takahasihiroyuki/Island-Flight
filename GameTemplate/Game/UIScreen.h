@@ -172,7 +172,7 @@ public:
 
 protected:
 	std::string m_name;	//スクリーンの名前
-	UIState m_state;
+	UIState m_state = UIState::enHidden;
 	float m_animTimer = 0;			//アニメーション用タイマー
 	float m_animDurationOpen = 0;	//UI表示時のアニメーションの時間（0ならアニメーションしない）
 	float m_animDurationClose = 0;	//UI非表示時のアニメーションの時間（0ならアニメーションしない）

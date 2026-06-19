@@ -3,6 +3,10 @@
 #include "Timer.h"
 #include "AddTimePopupUI.h"
 
+namespace {
+	Vector3 EFFECT_SIZE = Vector3{ 10,10,10 };
+}
+
 void AddTimeItem::ApplyEffect(
 	const BonusItemEffectContext& context)
 {
@@ -10,6 +14,29 @@ void AddTimeItem::ApplyEffect(
 	{
 		return;
 	}
+
+	//取ったときのSE
+	{
+		auto* se = NewGO<SoundSource>(0, "AddTimeLimitItemGetSE");
+		se->Init(static_cast<int>(SoundID::enAddTimeLimitItemGetSE), false);
+		se->Play(false);
+	}
+
+	//取ったときのエフェクト
+	{
+		EffectEngine::GetInstance()->ResistEffect(
+			enAddLimitCollectEffect,
+			effectPath[enAddLimitCollectEffect]
+		);
+
+		auto* effect = NewGO<EffectEmitter>(0);
+		effect->Init(enAddLimitCollectEffect);
+		effect->SetPosition(GetPosition());
+		effect->SetRotation(Quaternion::Identity);
+		effect->SetScale(EFFECT_SIZE);
+		effect->Play();
+	}
+
 
 	context.gameTimer->AddLimitTime(m_addSeconds);
 

@@ -205,6 +205,7 @@ void GamePlayState::Exit()
 		m_context->bonusItemManager->SetGameTimer(
 			nullptr
 		);
+		m_context->bonusItemManager->SetAddTimePopupUI(nullptr);
 	}
 
 	UIManager::GetInstance().RequestUnregisterScreen("scorePopupScreen");

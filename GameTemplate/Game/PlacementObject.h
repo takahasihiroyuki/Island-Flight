@@ -63,9 +63,19 @@ public:
 		float debug = 0;
 	}
 
+	void SetPosition(Vector3 position)
+	{
+		m_position = position;
+	}
+
 	Vector3 GetPosition() const
 	{
 		return m_position;
+	}
+
+	Quaternion GetRotation() const
+	{
+		return m_rotation;
 	}
 
 	static size_t GetMaxInstanceCount(const char* name)
@@ -183,6 +193,13 @@ public:
 
 		return true;
 	}
+
+	void Activate() override
+	{
+		PlacementObject::Activate();
+		m_isCollected = false;
+	}
+
 
 protected:
 	virtual void OnUpdate() {};

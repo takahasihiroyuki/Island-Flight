@@ -93,6 +93,11 @@ void AddTimePopupUI::Play(float addedSeconds)
 
 void AddTimePopupUI::OnUpdate()
 {
+	if (GetState() == UIState::enHidden)
+	{
+		return;
+	}
+
 
 	m_elapsedTime +=
 		g_gameTime->GetFrameDeltaTime();
