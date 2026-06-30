@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -227,6 +227,7 @@
     <ClCompile Include="AddTimeItem.cpp" />
     <ClCompile Include="AddTimePopupUI.cpp" />
     <ClCompile Include="Aircraft.cpp" />
+    <ClCompile Include="AircraftEngine.cpp" />
     <ClCompile Include="BonusItemManager.cpp" />
     <ClCompile Include="BonusItemMover.cpp" />
     <ClCompile Include="BonusItemWaypointSet.cpp" />
@@ -288,7 +289,8 @@
     <ClInclude Include="AddTimeItem.h" />
     <ClInclude Include="AddTimePopupUI.h" />
     <ClInclude Include="Aircraft.h" />
-    <ClInclude Include="AircraftState.h" />
+    <ClInclude Include="AircraftEngine.h" />
+    <ClInclude Include="AircraftPhysicsState.h" />
     <ClInclude Include="AssistWarpPoint.h" />
     <ClInclude Include="BonusItemEffectContext.h" />
     <ClInclude Include="BonusItemManager.h" />

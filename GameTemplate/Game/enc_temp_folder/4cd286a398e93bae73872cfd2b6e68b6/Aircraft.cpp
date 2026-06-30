@@ -17,8 +17,8 @@ namespace
 	constexpr float MAX_RUDDER_ANGLE = 3.0 * 0.8;			// 左右回転
 
 	constexpr float MAIN_WING_AREA = 1.0f;					//主翼の面積
-	constexpr float TAIL_WING_AREA = 1.0f;					//水平尾翼の面積
-	constexpr float VERTICAL_WING_AREA = 1.0f;				//垂直尾翼の面積
+	constexpr float TAIL_WING_AREA = 0.25f;					//水平尾翼の面積
+	constexpr float VERTICAL_WING_AREA = 0.25f;				//垂直尾翼の面積
 
 	//翼の位置オフセット
 	const Vector3 MAIN_LEFT_WING_POS_OFFSET = Vector3(-3.5f, 0.0f, 0.0f);

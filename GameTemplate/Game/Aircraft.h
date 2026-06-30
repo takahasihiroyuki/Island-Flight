@@ -1,72 +1,7 @@
 #pragma once
-#include"AircraftState.h"
+#include"AircraftPhysicsState.h"
+#include"AircraftEngine.h"
 
-class LiftingSurface;
-class Engine :public IGameObject
-{
-public:
-	Engine(float baseThrust) :m_baseThrust(baseThrust) {}
-	~Engine() {}
-	void Update() override {}
-
-	/// <summary>
-	/// 推力の更新
-	/// </summary>
-	void UpdateThrustForce();
-
-	/// <summary>
-	/// 推力の方向を更新
-	/// </summary>
-	/// <param name="orientation"></param>
-	void UpdateOrientation(Quaternion orientation) {
-		Vector3 localthrustDir = m_localThrustDir;
-		orientation.Normalize();
-		orientation.Apply(localthrustDir);
-		m_WoldeThrustDir = localthrustDir;
-
-	};
-
-	/// <summary>
-	/// 加速ブースト入力設定
-	/// </summary>
-	/// <param name="isPressed"></param>
-	void SetBoostInput(bool isPressed) { m_isBoostOn = isPressed; }
-
-	/// <summary>
-	/// エンジンを止めるスロットルカット入力設定
-	/// </summary>
-	/// <param name="isPressed"></param>
-	void SetThrottleCut(bool isPressed) { m_isThrottleCut = isPressed; }
-
-	const Vector3& GetThrustForce() const { return m_thrustForce; }
-
-	void SetBaseThrust(float maxThrust) {
-		m_baseThrust = maxThrust;
-	}
-
-	float GetBaseThrust() const {
-		return m_baseThrust;
-	}
-
-	float GetThrustScale() const {
-		return m_thrustForce.Length();
-	}
-
-	bool GetIsBoostOn() const {
-		return m_isBoostOn;
-	}
-
-private:
-	float m_baseThrust = 2000.0f;				// 基本推力
-	float m_throttleRatio = 0.0f;				// スロットル割合
-	float m_throttleSmoothValue = 0.0f;			// 推力を滑らかにするための値
-	float m_boostMultiplier = 2.0f;				// ブースト時の推力倍率
-	Vector3 m_thrustForce = Vector3::Zero;		// 推力ベクトル
-	Vector3 m_localThrustDir = Vector3::AxisZ;	// 機体前方方向（初期値）
-	Vector3 m_WoldeThrustDir = m_localThrustDir;// ワールド座標での推力方向
-	bool m_isBoostOn = false;					// ブーストがかかっているか
-	bool m_isThrottleCut = false;				// スロットルカットがかかっているか
-};
 
 enum class WingType {
 	MainLeft,
@@ -94,7 +29,9 @@ public:
 	bool Start();
 	void fly();
 	void Init(const char* filePath, Vector3 initPos, float baseThrust = 2000);
+
 	void Update();
+
 	void Render(RenderContext& rc);
 
 	Vector3 GetPosition() const { return m_state.position; }
@@ -142,7 +79,7 @@ public:
 
 	void SetLockRotation(bool isLock)
 	{
-		m_lockPosition = isLock;
+		m_lockRotation = isLock;
 	}
 
 	void RequestWarp(Vector3 position, Quaternion rotation)
@@ -152,7 +89,6 @@ public:
 		m_state.orientation = rotation;
 		m_state.linearVelocity = Vector3::Zero;
 		m_state.angularVelocity = Vector3::Zero;
-		UpdateRelWind();
 		UpdateModel();
 	}
 
@@ -172,6 +108,7 @@ private:
 		Quaternion orientation,
 		Vector3 momentArm,
 		float maxWingDeflectionAngle,
+		float area = 1.0f,
 		bool isMirroed = false,
 		bool isVertical = false
 	);
@@ -180,17 +117,31 @@ private:
 	void InitWingPositionOffset();
 	void InitAllLiftingSurfaces();
 
+	/// <summary>
+	/// 翼の更新
+	/// </summary>
+	void UpdateLiftingSurfaces();
+
+	/// <summary>
+	/// エンジンの更新
+	/// </summary>
+	void UpdateEngine();
+
+	/// <summary>
+	/// 移動と衝突の解決
+	/// </summary>
+	void MoveAndResolveCollision();
+
+	/// <summary>
+	/// 見た目、音、エフェクトの更新
+	/// </summary>
+	void UpdatePresentation();
+
+
 	void UpdateModel();
 
 	void UpdatePropellerSound();
 
-	/// <summary>
-	/// 相対風を更新
-	/// アップデートの最後に呼ぶ
-	/// </summary>
-	void UpdateRelWind() {
-		m_state.relWind = m_state.linearVelocity * -1;
-	}
 
 	void PlayEffects();
 
@@ -224,7 +175,7 @@ private:
 	/// <summary>
 	/// モーメントを計算
 	/// </summary>
-	void ComputeMoment();
+	void UpdateAngularMotion();
 
 	/// <summary>
 	/// 翼の総モーメントをワールド座標で計算
@@ -274,11 +225,11 @@ private:
 	ModelRender m_model;					// モデル
 	ModelRender m_propeller;
 
-	AircraftState m_state;
-	std::unique_ptr<Engine> m_engine;			// 所有権付きポインタ
+	AircraftPhysicsState m_state;
+	std::unique_ptr<AircraftEngine> m_engine;			// 所有権付きポインタ
 	Vector3 m_accel = Vector3::Zero;			//加速度ベクトル（ワールド座標）
 	const float m_mass = 10.0f;							//質量
-	std::array<LiftingSurface*, static_cast<size_t>(WingType::Count)> m_wings;
+	std::array<std::unique_ptr<LiftingSurface>, static_cast<size_t>(WingType::Count)> m_wings;
 	std::array<Quaternion, static_cast<size_t>(WingType::Count)> m_initWingsOrientation;
 	std::array<Vector3, static_cast<size_t>(WingType::Count)> m_wingPositionOffset;
 	// 飛行機の場合姿勢によってはほぼ変わらないので

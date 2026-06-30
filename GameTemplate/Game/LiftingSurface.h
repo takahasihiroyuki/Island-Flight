@@ -1,5 +1,5 @@
 #pragma once
-#include "AircraftState.h"
+#include "AircraftPhysicsState.h"
 ///エアークラフト（飛行機）クラスが持つ翼クラス
 ///ひとつの翼は主翼部分と舵面(ControlSurface)（動かして入力によって動かせる部分）を持っている
 /// エアーポートクラスではこのクラスのインスタンスを三つ作る。
@@ -53,7 +53,7 @@ private:
 };
 
 
-class AircraftState;
+struct AircraftPhysicsState;
 class LiftingSurface
 {
 public:
@@ -62,6 +62,7 @@ public:
 		Quaternion orientation,
 		float maxWingDeflectionAngle,
 		Vector3 momentArm,
+		float area = 1.0f,
 		bool isMirroed = false,
 		bool isVertical = false
 	);
@@ -82,7 +83,15 @@ public:
 		return m_force;
 	}
 
-	void ComputeForces(const AircraftState& state);
+
+	/// <summary>
+	/// 翼の相対風を計算する
+	/// </summary>
+	/// <param name="state"></param>
+	/// <returns></returns>
+	Vector3 ComputeRelativeWindAtSurface(const AircraftPhysicsState& state) const;
+
+	void ComputeForces(const AircraftPhysicsState& state);
 
 	/// <summary>
 	/// モーメントを計算
@@ -91,7 +100,7 @@ public:
 	/// ComputeForcesを呼んだ後に呼ぶ
 	/// </summary>
 	/// <returns></returns>
-	Vector3 ComputeMoment(const AircraftState& state) {
+	Vector3 ComputeMoment() {
 
 		Vector3 moment;
 		moment.Cross(m_worldMomentArm, m_force);
@@ -150,22 +159,22 @@ private:
 	/// <summary>
 	/// 相対風とwingChordDirの角度（迎角）を計算する。
 	/// </summary>
-	/// <param name="m_relWind"></param>
+	/// <param name="relWind">相対風</param>
 	float ComputeAngleOfAttack(const Vector3& relWind);
 
-	float ComputeDynamicPressure(const AircraftState& state);
+	float ComputeDynamicPressure(const Vector3& relWind);
 
 	/// <summary>
 	/// 揚力（法線方向に働く力）を計算する。
 	/// </summary>
 	/// <param name="angleOfAttack">迎角</param>
 	Vector3 ComputeLift(
-		const AircraftState& state,
+		const Vector3& relWind,
 		float dynamicPressure,
 		float angleOfAttack);
 
 	Vector3 ComputeDrag(
-		const AircraftState& state,
+		const Vector3& relWind,
 		float dynamicPressure,
 		float angleOfAttack);
 
