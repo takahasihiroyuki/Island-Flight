@@ -103,7 +103,7 @@ public:
 	Vector3 ComputeMoment() {
 
 		Vector3 moment;
-		moment.Cross(m_worldMomentArm, m_force);
+		moment.Cross(m_worldMomentArm, m_momentForce);
 		m_moment = moment;
 		return moment;
 	};
@@ -153,6 +153,7 @@ public:
 	Vector3 GetWingChordDir() const {
 		return m_wingChordDir;
 	}
+
 
 private:
 
@@ -216,6 +217,7 @@ private:
 	Vector3 m_localSpanDir;
 	Vector3 m_localNormalDir;
 	Vector3 m_force;						// 翼に働く力（揚力＋抗力）
+	Vector3 m_momentForce = Vector3::Zero;
 	float m_area = 1.0f;				// 翼面積
 	float m_airDensity = 1.225f;		// 空気密度 (kg/m^3) 標準大気条件での値
 	ControlSurface m_controlSurface;

@@ -9,6 +9,7 @@ namespace
 	static constexpr float ASPECT_RATIO = 4.0f;        // ƒAƒXƒyƒNƒg”ä
 	static constexpr float OSWALD_EFFICIENCY = 0.7f;   // ƒIƒYƒƒ‹ƒhŒø—¦ŒW”
 	static constexpr float PI = 3.1415f;               // ‰~ü—¦
+	static constexpr float BASE_DRAG_COEFFICIENT = 0.0005f;
 }
 
 bool LiftingSurface::Start()
@@ -61,6 +62,7 @@ void LiftingSurface::ComputeForces(const AircraftPhysicsState& state)
 	float dynamicPressure = ComputeDynamicPressure(relWind);
 	//Œ}Šp
 	float angleOfAttack = ComputeAngleOfAttack(relWind);
+
 	//—g—Í
 	Vector3 lift = ComputeLift(relWind, dynamicPressure, angleOfAttack);
 	//R—Í
@@ -70,7 +72,15 @@ void LiftingSurface::ComputeForces(const AircraftPhysicsState& state)
 	float liftMag = lift.Length();
 	float dragMag = drag.Length();
 
+	Vector3 baseDrag = Vector3::Zero;
+	if (relWind.LengthSq() > 1e-12f) {
+		Vector3 dragDirection = relWind;
+		dragDirection.Normalize();
+		baseDrag = dragDirection * dynamicPressure * BASE_DRAG_COEFFICIENT * m_area;
+	}
+
 	m_force = lift + drag;
+	m_momentForce = m_force - baseDrag;
 }
 
 float LiftingSurface::ComputeAngleOfAttack(const Vector3& relWind)
@@ -171,18 +181,13 @@ float LiftingSurface::ComputeLiftCoefficient(float angleOfAttack) const
 
 float LiftingSurface::ComputeDragCoefficient(float angleOfAttack) const
 {
-	//NOTE:Šî–{R—Í‚ğ‚ğ‚±‚ê‚æ‚è¬‚³‚­‚·‚é‚ÆA‚È‚º‚©ƒ[ƒJƒ‹ X ²‚Ü‚½‚Í Y ²‚Ü‚í‚è‚É
-	//‚ä‚Á‚­‚è‚Æ‰ñ“]‚·‚éŒ»Û‚ª”­¶‚·‚éi”’lŒë·‚Ü‚½‚Íƒ‚[ƒƒ“ƒg•s‹Ït‚Æ‚©‚ªŒ´ˆö‚©‚àjB
-	//Œ»ó‚Ì’l (0.0005f) ‚Å‚ÍˆÀ’è‚µ‚Ä‚¢‚é‚½‚ßAC³‚Ì—Dæ“x‚Í’á‚¢B
-
-	constexpr float DragBase = 0.0005f; // Šî–{R—ÍŒW”(Œ}Šp‚ª0‚Ì‚ÌR—ÍŒW”)
 
 	//«—g—ÍŒW”‚ÆR—ÍŒW”‚ÌŠÖŒW®
 	float debug = pow(ComputeLiftCoefficient(angleOfAttack), 2.0);
 	float dragCofficient =
 		pow(ComputeLiftCoefficient(angleOfAttack), 2.0f)
 		/ (OSWALD_EFFICIENCY * ASPECT_RATIO * PI);
-	dragCofficient += DragBase;
+	dragCofficient += BASE_DRAG_COEFFICIENT;
 
 	return dragCofficient;
 
