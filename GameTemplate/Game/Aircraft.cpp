@@ -26,6 +26,9 @@ namespace
 	const Vector3 TAIL_WING_POS_OFFSET = Vector3(0.0f, 0.0f, 2.0f);
 	const Vector3 VERTICAL_WING_POS_OFFSET = Vector3(0.0f, 0.0f, 2.0f);
 
+	constexpr float ANGULAR_DAMPING_RATE = 40.0f;
+
+
 
 	/// <summary>
 	/// 度数法をラジアンに変換
@@ -294,8 +297,8 @@ Vector3 Aircraft::ComputeForce()
 	Vector3 wingsForce = Vector3::Zero;
 	for (int i = 0; i < static_cast<int>(WingType::Count); i++)
 	{
-		m_wings[i]->ComputeForces(m_state);
-		wingsForce += m_wings[i]->GetForce();
+		 m_wings[i]->ComputeForces(m_state);
+		 wingsForce += m_wings[i]->GetForce();
 	}
 	Vector3 force = thrust + wingsForce;
 	force += ComputeGravity();
@@ -323,6 +326,7 @@ void Aircraft::UpdateAngularMotion()
 	Vector3 totalMomentObj = totalMomentWold;
 	objMat.Apply(totalMomentObj);
 
+
 	//角加速度
 	Vector3 angularAcc = ComputeOmegaDotBody(totalMomentObj);
 
@@ -333,14 +337,13 @@ void Aircraft::UpdateAngularMotion()
 	//角速度
 	m_state.angularVelocity += angularAcc * delta;
 	// 回転ダンピング
-	m_state.angularVelocity *= 0.5f;
+	float angularDamping = 1.0f / (1.0f + ANGULAR_DAMPING_RATE * delta);
+	m_state.angularVelocity *= angularDamping;
 
 	Vector3 angularAxis = m_state.angularVelocity;
 	if (m_state.angularVelocity.Length() > 0.00001) {
 		angularAxis.Normalize();
 	}
-
-	K2_LOG("angularVelocity: %f, %f, %f\n", m_state.angularVelocity.x, m_state.angularVelocity.y, m_state.angularVelocity.z);
 
 	float angle = m_state.angularVelocity.Length() * g_gameTime->GetFrameDeltaTime();
 	if (angle > 1e-5f) { // 小さすぎる場合は無視
