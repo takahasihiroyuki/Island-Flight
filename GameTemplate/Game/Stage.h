@@ -39,6 +39,7 @@ public:
 		g_renderingEngine->SetFogParams(collar, fogDistanceScale);
 	}
 
+
 	void SetCoinManager(CoinManager* coinManager)
 	{
 		m_coinManager = coinManager;
@@ -58,7 +59,7 @@ public:
 
 
 private:
-	CoinManager* m_coinManager;
+	CoinManager* m_coinManager = nullptr;
 	BonusItemManager* m_bonusItemManager = nullptr;
 	InstancingManager* m_instancingManager = nullptr;
 	Vector3 m_posOfset = Vector3::Zero;
