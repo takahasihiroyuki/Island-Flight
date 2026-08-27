@@ -22,11 +22,11 @@ namespace nsK2EngineLow {
 			/// ジオメトリを登録。
 			/// </summary>
 			/// <param name="model">モデル</param>
-			void RegistGeometry(Model& model);
+			void RegisterGeometry(Model& model);
 			/// <summary>
 			/// ジオメトリの登録を確定。
 			/// </summary>
-			void CommitRegistGeometry(RenderContext& rc);
+			void CommitRegisteredGeometry(RenderContext& rc);
 			/// <summary>
 			/// レイトレワールドのインスタンスに対してクエリを行う。
 			/// </summary>

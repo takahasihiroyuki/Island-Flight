@@ -59,27 +59,27 @@ namespace nsK2EngineLow {
         if (m_textureExternal[0] != nullptr) {
             //外部のテクスチャが指定されている。
             for (int texNo = 0; texNo < m_numTexture; texNo++) {
-                m_descriptorHeap.RegistShaderResource(texNo, *m_textureExternal[texNo]);
+                m_descriptorHeap.RegisterShaderResource(texNo, *m_textureExternal[texNo]);
             }
         }
         else {
             for (int texNo = 0; texNo < m_numTexture; texNo++) {
-                m_descriptorHeap.RegistShaderResource(texNo, m_textures[texNo]);
+                m_descriptorHeap.RegisterShaderResource(texNo, m_textures[texNo]);
             }
         }
         for (int exSrvNo = 0; exSrvNo < EXPAND_MAX_SPRITE_EXPAND_SRV; exSrvNo++) {
-            if (initData.m_expandShaderResoruceView[exSrvNo] != nullptr) {
+            if (initData.m_expandShaderResourceView[exSrvNo] != nullptr) {
                 //拡張シェーダーリソースビュー。
-                m_descriptorHeap.RegistShaderResource(
+                m_descriptorHeap.RegisterShaderResource(
                     EXPAND_SRV_REG__START_NO + exSrvNo,
-                    *initData.m_expandShaderResoruceView[exSrvNo]
+                    *initData.m_expandShaderResourceView[exSrvNo]
                 );
             }
         }
-        m_descriptorHeap.RegistConstantBuffer(0, m_constantBufferGPU);
+        m_descriptorHeap.RegisterConstantBuffer(0, m_constantBufferGPU);
         if (m_userExpandConstantBufferCPU != nullptr) {
             //ユーザー拡張の定数バッファはb1に関連付けする。
-            m_descriptorHeap.RegistConstantBuffer(1, m_userExpandConstantBufferGPU);
+            m_descriptorHeap.RegisterConstantBuffer(1, m_userExpandConstantBufferGPU);
         }
         m_descriptorHeap.Commit();
     }

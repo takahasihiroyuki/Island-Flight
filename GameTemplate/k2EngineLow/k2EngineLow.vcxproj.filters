@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="k2EngineLowPreCompile.cpp" />
@@ -225,32 +225,53 @@
     <ClCompile Include="graphics\FrameBuffer.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ModelRender.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="RenderingEngine.cpp" />
-    <ClCompile Include="PostEffect.cpp">
-      <Filter>PostEffect</Filter>
+    <ClCompile Include="graphics\Renderer\ModelRender.cpp">
+      <Filter>graphics\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Bloom.cpp">
-      <Filter>PostEffect</Filter>
+    <ClCompile Include="graphics\Lighting\Light.cpp">
+      <Filter>graphics\Lighting</Filter>
     </ClCompile>
-    <ClCompile Include="Shadow.cpp" />
-    <ClCompile Include="Ocean.cpp" />
-    <ClCompile Include="PlaneReflectionPass.cpp" />
-    <ClCompile Include="SkyCube.cpp" />
-    <ClCompile Include="InstancingManager.cpp" />
-    <ClCompile Include="SpriteRender.cpp" />
-    <ClCompile Include="HexagonalBlur.cpp">
-      <Filter>PostEffect</Filter>
+    <ClCompile Include="graphics\Core\RenderingEngine.cpp">
+      <Filter>graphics\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Fog.cpp">
-      <Filter>PostEffect</Filter>
+    <ClCompile Include="graphics\PostProcess\PostEffect.cpp">
+      <Filter>graphics\PostProcess</Filter>
     </ClCompile>
-    <ClCompile Include="FadeOut.cpp">
-      <Filter>PostEffect</Filter>
+    <ClCompile Include="graphics\PostProcess\Bloom.cpp">
+      <Filter>graphics\PostProcess</Filter>
     </ClCompile>
-    <ClCompile Include="PostEffectBase.cpp">
-      <Filter>PostEffect</Filter>
+    <ClCompile Include="graphics\Lighting\Shadow.cpp">
+      <Filter>graphics\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Environment\Ocean.cpp">
+      <Filter>graphics\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Reflection\PlaneReflectionPass.cpp">
+      <Filter>graphics\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Environment\SkyCube.cpp">
+      <Filter>graphics\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Renderer\InstancingManager.cpp">
+      <Filter>graphics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Renderer\SpriteRender.cpp">
+      <Filter>graphics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\PostProcess\HexagonalBlur.cpp">
+      <Filter>graphics\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\PostProcess\Fog.cpp">
+      <Filter>graphics\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\PostProcess\FadeOut.cpp">
+      <Filter>graphics\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\PostProcess\PostEffectBase.cpp">
+      <Filter>graphics\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Reflection\PlanarReflectionPass.cpp">
+      <Filter>graphics\Reflection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -258,7 +279,7 @@
     <ClInclude Include="graphics\IShaderResource.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\IUnorderAccessResource.h">
+    <ClInclude Include="graphics\IUnorderedAccessResource.h">
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\Material.h">
@@ -505,7 +526,7 @@
     <ClInclude Include="geometry\BSP.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="time\FPSLimitter.h">
+    <ClInclude Include="time\FPSLimiter.h">
       <Filter>time</Filter>
     </ClInclude>
     <ClInclude Include="AI\PathFinding\PathFinding.h">
@@ -526,33 +547,36 @@
     <ClInclude Include="graphics\FrameBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="ModelRender.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="RenderingEngine.h" />
-    <ClInclude Include="PostEffect.h">
+    <ClInclude Include="graphics/Renderer/ModelRender.h" />
+    <ClInclude Include="graphics/Lighting/Light.h" />
+    <ClInclude Include="graphics/Core/RenderingEngine.h" />
+    <ClInclude Include="graphics/PostProcess/PostEffect.h">
       <Filter>PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Bloom.h">
+    <ClInclude Include="graphics/PostProcess/Bloom.h">
       <Filter>PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Shadow.h" />
-    <ClInclude Include="Ocean.h" />
-    <ClInclude Include="PlaneReflectionPass.h" />
-    <ClInclude Include="GraphicsEnums.h" />
-    <ClInclude Include="SkyCube.h" />
-    <ClInclude Include="InstancingManager.h" />
-    <ClInclude Include="SpriteRender.h" />
-    <ClInclude Include="HexagonalBlur.h">
+    <ClInclude Include="graphics/Lighting/Shadow.h" />
+    <ClInclude Include="graphics/Environment/Ocean.h" />
+    <ClInclude Include="graphics/Reflection/PlaneReflectionPass.h" />
+    <ClInclude Include="graphics/Core/GraphicsEnums.h" />
+    <ClInclude Include="graphics/Environment/SkyCube.h" />
+    <ClInclude Include="graphics/Renderer/InstancingManager.h" />
+    <ClInclude Include="graphics/Renderer/SpriteRender.h" />
+    <ClInclude Include="graphics/PostProcess/HexagonalBlur.h">
       <Filter>PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Fog.h">
+    <ClInclude Include="graphics/PostProcess/Fog.h">
       <Filter>PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="FadeOut.h">
+    <ClInclude Include="graphics/PostProcess/fadeOut.h">
       <Filter>PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="PostEffectBase.h">
+    <ClInclude Include="graphics/PostProcess/PostEffectBase.h">
       <Filter>PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Reflection\PlanarReflectionPass.h">
+      <Filter>graphics\Reflection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -615,6 +639,24 @@
     </Filter>
     <Filter Include="PostEffect">
       <UniqueIdentifier>{bfc79ddf-81ff-4443-8004-cbb0aa0557bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\Core">
+      <UniqueIdentifier>{f0b1f9da-72d9-4788-bd4d-3bcf0828399d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\Renderer">
+      <UniqueIdentifier>{eb06ba75-be03-4702-ace0-90904f25c69f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\PostProcess">
+      <UniqueIdentifier>{e299b04c-4eb7-4afc-a4d9-811e9fa2ea57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\Lighting">
+      <UniqueIdentifier>{9a76909f-8f2a-4fa7-87c4-e06455b9c66e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\Reflection">
+      <UniqueIdentifier>{15b27c1f-95c0-4df1-ac9f-f7456f705ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\Environment">
+      <UniqueIdentifier>{b0bc8249-0044-419e-86c1-1830eef23311}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

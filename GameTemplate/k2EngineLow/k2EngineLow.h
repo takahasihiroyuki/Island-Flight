@@ -6,7 +6,7 @@
 #include "tkFile/TksFile.h"
 #include "tkFile/TkaFile.h"
 #include "graphics/Shader.h"
-#include "time/FPSLimitter.h"
+#include "time/FPSLimiter.h"
 
 namespace nsK2EngineLow {
 	class GraphicsEngine;
@@ -75,9 +75,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath">ファイルパス</param>
 		/// <param name="tksFile">登録するtksファイル。</param>
-		void RegistTksFileToBank(const char* filePath, TksFile* tksFile) 
+		void RegisterTksFileToBank(const char* filePath, TksFile* tksFile)
 		{
-			m_tksFileBank.Regist(filePath, tksFile);
+			m_tksFileBank.Register(filePath, tksFile);
 		}
 		/// <summary>
 		/// tkmファイルをバンクから取得。
@@ -93,9 +93,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath">tkmファイルパス</param>
 		/// <param name="tkmFile"></param>
-		void RegistTkmFileToBank(const char* filePath, TkmFile* tkmFile)
+		void RegisterTkmFileToBank(const char* filePath, TkmFile* tkmFile)
 		{
-			m_tkmFileBank.Regist(filePath, tkmFile);
+			m_tkmFileBank.Register(filePath, tkmFile);
 		}
 		/// <summary>
 		/// tkaファイルをバンクから取得。
@@ -111,9 +111,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath"></param>
 		/// <param name="tkaFile"></param>
-		void RegistTkaFileToBank(const char* filePath, TkaFile* tkaFile)
+		void RegisterTkaFileToBank(const char* filePath, TkaFile* tkaFile)
 		{
-			m_tkaFileBank.Regist(filePath, tkaFile);
+			m_tkaFileBank.Register(filePath, tkaFile);
 		}
 		/// <summary>
 		/// シェーダーファイルバンクからシェーダーを取得。
@@ -131,9 +131,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
 		/// <param name="texture">テクスチャ。</param>
-		void RegistTextureToBank(const char* filePath, Texture* texture)
+		void RegisterTextureToBank(const char* filePath, Texture* texture)
 		{
-			m_textureBank.Regist(filePath, texture);
+			m_textureBank.Register(filePath, texture);
 		}
 		/// <summary>
 		/// バンクからテクスチャを取得。
@@ -149,11 +149,11 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath"></param>
 		/// <param name="shader"></param>
-		void RegistShaderToBank(const char* filePath, const char* entryPointFuncName, Shader* shader)
+		void RegisterShaderToBank(const char* filePath, const char* entryPointFuncName, Shader* shader)
 		{
 			std::string programName = filePath;
 			programName += entryPointFuncName;
-			m_shaderBank.Regist(programName.c_str(), shader);
+			m_shaderBank.Register(programName.c_str(), shader);
 		}
 		/// <summary>
 		/// バンクからテクスチャの生データを取得
@@ -169,9 +169,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
 		/// <param name="texture">テクスチャ。</param>
-		void RegistLowTextureToBank(const char* filePath, LowTexture* textureLow)
+		void RegisterLowTextureToBank(const char* filePath, LowTexture* textureLow)
 		{
-			m_lowTextureBank.Regist(filePath, textureLow);
+			m_lowTextureBank.Register(filePath, textureLow);
 		}
 		/// <summary>
 		/// 現在のフレームレートに関する情報を取得
@@ -197,7 +197,7 @@ namespace nsK2EngineLow {
 				// 可変フレームレート
 				m_gameTime.DisableFixedFrameDeltaTime();
 			}
-			m_fpsLimitter.SetMaxFPS(maxFPS);
+			m_fpsLimiter.SetMaxFPS(maxFPS);
 			// フレームレートに関する情報を記憶。
 			m_frameRateInfo.frameRateMode = frameRateMode;
 			m_frameRateInfo.maxFPS = maxFPS;
@@ -217,7 +217,7 @@ namespace nsK2EngineLow {
 		TResourceBank<TkaFile> m_tkaFileBank;			// TKAファイルバンク。
 		GamePad m_pad[GamePad::CONNECT_PAD_MAX];		// ゲームパッド。
 		GameTime m_gameTime;
-		FPSLimitter m_fpsLimitter;						// FPSに制限をかける処理。
+		FPSLimiter m_fpsLimiter;						// FPSに制限をかける処理。
 		FrameRateInfo m_frameRateInfo = { enFrameRateMode_Variable , 60};
 	};
 

@@ -58,8 +58,8 @@ namespace nsK2EngineLow {
 		/// ディスクリプタヒープにConstantBufferViewを登録。
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
-		void RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle);
-		void RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo);
+		void RegisterConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle);
+		void RegisterConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo);
 		/// <summary>
 		/// VRAM上の仮想アドレスを取得する。
 		/// </summary>

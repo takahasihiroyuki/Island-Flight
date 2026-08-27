@@ -38,7 +38,7 @@ namespace nsK2EngineLow {
 		/// SRVに登録。
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
-		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo);
+		void RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo);
 		/// <summary>
 		/// テクスチャが有効か判定。
 		/// </summary>

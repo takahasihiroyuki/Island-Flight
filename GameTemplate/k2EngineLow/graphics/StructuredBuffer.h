@@ -23,7 +23,7 @@ namespace nsK2EngineLow {
 		/// SRVに登録。
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
-		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
+		void RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
 		/// <summary>
 		/// 構造化バッファの内容を更新。
 		/// </summary>
@@ -41,7 +41,7 @@ namespace nsK2EngineLow {
 		/// D3Dリソースを取得。
 		/// </summary>
 		/// <returns></returns>
-		ID3D12Resource* GetD3DResoruce();
+		ID3D12Resource* GetD3DResource();
 	private:
 		/// <summary>
 		/// 解放処理。

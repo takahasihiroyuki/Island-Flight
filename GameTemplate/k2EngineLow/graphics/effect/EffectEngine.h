@@ -114,7 +114,7 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="number">登録番号。</param>
 		/// <param name="filePath">ファイルパス。</param>
-		void ResistEffect(const int number, const char16_t* filePath);
+		void RegisterEffect(const int number, const char16_t* filePath);
 		/// <summary>
 		/// フレームの開始時に呼び出す必要がある処理。
 		/// </summary>

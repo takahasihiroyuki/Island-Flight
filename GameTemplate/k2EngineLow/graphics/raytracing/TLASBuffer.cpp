@@ -94,7 +94,7 @@ namespace nsK2EngineLow {
 		/// SRVに登録。
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
-		void TLASBuffer::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+		void TLASBuffer::RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
 		{
 			auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 			//TLASをディスクリプタヒープに登録。

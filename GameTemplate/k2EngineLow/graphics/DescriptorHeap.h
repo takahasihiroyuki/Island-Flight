@@ -46,9 +46,9 @@ namespace nsK2EngineLow {
 		/// <remark>
 		/// デフォルトで足りなくなった or 最適なサイズにしたい場合に利用してください。
 		/// </remark>
-		void ResizeUnorderAccessResource(int numUAV)
+		void ResizeUnorderedAccessResource(int numUAV)
 		{
-			m_uavResoruces.resize(numUAV);
+			m_uavResources.resize(numUAV);
 		}
 		/// <summary>
 		/// シェーダーリソースをディスクリプタヒープに登録。
@@ -57,15 +57,15 @@ namespace nsK2EngineLow {
 		/// レジスタ番号。-1が指定されたら、現在登録されているリソース数の次のレジスタが使用される。
 		/// </param>
 		/// <param name="sr">シェーダーリソース</param>
-		void RegistShaderResource(int registerNo, IShaderResource& sr)
+		void RegisterShaderResource(int registerNo, IShaderResource& sr)
 		{
-			RegistResource(
+			RegisterResource(
 				registerNo,
 				&sr,
 				&m_shaderResources.front(),
 				m_numShaderResource,
 				static_cast<int>(m_shaderResources.size()),
-				L"DescriptorHeap::RegistShaderResource() レジスタ番号が範囲外です。"
+				L"DescriptorHeap::RegisterShaderResource() レジスタ番号が範囲外です。"
 			);
 		}
 
@@ -76,15 +76,15 @@ namespace nsK2EngineLow {
 		/// レジスタ番号。-1が指定されたら、現在登録されているリソース数の次のレジスタが使用される。
 		/// </param>
 		/// <param name="sr">アンオーダーリソース</param>
-		void RegistUnorderAccessResource(int registerNo, IUnorderAccessResrouce& sr)
+		void RegisterUnorderedAccessResource(int registerNo, IUnorderedAccessResource& sr)
 		{
-			RegistResource(
+			RegisterResource(
 				registerNo,
 				&sr,
-				&m_uavResoruces.front(),
+				&m_uavResources.front(),
 				m_numUavResource,
-				static_cast<int>(m_uavResoruces.size()),
-				L"DescriptorHeap::RegistUnorderAccessResource() レジスタ番号が範囲外です。"
+				static_cast<int>(m_uavResources.size()),
+				L"DescriptorHeap::RegisterUnorderedAccessResource() レジスタ番号が範囲外です。"
 			);
 		}
 		/// <summary>
@@ -94,15 +94,15 @@ namespace nsK2EngineLow {
 		/// レジスタ番号。-1が指定されたら、現在登録されているリソース数の次のレジスタが使用される。
 		/// </param>
 		/// <param name="cb">定数バッファ</param>
-		void RegistConstantBuffer(int registerNo, ConstantBuffer& cb)
+		void RegisterConstantBuffer(int registerNo, ConstantBuffer& cb)
 		{
-			RegistResource(
+			RegisterResource(
 				registerNo,
 				&cb,
 				&m_constantBuffers.front(),
 				m_numConstantBuffer,
 				static_cast<int>(m_constantBuffers.size()),
-				L"DescriptorHeap::RegistConstantBuffer() レジスタ番号が範囲外です。"
+				L"DescriptorHeap::RegisterConstantBuffer() レジスタ番号が範囲外です。"
 			);
 		}
 		/// <summary>
@@ -114,15 +114,15 @@ namespace nsK2EngineLow {
 		/// <param name="desc">
 		/// サンプラ定義
 		/// </param>
-		void RegistSamplerDesc(int registerNo, const D3D12_SAMPLER_DESC& desc)
+		void RegisterSamplerDesc(int registerNo, const D3D12_SAMPLER_DESC& desc)
 		{
-			RegistResource(
+			RegisterResource(
 				registerNo,
 				desc,
 				m_samplerDescs,
 				m_numSamplerDesc,
 				MAX_SAMPLER_STATE,
-				L"DescriptorHeap::RegistSamplerDesc() レジスタ番号が範囲外です。"
+				L"DescriptorHeap::RegisterSamplerDesc() レジスタ番号が範囲外です。"
 			);
 		}
 		/// <summary>
@@ -156,7 +156,7 @@ namespace nsK2EngineLow {
 		/// シェーダーリソースが一つでも登録されているか判定。
 		/// </summary>
 		/// <returns></returns>
-		bool IsRegistShaderResource() const
+		bool IsRegisteredShaderResource() const
 		{
 			return m_numShaderResource != 0;
 		}
@@ -164,7 +164,7 @@ namespace nsK2EngineLow {
 		/// 定数バッファが一つでも登録されているか判定。
 		/// </summary>
 		/// <returns></returns>
-		bool IsRegistConstantBuffer() const
+		bool IsRegisteredConstantBuffer() const
 		{
 			return m_numConstantBuffer != 0;
 		}
@@ -172,7 +172,7 @@ namespace nsK2EngineLow {
 		/// UAVリソースが一つでも登録されているか判定。
 		/// </summary>
 		/// <returns></returns>
-		bool IsRegistUavResource() const
+		bool IsRegisteredUavResource() const
 		{
 			return m_numUavResource != 0;
 		}
@@ -224,7 +224,7 @@ namespace nsK2EngineLow {
 		/// <param name="resTbl">リソーステーブル。このテーブルにリソースが追加されます。</param>
 		/// <param name="numRes">登録されているリソースの数。本関数を呼び出すと、この数が１インクリメントされます。</param>
 		template<class T>
-		void RegistResource(
+		void RegisterResource(
 			int registerNo,
 			T res,
 			T resTbl[],
@@ -260,7 +260,7 @@ namespace nsK2EngineLow {
 		int m_numSamplerDesc = 0;		//サンプラの数。
 		ID3D12DescriptorHeap* m_descriptorHeap = { nullptr };					//ディスクリプタヒープ。
 		std::vector<IShaderResource*> m_shaderResources;		//シェーダーリソース。
-		std::vector < IUnorderAccessResrouce*> m_uavResoruces;	//UAVリソース。
+		std::vector < IUnorderedAccessResource*> m_uavResources;	//UAVリソース。
 		std::vector < ConstantBuffer*> m_constantBuffers;		//定数バッファ。
 		D3D12_SAMPLER_DESC m_samplerDescs[MAX_SAMPLER_STATE];						//サンプラステート。
 		D3D12_GPU_DESCRIPTOR_HANDLE m_cbGpuDescriptorStart[2];						//定数バッファのディスクリプタヒープの開始ハンドル。

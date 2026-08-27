@@ -158,16 +158,16 @@ namespace nsK2EngineLow {
 		/// 3DModelをレイトレワールドに登録。
 		/// </summary>
 		/// <param name="model"></param>
-		void RegistModelToRaytracingWorld(Model& model)
+		void RegisterModelToRaytracingWorld(Model& model)
 		{
-			m_raytracingEngine.RegistGeometry(model);
+			m_raytracingEngine.RegisterGeometry(model);
 		}
 		/// <summary>
 		/// ここまで登録されたモデルを使ってレイトレワールドを構築。
 		/// </summary>
 		void BuildRaytracingWorld(RenderContext& rc)
 		{
-			m_raytracingEngine.CommitRegistGeometry(rc);
+			m_raytracingEngine.CommitRegisteredGeometry(rc);
 		}
 		/// <summary>
 		/// レイトレーシングをディスパッチ。

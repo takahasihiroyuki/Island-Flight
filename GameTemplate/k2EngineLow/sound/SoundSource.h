@@ -7,7 +7,7 @@
 namespace nsK2EngineLow {
 	/// <summary>
 	/// 音源クラス。
-	/// サウンドを再生するにはまず、g_soundEngine->ResistWaveFileBank()で波形データを読み込んでください。
+	/// サウンドを再生するにはまず、g_soundEngine->RegisterWaveFileBank()で波形データを読み込んでください。
 	/// SoundSource::Initで登録した番号を指定して、SoundSource::Playでループフラグを指定してください。
 	/// このクラスのインスタンスをゲームオブジェクトマネージャーに登録した場合、ループ再生ではない場合は再生が完了すると。
 	/// 自動的に登録解除されます。ループ再生の場合はユーザーが明示的に登録を解除する必要があります。
@@ -25,7 +25,7 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// 初期化。
 		/// </summary>
-		/// <param name="number">g_soundEngine->ResistWaveFileBankで登録した波形データの番号。</param>
+		/// <param name="number">g_soundEngine->RegisterWaveFileBankで登録した波形データの番号。</param>
 		/// <param name="is3DSound">3Dサウンドならtrue。</param>
 		void Init(const int number, bool is3DSound = false);
 		/// <summary>

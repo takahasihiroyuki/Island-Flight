@@ -132,10 +132,10 @@ namespace nsK2EngineLow {
 
 		}
 
-		void Engine::CommitRegistGeometry(RenderContext& rc)
+		void Engine::CommitRegisteredGeometry(RenderContext& rc)
 		{
 			g_graphicsEngine->BeginRender();
-			m_world.CommitRegistGeometry(rc);
+			m_world.CommitRegisteredGeometry(rc);
 			//シェーダーリソースを作成。
 			CreateShaderResources();
 			//各種リソースをディスクリプタヒープに登録する。

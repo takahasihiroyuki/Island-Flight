@@ -141,9 +141,9 @@ namespace nsK2EngineLow {
 		std::string m_name = "default";					//ゲームオブジェクトの名前
 		bool m_isStart = false;							//Startの開始フラグ。
 		bool m_isDead = false;							//死亡フラグ。
-		bool m_isRegistDeadList = false;				//死亡リストに積まれている。
+		bool m_isRegisteredDeadList = false;				//死亡リストに積まれている。
 		bool m_isNewFromGameObjectManager;	//GameObjectManagerでnewされた。
-		bool m_isRegist = false;							//GameObjectManagerに登録されている？
+		bool m_isRegistered = false;							//GameObjectManagerに登録されている？
 		bool m_isActive = true;							//Activeフラグ。
 	};
 }

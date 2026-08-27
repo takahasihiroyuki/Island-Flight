@@ -16,7 +16,7 @@ namespace nsK2EngineLow {
 		Release();
 	}
 
-	void WaveFileBank::Resist(int number, const char* filePath)
+	void WaveFileBank::Register(int number, const char* filePath)
 	{
 		//既に波形データが登録されていたら。
 		if (m_waveFilePtrArray[number])

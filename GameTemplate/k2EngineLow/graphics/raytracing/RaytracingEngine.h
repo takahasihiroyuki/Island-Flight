@@ -25,15 +25,15 @@ namespace nsK2EngineLow {
 			/// ジオメトリを登録。
 			/// </summary>
 			/// <param name="model">モデル</param>
-			void RegistGeometry(Model& model)
+			void RegisterGeometry(Model& model)
 			{
 				//レイトレワールドにジオメトリを登録。
-				m_world.RegistGeometry(model);
+				m_world.RegisterGeometry(model);
 			}
 			/// <summary>
 			/// ジオメトリの登録を確定。
 			/// </summary>
-			void CommitRegistGeometry(RenderContext& rc);
+			void CommitRegisteredGeometry(RenderContext& rc);
 		private:
 			/// <summary>
 			/// シェーダーテーブルを作成。

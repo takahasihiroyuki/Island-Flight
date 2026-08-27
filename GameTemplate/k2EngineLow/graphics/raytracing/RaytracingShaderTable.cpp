@@ -68,7 +68,7 @@ namespace nsK2EngineLow {
 
 			uint64_t hitGroup_pbrCameraRaySrvHeapStart = srvUavCbvDescriptorHeap.Get()->GetGPUDescriptorHandleForHeapStart().ptr + ds_size_cbv_srv_uav;
 			//シェーダーテーブルにシェーダーを登録する関数。
-			auto RegistShaderTblFunc = [&](const ShaderData& shaderData, EShaderCategory registCategory, Instance* instance) {
+			auto RegisterShaderTblFunc = [&](const ShaderData& shaderData, EShaderCategory registCategory, Instance* instance) {
 				if (shaderData.category == registCategory) {
 					//まずシェーダーIDを設定する。
 					void* pShaderId = nullptr;
@@ -97,16 +97,16 @@ namespace nsK2EngineLow {
 			};
 			// レイジェネレーションシェーダーをテーブルに登録していく。
 			for (auto& shader : shaderDatas) {
-				RegistShaderTblFunc(shader, eShaderCategory_RayGenerator, nullptr);
+				RegisterShaderTblFunc(shader, eShaderCategory_RayGenerator, nullptr);
 			}
 			// 続いてミスシェーダー。
 			for (auto& shader : shaderDatas) {
-				RegistShaderTblFunc(shader, eShaderCategory_Miss, nullptr);
+				RegisterShaderTblFunc(shader, eShaderCategory_Miss, nullptr);
 			}
 			//最後にヒットシェーダー。ヒットシェーダーはヒットシェーダーの数　×　インスタンスの数だけ登録する。
 			world.QueryInstances([&](Instance& instance) {
 				for (auto& shader : shaderDatas) {
-					RegistShaderTblFunc(shader, eShaderCategory_ClosestHit, &instance);
+					RegisterShaderTblFunc(shader, eShaderCategory_ClosestHit, &instance);
 				};
 				hitGroup_pbrCameraRaySrvHeapStart += hitGroup_pbrCameraRaySrvHeapStride;	//次
 			});

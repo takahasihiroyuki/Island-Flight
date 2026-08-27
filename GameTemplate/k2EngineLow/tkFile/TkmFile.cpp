@@ -255,7 +255,7 @@ namespace nsK2EngineLow {
 						fclose(texFileFp);
 						lowTexture->filePath = texFilePath;
 						// ロードしたテクスチャをバンクに登録する。
-						g_engine->RegistLowTextureToBank(lowTexture->filePath.c_str(), lowTexture);
+						g_engine->RegisterLowTextureToBank(lowTexture->filePath.c_str(), lowTexture);
 					}
 					else {
 						char errorMessage[256];

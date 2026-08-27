@@ -1,0 +1,78 @@
+#include "k2EngineLowPreCompile.h"
+
+namespace {
+	const float BASEREFLECTANCE = 0.05f;
+}
+
+namespace nsK2EngineLow {
+	Ocean::Ocean()
+	{
+	}
+	Ocean::~Ocean()
+	{
+	}
+	bool Ocean::Start()
+	{
+		BeginGPUEvent("Ocean");
+
+		SetConstatntBuffer(
+			g_renderingEngine->GetReflectViewProjectionMatrix(ReflectLayer::enOcean),
+			g_renderingEngine->GetSceneLight().GetLight(),
+			g_renderingEngine->GetReflectCamera(ReflectLayer::enOcean).GetPosition(),
+			BASEREFLECTANCE
+		);
+
+		//g_renderingEngine->SetReflectPlane(m_plane, ReflectLayer::enOcean);
+
+		ModelInitData initData;
+		//tkmファイルのファイルパスを指定する。
+		initData.m_tkmFilePath = "Assets/modelData/Stylize Water Texture/Textures/ocean.tkm";
+		//シェーダーファイルのファイルパスを指定する。
+		initData.m_fxFilePath = "Assets/shader/MyCode/Ocean.fx";
+		initData.m_vsEntryPointFunc = "VSMain";
+		initData.m_psEntryPointFunc = "PSMain";
+
+		m_reflectionRenderTarget = &g_renderingEngine->GetPlaneReflectionRenderTarget(ReflectLayer::enOcean);
+		initData.m_expandShaderResourceView[0] = &m_reflectionRenderTarget->GetRenderTargetTexture();
+		initData.m_expandShaderResourceView[1] = &g_renderingEngine->GetShadowTexture();
+
+		initData.m_expandConstantBuffer = &m_constantBuffer;
+		initData.m_expandConstantBufferSize = sizeof(m_constantBuffer);
+
+
+		m_modelRender.InitOcean(initData, initData.m_tkmFilePath);
+		m_modelRender.SetTransform(m_position, g_quatIdentity, m_scale);
+		//m_modelRender.ChangeAlbedoMap("", m_reflectionRenderTarget->GetRenderTargetTexture());
+		m_modelRender.Update();
+
+		//当たり判定の初期化
+		m_physics.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+
+		return true;
+	}
+	void Ocean::Init()
+	{
+	}
+	//void Ocean::InitOceanSprite()
+	//{
+	//	SpriteInitData spriteInitData;
+	//	spriteInitData.m_width = FRAME_BUFFER_W;
+	//	spriteInitData.m_height = FRAME_BUFFER_H;
+	//	spriteInitData.m_textures[0] = &m_reflectionRenderTarget->GetRenderTargetTexture();
+	//}
+	void Ocean::Update()
+	{
+		SetConstatntBuffer(
+			g_renderingEngine->GetReflectViewProjectionMatrix(ReflectLayer::enOcean),
+			g_renderingEngine->GetSceneLight().GetLight(),
+			g_renderingEngine->GetReflectCamera(ReflectLayer::enOcean).GetPosition(),
+			BASEREFLECTANCE
+		);
+		UpdateWaveOffset();
+	}
+	void Ocean::Render(RenderContext& rc)
+	{
+		m_modelRender.Draw(rc);
+	}
+
+}

@@ -34,7 +34,7 @@ namespace nsK2EngineLow {
 			IID_PPV_ARGS(&m_buffer)
 		);
 	}
-	void GPUBuffer::RegistUnorderAccessView(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, int bufferNo)
+	void GPUBuffer::RegisterUnorderedAccessView(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, int bufferNo)
 	{
 		D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
 		if (m_desc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D) {
@@ -54,7 +54,7 @@ namespace nsK2EngineLow {
 
 
 	}
-	void GPUBuffer::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	void GPUBuffer::RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
 	{
 	}
 }

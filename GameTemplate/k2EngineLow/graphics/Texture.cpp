@@ -92,7 +92,7 @@ namespace nsK2EngineLow {
 		m_textureDesc = m_texture->GetDesc();
 	}
 
-	void Texture::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	void Texture::RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
 	{
 		if (m_texture) {
 			auto device = g_graphicsEngine->GetD3DDevice();

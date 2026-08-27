@@ -29,7 +29,7 @@ namespace nsK2EngineLow {
 			//–¢“o˜^
 			tkmFile = new TkmFile;
 			tkmFile->Load(initData.m_tkmFilePath, false);
-			g_engine->RegistTkmFileToBank(initData.m_tkmFilePath, tkmFile);
+			g_engine->RegisterTkmFileToBank(initData.m_tkmFilePath, tkmFile);
 		}
 		m_tkmFile = tkmFile;
 		m_meshParts.InitFromTkmFile(
@@ -40,7 +40,7 @@ namespace nsK2EngineLow {
 			initData.m_psEntryPointFunc,
 			initData.m_expandConstantBuffer,
 			initData.m_expandConstantBufferSize,
-			initData.m_expandShaderResoruceView,
+			initData.m_expandShaderResourceView,
 			initData.m_colorBufferFormat,
 			initData.m_alphaBlendMode,
 			initData.m_isDepthWrite,

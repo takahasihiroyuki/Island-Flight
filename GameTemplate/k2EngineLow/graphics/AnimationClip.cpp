@@ -17,7 +17,7 @@ namespace nsK2EngineLow {
 		if (m_tkaFile == nullptr) {
 			m_tkaFile = new TkaFile;
 			m_tkaFile->Load(filePath);
-			g_engine->RegistTkaFileToBank(filePath, m_tkaFile);
+			g_engine->RegisterTkaFileToBank(filePath, m_tkaFile);
 		}
 		
 		BuildKeyFramesAndAnimationEvents();

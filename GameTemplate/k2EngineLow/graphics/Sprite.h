@@ -29,7 +29,7 @@ namespace nsK2EngineLow {
 		UINT m_height = 0;												//スプライトの高さ。
 		void* m_expandConstantBuffer = nullptr;							//ユーザー拡張の定数バッファ
 		int m_expandConstantBufferSize = 0;								//ユーザー拡張の定数バッファのサイズ。
-		std::array<IShaderResource*, EXPAND_MAX_SPRITE_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };			//ユーザー拡張のシェーダーリソース。
+		std::array<IShaderResource*, EXPAND_MAX_SPRITE_EXPAND_SRV> m_expandShaderResourceView = { nullptr };			//ユーザー拡張のシェーダーリソース。
 		AlphaBlendMode m_alphaBlendMode = AlphaBlendMode_None;			//アルファブレンディングモード。
 		std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = {
 			DXGI_FORMAT_R8G8B8A8_UNORM,

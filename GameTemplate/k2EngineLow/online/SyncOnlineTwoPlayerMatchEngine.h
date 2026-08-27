@@ -330,8 +330,8 @@ namespace nsK2EngineLow {
 		OnErrorFunc m_errorFunc = nullptr;									// 通信エラーが起きた時に呼ばれる関数。
 		std::unique_ptr<std::uint8_t[]> m_sendDataOnGameStart;				// ゲーム開始時に転送するデータ。
 		int m_sendDataSizeOnGameStart;										// ゲーム開始時に転送するデータのサイズ。
-		std::unique_ptr<std::uint8_t[]> m_recieveDataOnGameStart;			// ゲーム開始のために受け取ったデータ。
-		int m_recieveDataSize = 0;											// ゲーム開始のために受け取ったデータのサイズ。
+		std::unique_ptr<std::uint8_t[]> m_receiveDataOnGameStart;			// ゲーム開始のために受け取ったデータ。
+		int m_receiveDataSize = 0;											// ゲーム開始のために受け取ったデータのサイズ。
 		bool m_isInited = false;											// 初期化済み？
 		float m_timer = 0.0f;												// タイマー
 		float m_waitLimitTime = 0.0f;										// 待ちの最大秒数。
@@ -339,7 +339,7 @@ namespace nsK2EngineLow {
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
 		K2EngineLow::FrameRateInfo m_frameRateInfoBackup;								// フレームレートに関する情報のバックアップ。
 		
-		bool m_isHoge = false;
+		bool m_hasReceivedGameStartData = false;
 #ifdef ENABLE_ONLINE_PAD_LOG
 		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。
 #endif

@@ -12,49 +12,49 @@ namespace nsK2EngineLow {
 		{
 
 			//レイトレの出力先をディスクリプタヒープに登録する。
-			m_srvUavCbvHeap.RegistUnorderAccessResource(0, outputBuffer);
-			m_srvUavCbvHeap.RegistConstantBuffer(0, rayGeneCB);
+			m_srvUavCbvHeap.RegisterUnorderedAccessResource(0, outputBuffer);
+			m_srvUavCbvHeap.RegisterConstantBuffer(0, rayGeneCB);
 			int regNo = 0;
 			world.QueryInstances([&](Instance& instance)
 			{
-				m_srvUavCbvHeap.RegistShaderResource(
+				m_srvUavCbvHeap.RegisterShaderResource(
 					regNo + (int)ESRV_OneEntry::eTLAS,
 					world.GetTLASBuffer()
 				);
 				//アルベドマップをディスクリプタヒープに登録。
-				m_srvUavCbvHeap.RegistShaderResource(
+				m_srvUavCbvHeap.RegisterShaderResource(
 					regNo + (int)ESRV_OneEntry::eAlbedoMap,
 					instance.m_material->GetAlbedoMap()
 				);
 				//法線マップをディスクリプタヒープに登録。
-				m_srvUavCbvHeap.RegistShaderResource(
+				m_srvUavCbvHeap.RegisterShaderResource(
 					regNo + (int)ESRV_OneEntry::eNormalMap,
 					instance.m_material->GetNormalMap()
 				);
 				//スペキュラマップをディスクリプタヒープに登録。
-				m_srvUavCbvHeap.RegistShaderResource(
+				m_srvUavCbvHeap.RegisterShaderResource(
 					regNo + (int)ESRV_OneEntry::eSpecularMap,
 					instance.m_material->GetSpecularMap()
 				);
 
 				//リフレクションマップをディスクリプタヒープに登録。
-				m_srvUavCbvHeap.RegistShaderResource(
+				m_srvUavCbvHeap.RegisterShaderResource(
 					regNo + (int)ESRV_OneEntry::eReflectionMap,
 					instance.m_material->GetReflectionMap()
 				);
 
 				//屈折マップをディスクリプタヒープに登録。
-				m_srvUavCbvHeap.RegistShaderResource(
+				m_srvUavCbvHeap.RegisterShaderResource(
 					regNo + (int)ESRV_OneEntry::eRefractionMap,
 					instance.m_material->GetRefractionMap()
 				);
 				//頂点バッファをディスクリプタヒープに登録。
-				m_srvUavCbvHeap.RegistShaderResource(
+				m_srvUavCbvHeap.RegisterShaderResource(
 					regNo + (int)ESRV_OneEntry::eVertexBuffer,
 					instance.m_vertexBufferRWSB
 				);
 				//インデックスバッファをディスクリプタヒープに登録。
-				m_srvUavCbvHeap.RegistShaderResource(
+				m_srvUavCbvHeap.RegisterShaderResource(
 					regNo + (int)ESRV_OneEntry::eIndexBuffer,
 					instance.m_indexBufferRWSB
 				);
@@ -79,7 +79,7 @@ namespace nsK2EngineLow {
 			samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
 
 			//サンプラステートをディスクリプタヒープに登録する。
-			m_samplerDescriptorHeap.RegistSamplerDesc(0, samplerDesc);
+			m_samplerDescriptorHeap.RegisterSamplerDesc(0, samplerDesc);
 			m_samplerDescriptorHeap.CommitSamperHeap();
 			m_srvUavCbvHeap.Commit();
 		}

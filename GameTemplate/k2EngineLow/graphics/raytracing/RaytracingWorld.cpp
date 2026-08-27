@@ -7,7 +7,7 @@
 namespace nsK2EngineLow {
 	namespace raytracing {
 
-		void World::RegistGeometry(Model& model)
+		void World::RegisterGeometry(Model& model)
 		{
 			model.QueryMeshAndDescriptorHeap([&](const SMesh& mesh, const DescriptorHeap& ds) {
 
@@ -37,7 +37,7 @@ namespace nsK2EngineLow {
 			});
 		}
 
-		void World::CommitRegistGeometry(RenderContext& rc)
+		void World::CommitRegisteredGeometry(RenderContext& rc)
 		{
 			//BLASÇç\ízÅB
 			m_blasBuffer.Init(rc, m_instances);

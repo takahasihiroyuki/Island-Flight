@@ -100,7 +100,7 @@ namespace nsK2EngineLow {
 		}
 		m_isInited = true;
 	}
-	ID3D12Resource* RWStructuredBuffer::GetD3DResoruce()
+	ID3D12Resource* RWStructuredBuffer::GetD3DResource()
 	{
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
 		return m_buffersOnGPU[backBufferIndex];
@@ -114,7 +114,7 @@ namespace nsK2EngineLow {
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
 		return m_buffersOnCPU[backBufferIndex];
 	}
-	void RWStructuredBuffer::RegistUnorderAccessView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	void RWStructuredBuffer::RegisterUnorderedAccessView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
 	{
 		if (!m_isInited) {
 			return;
@@ -133,7 +133,7 @@ namespace nsK2EngineLow {
 			descriptorHandle
 		);
 	}
-	void RWStructuredBuffer::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	void RWStructuredBuffer::RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
 	{
 		if (!m_isInited) {
 			return;

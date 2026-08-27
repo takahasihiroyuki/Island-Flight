@@ -56,7 +56,7 @@ namespace nsK2EngineLow {
 	}
 	void K2EngineLow::BeginFrame()
 	{
-		m_fpsLimitter.BeginFrame();
+		m_fpsLimiter.BeginFrame();
 		m_gameTime.BeginMeasurement();
 		m_graphicsEngine->BeginRender();
 		EffectEngine::GetInstance()->BeginFrame();
@@ -78,7 +78,7 @@ namespace nsK2EngineLow {
 #endif 
 		m_graphicsEngine->EndRender();
 #ifdef USE_FPS_LIMITTER
-		m_fpsLimitter.Wait();
+		m_fpsLimiter.Wait();
 #endif
 		m_gameTime.EndMeasurement();
 

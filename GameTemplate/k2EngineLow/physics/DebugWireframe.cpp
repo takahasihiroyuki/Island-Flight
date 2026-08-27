@@ -106,7 +106,7 @@ namespace nsK2EngineLow {
 	void DebugWireframe::InitDescriptorHeap()
 	{
 		//ディスクリプタヒープにディスクリプタを登録していく。
-		m_descriptorHeap.RegistConstantBuffer(0, m_constantBuffer);
+		m_descriptorHeap.RegisterConstantBuffer(0, m_constantBuffer);
 		//ディスクリプタヒープへの登録を確定させる。
 		m_descriptorHeap.Commit();
 	}

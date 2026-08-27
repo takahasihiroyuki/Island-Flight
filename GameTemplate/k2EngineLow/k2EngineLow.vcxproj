@@ -74,10 +74,8 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings"></ImportGroup>
+  <ImportGroup Label="Shared"></ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -254,9 +252,9 @@
     <ClCompile Include="AI\PathFinding\NaviMesh.cpp" />
     <ClCompile Include="AI\PathFinding\Path.cpp" />
     <ClCompile Include="AI\PathFinding\PathFinding.cpp" />
-    <ClCompile Include="Bloom.cpp" />
-    <ClCompile Include="FadeOut.cpp" />
-    <ClCompile Include="Fog.cpp" />
+    <ClCompile Include="graphics\PostProcess\Bloom.cpp" />
+    <ClCompile Include="graphics\PostProcess\FadeOut.cpp" />
+    <ClCompile Include="graphics\PostProcess\Fog.cpp" />
     <ClCompile Include="gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
     <ClCompile Include="geometry\AABB.cpp" />
@@ -299,9 +297,9 @@
     <ClCompile Include="graphics\StructuredBuffer.cpp" />
     <ClCompile Include="graphics\Texture.cpp" />
     <ClCompile Include="graphics\VertexBuffer.cpp" />
-    <ClCompile Include="HexagonalBlur.cpp" />
+    <ClCompile Include="graphics\PostProcess\HexagonalBlur.cpp" />
     <ClCompile Include="HID\GamePad.cpp" />
-    <ClCompile Include="InstancingManager.cpp" />
+    <ClCompile Include="graphics\Renderer\InstancingManager.cpp" />
     <ClCompile Include="k2EngineLow.cpp" />
     <ClCompile Include="k2EngineLowPreCompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -314,11 +312,11 @@
     <ClCompile Include="level3D\Level.cpp" />
     <ClCompile Include="level3D\MapChip.cpp" />
     <ClCompile Include="level3D\TklFile.cpp" />
-    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="graphics\Lighting\Light.cpp" />
     <ClCompile Include="math\Matrix.cpp" />
     <ClCompile Include="math\Vector.cpp" />
-    <ClCompile Include="ModelRender.cpp" />
-    <ClCompile Include="Ocean.cpp" />
+    <ClCompile Include="graphics\Renderer\ModelRender.cpp" />
+    <ClCompile Include="graphics\Environment\Ocean.cpp" />
     <ClCompile Include="online\SyncOnlineTwoPlayerMatchEngine.cpp" />
     <ClCompile Include="physics\BoxCollider.cpp" />
     <ClCompile Include="physics\CapsuleCollider.cpp" />
@@ -330,37 +328,38 @@
     <ClCompile Include="physics\PhysicsStaticObject.cpp" />
     <ClCompile Include="physics\RigidBody.cpp" />
     <ClCompile Include="physics\SphereCollider.cpp" />
-    <ClCompile Include="PlaneReflectionPass.cpp" />
-    <ClCompile Include="PostEffect.cpp" />
-    <ClCompile Include="PostEffectBase.cpp" />
-    <ClCompile Include="RenderingEngine.cpp" />
-    <ClCompile Include="Shadow.cpp" />
-    <ClCompile Include="SkyCube.cpp" />
+    <ClCompile Include="graphics\Reflection\PlaneReflectionPass.cpp" />
+    <ClCompile Include="graphics\PostProcess\PostEffect.cpp" />
+    <ClCompile Include="graphics\PostProcess\PostEffectBase.cpp" />
+    <ClCompile Include="graphics\Core\RenderingEngine.cpp" />
+    <ClCompile Include="graphics\Lighting\Shadow.cpp" />
+    <ClCompile Include="graphics\Environment\SkyCube.cpp" />
     <ClCompile Include="sound\SoundEngine.cpp" />
     <ClCompile Include="sound\SoundSource.cpp" />
     <ClCompile Include="sound\WaveFile.cpp" />
     <ClCompile Include="sound\WaveFileBank.cpp" />
-    <ClCompile Include="SpriteRender.cpp" />
+    <ClCompile Include="graphics\Renderer\SpriteRender.cpp" />
     <ClCompile Include="tkFile\TkaFile.cpp" />
     <ClCompile Include="tkFile\TkmFile.cpp" />
     <ClCompile Include="tkFile\TknFile.cpp" />
     <ClCompile Include="tkFile\TksFile.cpp" />
+    <ClCompile Include="graphics\Reflection\PlanarReflectionPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\PathFinding\Cell.h" />
     <ClInclude Include="AI\PathFinding\NaviMesh.h" />
     <ClInclude Include="AI\PathFinding\Path.h" />
     <ClInclude Include="AI\PathFinding\PathFinding.h" />
-    <ClInclude Include="Bloom.h" />
+    <ClInclude Include="graphics/PostProcess/Bloom.h" />
     <ClInclude Include="dbg\MyAssert.h" />
     <ClInclude Include="dbg\MyLog.h" />
-    <ClInclude Include="FadeOut.h" />
-    <ClInclude Include="Fog.h" />
+    <ClInclude Include="graphics/PostProcess/fadeOut.h" />
+    <ClInclude Include="graphics/PostProcess/Fog.h" />
     <ClInclude Include="gameObject\GameObjectManager.h" />
     <ClInclude Include="gameObject\IGameobject.h" />
     <ClInclude Include="geometry\AABB.h" />
     <ClInclude Include="geometry\BSP.h" />
-    <ClInclude Include="GraphicsEnums.h" />
+    <ClInclude Include="graphics/Core/GraphicsEnums.h" />
     <ClInclude Include="graphics\Animation.h" />
     <ClInclude Include="graphics\AnimationClip.h" />
     <ClInclude Include="graphics\AnimationPlayController.h" />
@@ -380,7 +379,7 @@
     <ClInclude Include="graphics\GraphicsEngine.h" />
     <ClInclude Include="graphics\IndexBuffer.h" />
     <ClInclude Include="graphics\IShaderResource.h" />
-    <ClInclude Include="graphics\IUnorderAccessResource.h" />
+    <ClInclude Include="graphics\IUnorderedAccessResource.h" />
     <ClInclude Include="graphics\Material.h" />
     <ClInclude Include="graphics\MeshParts.h" />
     <ClInclude Include="graphics\Model.h" />
@@ -406,9 +405,9 @@
     <ClInclude Include="graphics\StructuredBuffer.h" />
     <ClInclude Include="graphics\Texture.h" />
     <ClInclude Include="graphics\VertexBuffer.h" />
-    <ClInclude Include="HexagonalBlur.h" />
+    <ClInclude Include="graphics/PostProcess/HexagonalBlur.h" />
     <ClInclude Include="HID\GamePad.h" />
-    <ClInclude Include="InstancingManager.h" />
+    <ClInclude Include="graphics/Renderer/InstancingManager.h" />
     <ClInclude Include="k2EngineLow.h" />
     <ClInclude Include="k2EngineLowPreCompile.h" />
     <ClInclude Include="level2D\CaslFile.h" />
@@ -417,12 +416,12 @@
     <ClInclude Include="level3D\Level.h" />
     <ClInclude Include="level3D\MapChip.h" />
     <ClInclude Include="level3D\TklFile.h" />
-    <ClInclude Include="Light.h" />
+    <ClInclude Include="graphics/Lighting/Light.h" />
     <ClInclude Include="math\Math.h" />
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
-    <ClInclude Include="ModelRender.h" />
-    <ClInclude Include="Ocean.h" />
+    <ClInclude Include="graphics/Renderer/ModelRender.h" />
+    <ClInclude Include="graphics/Environment/Ocean.h" />
     <ClInclude Include="online\SyncOnlineTwoPlayerMatchEngine.h" />
     <ClInclude Include="physics\BoxCollider.h" />
     <ClInclude Include="physics\CapsuleCollider.h" />
@@ -436,18 +435,18 @@
     <ClInclude Include="physics\PhysicsStaticObject.h" />
     <ClInclude Include="physics\RigidBody.h" />
     <ClInclude Include="physics\SphereCollider.h" />
-    <ClInclude Include="PlaneReflectionPass.h" />
-    <ClInclude Include="PostEffect.h" />
-    <ClInclude Include="PostEffectBase.h" />
-    <ClInclude Include="RenderingEngine.h" />
-    <ClInclude Include="Shadow.h" />
-    <ClInclude Include="SkyCube.h" />
+    <ClInclude Include="graphics/Reflection/PlaneReflectionPass.h" />
+    <ClInclude Include="graphics/PostProcess/PostEffect.h" />
+    <ClInclude Include="graphics/PostProcess/PostEffectBase.h" />
+    <ClInclude Include="graphics/Core/RenderingEngine.h" />
+    <ClInclude Include="graphics/Lighting/Shadow.h" />
+    <ClInclude Include="graphics/Environment/SkyCube.h" />
     <ClInclude Include="sound\SoundEngine.h" />
     <ClInclude Include="sound\SoundSource.h" />
     <ClInclude Include="sound\WaveFile.h" />
     <ClInclude Include="sound\WaveFileBank.h" />
-    <ClInclude Include="SpriteRender.h" />
-    <ClInclude Include="time\FPSLimitter.h" />
+    <ClInclude Include="graphics/Renderer/SpriteRender.h" />
+    <ClInclude Include="time\FPSLimiter.h" />
     <ClInclude Include="time\GameTime.h" />
     <ClInclude Include="time\Stopwatch.h" />
     <ClInclude Include="tkFile\TkaFile.h" />
@@ -455,8 +454,8 @@
     <ClInclude Include="tkFile\TknFile.h" />
     <ClInclude Include="tkFile\TksFile.h" />
     <ClInclude Include="util\TResourceBank.h" />
+    <ClInclude Include="graphics\Reflection\PlanarReflectionPass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets"></ImportGroup>
 </Project>

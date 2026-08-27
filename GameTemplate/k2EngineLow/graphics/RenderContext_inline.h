@@ -7,13 +7,13 @@ namespace nsK2EngineLow {
 		m_commandList->SetDescriptorHeaps(1, m_descriptorHeaps);
 
 		//ディスクリプタテーブルに登録する。
-		if (descHeap.IsRegistConstantBuffer()) {
+		if (descHeap.IsRegisteredConstantBuffer()) {
 			SetGraphicsRootDescriptorTable(0, descHeap.GetConstantBufferGpuDescritorStartHandle());
 		}
-		if (descHeap.IsRegistShaderResource()) {
+		if (descHeap.IsRegisteredShaderResource()) {
 			SetGraphicsRootDescriptorTable(1, descHeap.GetShaderResourceGpuDescritorStartHandle());
 		}
-		if (descHeap.IsRegistUavResource()) {
+		if (descHeap.IsRegisteredUavResource()) {
 			SetGraphicsRootDescriptorTable(2, descHeap.GetUavResourceGpuDescritorStartHandle());
 		}
 	}
@@ -23,13 +23,13 @@ namespace nsK2EngineLow {
 		m_commandList->SetDescriptorHeaps(1, m_descriptorHeaps);
 
 		//ディスクリプタテーブルに登録する。
-		if (descHeap.IsRegistConstantBuffer()) {
+		if (descHeap.IsRegisteredConstantBuffer()) {
 			SetComputeRootDescriptorTable(0, descHeap.GetConstantBufferGpuDescritorStartHandle());
 		}
-		if (descHeap.IsRegistShaderResource()) {
+		if (descHeap.IsRegisteredShaderResource()) {
 			SetComputeRootDescriptorTable(1, descHeap.GetShaderResourceGpuDescritorStartHandle());
 		}
-		if (descHeap.IsRegistUavResource()) {
+		if (descHeap.IsRegisteredUavResource()) {
 			SetComputeRootDescriptorTable(2, descHeap.GetUavResourceGpuDescritorStartHandle());
 		}
 	}

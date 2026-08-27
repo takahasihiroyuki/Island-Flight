@@ -1,0 +1,65 @@
+#pragma once
+#include"Source/Scene/SceneStateContext.h"
+#include "Source/Camera/CameraTypes.h"
+
+class ICameraController;
+class CameraState;
+class CameraManager :public Noncopyable
+{
+public:
+	enum EnCameraParamterType
+	{
+		StaticA = 0,
+		StaticB,
+		SpringFollowA = 0,
+		SpringFollowB
+	};
+
+public:
+	static CameraManager& GetInstance() {
+		static CameraManager instance;
+		return instance;
+	}
+	bool Start();
+	void Update();
+
+public:
+
+	void Inint() {}
+	/// <summary>
+	/// ターゲット情報を外から設定する。
+	/// ターゲットが動く場合は毎フレームセットする。
+	/// それをそのままターゲットやポジションとして使うわけではなく
+	/// ターゲットを参考にしてコントローラーを動かす。
+	/// </summary>
+	/// <param name="info"></param>
+	void SetTargetInfo(const TargetSnapshot& info);
+
+	void ChangeController(CameraControllerType type);
+
+	CameraState GetCameraState() const;
+
+	/// <summary>
+	/// ワープ通知
+	/// </summary>
+	/// <param name="snap"></param>
+	void NotifyTargetWarped(const TargetSnapshot& snap);
+
+	void SetPosition(Vector3 position);
+
+private:
+	CameraManager();
+	~CameraManager();
+private:
+	TargetSnapshot m_targetSnapshot;	//ターゲットの情報
+	CameraState m_currentState;
+	CameraState m_prevState;			// ブレンド用
+	ICameraController* m_activeController;
+
+	Vector3 m_cameraTarget;			// カメラ注視点
+	Quaternion m_rotation;			// 回転
+	Quaternion m_targetRotationX;	// 目標回転
+	Vector3 m_cameraPosition = Vector3::Zero;		// カメラ座標
+	ICameraControllerSettings m_controllerSettings;
+};
+

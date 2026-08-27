@@ -2,306 +2,426 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="system">
-      <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
+      <UniqueIdentifier>{1cc74484-a143-4e65-a70e-7d6ecb619cf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Camera">
-      <UniqueIdentifier>{0d78848c-98da-41fd-aa62-c00231c65f54}</UniqueIdentifier>
+    <Filter Include="Source">
+      <UniqueIdentifier>{2f7d003f-7a9f-4210-b820-a69e1d84ccd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="InGameState">
-      <UniqueIdentifier>{a3dd146d-1a31-422b-8fef-bbc965e12ad5}</UniqueIdentifier>
+    <Filter Include="Source\Core">
+      <UniqueIdentifier>{d9463745-0d68-41ba-b5f4-f6b987eeae80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{8099db67-bc97-4fa0-ae0e-11cad0092518}</UniqueIdentifier>
+    <Filter Include="Source\Scene">
+      <UniqueIdentifier>{0714ef01-6789-4d01-b140-d98773eb2c6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{b3a067bf-01d0-474c-85bc-0a1a7631422d}</UniqueIdentifier>
+    <Filter Include="Source\Scene\Title">
+      <UniqueIdentifier>{b8019f29-644c-4ad6-a510-d1cba70ae4b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BounusItemObject">
-      <UniqueIdentifier>{66ee20d8-15e8-4028-bff9-ced4957777ad}</UniqueIdentifier>
+    <Filter Include="Source\Scene\InGame">
+      <UniqueIdentifier>{d4be3b28-19f2-4e47-a44e-4f29cb83b6f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Aircraft">
-      <UniqueIdentifier>{48f7b939-a640-48c6-a231-995d8a228af5}</UniqueIdentifier>
+    <Filter Include="Source\Scene\InGame\State">
+      <UniqueIdentifier>{0d68c749-c3d5-4d43-9afe-e86f5c8c05e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay">
+      <UniqueIdentifier>{4c51a16b-aa5e-4c0d-a20d-3434fabec6a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Aircraft">
+      <UniqueIdentifier>{9045b847-5e03-4554-9112-feadf43aa3e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Coin">
+      <UniqueIdentifier>{7878abee-336f-4195-863e-dac45587a0fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\BonusItem">
+      <UniqueIdentifier>{74bbf329-7c97-45a0-b045-b97ec47f40b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Score">
+      <UniqueIdentifier>{3a8185f3-98f3-4aa8-8672-03741d614b1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Assist">
+      <UniqueIdentifier>{76fe0ad9-6114-4c26-8c19-d1196c83671d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Stage">
+      <UniqueIdentifier>{45787e7a-c40f-4474-b9d6-a7d4d9e51306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Time">
+      <UniqueIdentifier>{2f50bae8-1f44-48fb-b89c-29c0c0b00e4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Camera">
+      <UniqueIdentifier>{b63f29c7-314a-468c-afb3-3eba3f5c966b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Camera\Controller">
+      <UniqueIdentifier>{2f5c7d5e-ddb1-4afb-bd3e-5901c5e9b23e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI">
+      <UniqueIdentifier>{6b1cf1a3-79f7-4d39-b7f1-b4c00094a435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Audio">
+      <UniqueIdentifier>{64537a6c-0061-468e-b1f2-7b80c6163afd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Math">
+      <UniqueIdentifier>{8c5c7620-9a24-49c2-8bfb-f84788e6ac23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Effect">
+      <UniqueIdentifier>{7a077e18-4852-4fa7-8cf6-4ed82290c7a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\stdafx.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="PlacementObject.cpp" />
-    <ClCompile Include="CoinManager.cpp" />
-    <ClCompile Include="Coin.cpp" />
-    <ClCompile Include="ScoreManager.cpp" />
-    <ClCompile Include="SoundManager.cpp" />
-    <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="Source\Gameplay\Stage\PlacementObject.cpp">
+      <Filter>Source\Gameplay\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Coin\CoinManager.cpp">
+      <Filter>Source\Gameplay\Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Coin\Coin.cpp">
+      <Filter>Source\Gameplay\Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Score\ScoreManager.cpp">
+      <Filter>Source\Gameplay\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio\SoundManager.cpp">
+      <Filter>Source\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Stage\Stage.cpp">
+      <Filter>Source\Gameplay\Stage</Filter>
+    </ClCompile>
     <ClCompile Include="SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="SceneLoader\TransformHelper.cpp" />
-    <ClCompile Include="IScene.cpp" />
-    <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="CameraManager.cpp">
-      <Filter>Camera</Filter>
+    <ClCompile Include="Source\Scene\IScene.cpp">
+      <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="ICameraController.cpp">
-      <Filter>Camera</Filter>
+    <ClCompile Include="Source\Core\GameManager.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="SpringFollowController.cpp">
-      <Filter>Camera</Filter>
+    <ClCompile Include="Source\Camera\CameraManager.cpp">
+      <Filter>Source\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="StaticController.cpp">
-      <Filter>Camera</Filter>
+    <ClCompile Include="Source\Camera\ICameraController.cpp">
+      <Filter>Source\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="InGameStateManager.cpp">
-      <Filter>InGameState</Filter>
+    <ClCompile Include="Source\Camera\Controller\SpringFollowController.cpp">
+      <Filter>Source\Camera\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="IInGameState.cpp">
-      <Filter>InGameState</Filter>
+    <ClCompile Include="Source\Camera\Controller\StaticController.cpp">
+      <Filter>Source\Camera\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="GamePlayState.cpp">
-      <Filter>InGameState</Filter>
+    <ClCompile Include="Source\Gameplay\Time\Timer.cpp">
+      <Filter>Source\Gameplay\Time</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>Scene</Filter>
+    <ClCompile Include="Source\Scene\InGame\State\InGameStateManager.cpp">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClCompile>
-    <ClCompile Include="InGameScene.cpp">
-      <Filter>Scene</Filter>
+    <ClCompile Include="Source\Scene\InGame\State\IInGameState.cpp">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
-      <Filter>Scene</Filter>
+    <ClCompile Include="Source\Scene\InGame\State\GamePlayState.cpp">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClCompile>
-    <ClCompile Include="ResoltState.cpp">
-      <Filter>InGameState</Filter>
+    <ClCompile Include="Source\Scene\SceneManager.cpp">
+      <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Scene\InGame\InGameScene.cpp">
+      <Filter>Source\Scene\InGame</Filter>
     </ClCompile>
-    <ClCompile Include="UIManagerObject.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Scene\Title\TitleScene.cpp">
+      <Filter>Source\Scene\Title</Filter>
     </ClCompile>
-    <ClCompile Include="UIScreen.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Scene\InGame\State\ResultState.cpp">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClCompile>
-    <ClCompile Include="TimerUI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\UI\UIManager.cpp">
+      <Filter>Source\UI</Filter>
     </ClCompile>
-    <ClCompile Include="ResultUI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\UI\UIManagerObject.cpp">
+      <Filter>Source\UI</Filter>
     </ClCompile>
-    <ClCompile Include="TitleUI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\UI\UIScreen.cpp">
+      <Filter>Source\UI</Filter>
     </ClCompile>
-    <ClCompile Include="CoinDirectionArrowUI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Gameplay\Time\TimerUI.cpp">
+      <Filter>Source\Gameplay\Time</Filter>
     </ClCompile>
-    <ClCompile Include="CoinGetUI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Scene\InGame\State\ResultUI.cpp">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClCompile>
-    <ClCompile Include="DebugArrowUI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Scene\Title\TitleUI.cpp">
+      <Filter>Source\Scene\Title</Filter>
     </ClCompile>
-    <ClCompile Include="StageOrbitCameraController.cpp">
-      <Filter>Camera</Filter>
+    <ClCompile Include="Source\Gameplay\Coin\CoinDirectionArrowUI.cpp">
+      <Filter>Source\Gameplay\Coin</Filter>
     </ClCompile>
-    <ClCompile Include="FlightDebugScene.cpp">
-      <Filter>Scene</Filter>
+    <ClCompile Include="Source\Gameplay\Coin\CoinGetUI.cpp">
+      <Filter>Source\Gameplay\Coin</Filter>
     </ClCompile>
-    <ClCompile Include="CoinCounterUI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\UI\DebugArrowUI.cpp">
+      <Filter>Source\UI</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerAssistSystem.cpp" />
-    <ClCompile Include="PlayerAssistUI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Camera\Controller\StageOrbitCameraController.cpp">
+      <Filter>Source\Camera\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="ComboSystem.cpp" />
-    <ClCompile Include="GameTuningSettings.cpp" />
-    <ClCompile Include="ScorePopupScreen.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Scene\FlightDebugScene.cpp">
+      <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="ComboCounterScreen.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Gameplay\Coin\CoinCounterUI.cpp">
+      <Filter>Source\Gameplay\Coin</Filter>
     </ClCompile>
-    <ClCompile Include="ScoreBoostItem.cpp">
-      <Filter>BounusItemObject</Filter>
+    <ClCompile Include="Source\Gameplay\Assist\PlayerAssistSystem.cpp">
+      <Filter>Source\Gameplay\Assist</Filter>
     </ClCompile>
-    <ClCompile Include="ScoreBoostEffect.cpp" />
-    <ClCompile Include="IGameTimeController.cpp" />
-    <ClCompile Include="AddTimeItem.cpp">
-      <Filter>BounusItemObject</Filter>
+    <ClCompile Include="Source\Gameplay\Assist\PlayerAssistUI.cpp">
+      <Filter>Source\Gameplay\Assist</Filter>
     </ClCompile>
-    <ClCompile Include="SplineMath.cpp" />
-    <ClCompile Include="ScoreBoostUIScreen.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Source\Gameplay\Score\ComboSystem.cpp">
+      <Filter>Source\Gameplay\Score</Filter>
     </ClCompile>
-    <ClCompile Include="AddTimePopupUI.cpp" />
-    <ClCompile Include="BonusItemManager.cpp">
-      <Filter>BounusItemObject</Filter>
+    <ClCompile Include="Source\Core\GameTuningSettings.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="BonusItemMover.cpp">
-      <Filter>BounusItemObject</Filter>
+    <ClCompile Include="Source\Gameplay\Score\ScorePopupScreen.cpp">
+      <Filter>Source\Gameplay\Score</Filter>
     </ClCompile>
-    <ClCompile Include="BonusItemWaypointSet.cpp">
-      <Filter>BounusItemObject</Filter>
+    <ClCompile Include="Source\Gameplay\Score\ComboCounterScreen.cpp">
+      <Filter>Source\Gameplay\Score</Filter>
     </ClCompile>
-    <ClCompile Include="Aircraft.cpp">
-      <Filter>Aircraft</Filter>
+    <ClCompile Include="Source\Gameplay\BonusItem\ScoreBoostItem.cpp">
+      <Filter>Source\Gameplay\BonusItem</Filter>
     </ClCompile>
-    <ClCompile Include="LiftingSurface.cpp">
-      <Filter>Aircraft</Filter>
+    <ClCompile Include="Source\Gameplay\BonusItem\ScoreBoostEffect.cpp">
+      <Filter>Source\Gameplay\BonusItem</Filter>
     </ClCompile>
-    <ClCompile Include="AircraftEngine.cpp">
-      <Filter>Aircraft</Filter>
+    <ClCompile Include="Source\Gameplay\Time\IGameTimeController.cpp">
+      <Filter>Source\Gameplay\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\BonusItem\AddTimeItem.cpp">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Math\SplineMath.cpp">
+      <Filter>Source\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\BonusItem\ScoreBoostUIScreen.cpp">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\BonusItem\AddTimePopupUI.cpp">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\BonusItem\BonusItemManager.cpp">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\BonusItem\BonusItemMover.cpp">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\BonusItem\BonusItemWaypointSet.cpp">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Aircraft\Aircraft.cpp">
+      <Filter>Source\Gameplay\Aircraft</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Aircraft\LiftingSurface.cpp">
+      <Filter>Source\Gameplay\Aircraft</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Aircraft\AircraftEngine.cpp">
+      <Filter>Source\Gameplay\Aircraft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Source\stdafx.h">
+      <Filter>Source</Filter>
+    </ClInclude>
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="AircraftPhysicsState.h" />
-    <ClInclude Include="PlacementObject.h" />
-    <ClInclude Include="CoinManager.h" />
-    <ClInclude Include="Coin.h" />
-    <ClInclude Include="ScoreManager.h" />
-    <ClInclude Include="SoundManager.h" />
-    <ClInclude Include="Stage.h" />
+    <ClInclude Include="Source\Gameplay\Aircraft\AircraftPhysicsState.h">
+      <Filter>Source\Gameplay\Aircraft</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Stage\PlacementObject.h">
+      <Filter>Source\Gameplay\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Coin\CoinManager.h">
+      <Filter>Source\Gameplay\Coin</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Coin\Coin.h">
+      <Filter>Source\Gameplay\Coin</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Score\ScoreManager.h">
+      <Filter>Source\Gameplay\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio\SoundManager.h">
+      <Filter>Source\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Stage\Stage.h">
+      <Filter>Source\Gameplay\Stage</Filter>
+    </ClInclude>
     <ClInclude Include="SceneLoader\SceneLoader.h" />
     <ClInclude Include="SceneLoader\TransformHelper.h" />
-    <ClInclude Include="IScene.h" />
-    <ClInclude Include="GameManager.h" />
-    <ClInclude Include="CameraManager.h">
-      <Filter>Camera</Filter>
+    <ClInclude Include="Source\Scene\IScene.h">
+      <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="ICameraController.h">
-      <Filter>Camera</Filter>
+    <ClInclude Include="Source\Core\GameManager.h">
+      <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="SpringFollowController.h">
-      <Filter>Camera</Filter>
+    <ClInclude Include="Source\Camera\CameraManager.h">
+      <Filter>Source\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="CameraTypes.h">
-      <Filter>Camera</Filter>
+    <ClInclude Include="Source\Camera\ICameraController.h">
+      <Filter>Source\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="StaticController.h">
-      <Filter>Camera</Filter>
+    <ClInclude Include="Source\Camera\Controller\SpringFollowController.h">
+      <Filter>Source\Camera\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="InGameStateManager.h">
-      <Filter>InGameState</Filter>
+    <ClInclude Include="Source\Camera\CameraTypes.h">
+      <Filter>Source\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="IInGameState.h">
-      <Filter>InGameState</Filter>
+    <ClInclude Include="Source\Camera\Controller\StaticController.h">
+      <Filter>Source\Camera\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="InGameStateType.h">
-      <Filter>InGameState</Filter>
+    <ClInclude Include="Source\Gameplay\Time\Timer.h">
+      <Filter>Source\Gameplay\Time</Filter>
     </ClInclude>
-    <ClInclude Include="GamePlayState.h">
-      <Filter>InGameState</Filter>
+    <ClInclude Include="Source\Scene\InGame\State\InGameStateManager.h">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="Source\Scene\InGame\State\IInGameState.h">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClInclude>
-    <ClInclude Include="SceneStateContext.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="Source\Scene\InGame\State\InGameStateType.h">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClInclude>
-    <ClInclude Include="SceneType.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="Source\Scene\InGame\State\GamePlayState.h">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClInclude>
-    <ClInclude Include="InGameScene.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="Source\Scene\SceneManager.h">
+      <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScene.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="Source\Scene\SceneStateContext.h">
+      <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="ResoltState.h">
-      <Filter>InGameState</Filter>
+    <ClInclude Include="Source\Scene\SceneType.h">
+      <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Scene\InGame\InGameScene.h">
+      <Filter>Source\Scene\InGame</Filter>
     </ClInclude>
-    <ClInclude Include="UIManagerObject.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Scene\Title\TitleScene.h">
+      <Filter>Source\Scene\Title</Filter>
     </ClInclude>
-    <ClInclude Include="UIScreen.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Scene\InGame\State\ResultState.h">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClInclude>
-    <ClInclude Include="TimerUI.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\UI\UIManager.h">
+      <Filter>Source\UI</Filter>
     </ClInclude>
-    <ClInclude Include="ResultUI.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\UI\UIManagerObject.h">
+      <Filter>Source\UI</Filter>
     </ClInclude>
-    <ClInclude Include="TitleUI.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\UI\UIScreen.h">
+      <Filter>Source\UI</Filter>
     </ClInclude>
-    <ClInclude Include="CoinDirectionArrowUI.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Gameplay\Time\TimerUI.h">
+      <Filter>Source\Gameplay\Time</Filter>
     </ClInclude>
-    <ClInclude Include="SoundID.h" />
-    <ClInclude Include="CoinGetUI.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Scene\InGame\State\ResultUI.h">
+      <Filter>Source\Scene\InGame\State</Filter>
     </ClInclude>
-    <ClInclude Include="DebugArrowUI.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Scene\Title\TitleUI.h">
+      <Filter>Source\Scene\Title</Filter>
     </ClInclude>
-    <ClInclude Include="StageOrbitCameraController.h">
-      <Filter>Camera</Filter>
+    <ClInclude Include="Source\Gameplay\Coin\CoinDirectionArrowUI.h">
+      <Filter>Source\Gameplay\Coin</Filter>
     </ClInclude>
-    <ClInclude Include="EffectType.h" />
-    <ClInclude Include="FlightDebugScene.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="Source\Audio\SoundID.h">
+      <Filter>Source\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="CoinCounterUI.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Gameplay\Coin\CoinGetUI.h">
+      <Filter>Source\Gameplay\Coin</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerAssistSystem.h" />
-    <ClInclude Include="AssistWarpPoint.h" />
-    <ClInclude Include="PlayerAssistUI.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\UI\DebugArrowUI.h">
+      <Filter>Source\UI</Filter>
     </ClInclude>
-    <ClInclude Include="ComboSystem.h" />
-    <ClInclude Include="GameTuningSettings.h" />
-    <ClInclude Include="ScorePopupScreen.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Camera\Controller\StageOrbitCameraController.h">
+      <Filter>Source\Camera\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="ComboCounterScreen.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Effect\EffectType.h">
+      <Filter>Source\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="AddTimeItem.h">
-      <Filter>BounusItemObject</Filter>
+    <ClInclude Include="Source\Scene\FlightDebugScene.h">
+      <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="ScoreBoostItem.h">
-      <Filter>BounusItemObject</Filter>
+    <ClInclude Include="Source\Gameplay\Coin\CoinCounterUI.h">
+      <Filter>Source\Gameplay\Coin</Filter>
     </ClInclude>
-    <ClInclude Include="ScoreBoostEffect.h" />
-    <ClInclude Include="IGameTimeController.h" />
-    <ClInclude Include="SplineMath.h" />
-    <ClInclude Include="ScoreBoostUIScreen.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Source\Gameplay\Assist\PlayerAssistSystem.h">
+      <Filter>Source\Gameplay\Assist</Filter>
     </ClInclude>
-    <ClInclude Include="AddTimePopupUI.h" />
-    <ClInclude Include="BonusItemEffectContext.h">
-      <Filter>BounusItemObject</Filter>
+    <ClInclude Include="Source\Gameplay\Assist\AssistWarpPoint.h">
+      <Filter>Source\Gameplay\Assist</Filter>
     </ClInclude>
-    <ClInclude Include="BonusItemManager.h">
-      <Filter>BounusItemObject</Filter>
+    <ClInclude Include="Source\Gameplay\Assist\PlayerAssistUI.h">
+      <Filter>Source\Gameplay\Assist</Filter>
     </ClInclude>
-    <ClInclude Include="BonusItemMover.h">
-      <Filter>BounusItemObject</Filter>
+    <ClInclude Include="Source\Gameplay\Score\ComboSystem.h">
+      <Filter>Source\Gameplay\Score</Filter>
     </ClInclude>
-    <ClInclude Include="BonusItemType.h">
-      <Filter>BounusItemObject</Filter>
+    <ClInclude Include="Source\Core\GameTuningSettings.h">
+      <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="BonusItemWaypointSet.h">
-      <Filter>BounusItemObject</Filter>
+    <ClInclude Include="Source\Gameplay\Score\ScorePopupScreen.h">
+      <Filter>Source\Gameplay\Score</Filter>
     </ClInclude>
-    <ClInclude Include="Aircraft.h">
-      <Filter>Aircraft</Filter>
+    <ClInclude Include="Source\Gameplay\Score\ComboCounterScreen.h">
+      <Filter>Source\Gameplay\Score</Filter>
     </ClInclude>
-    <ClInclude Include="LiftingSurface.h">
-      <Filter>Aircraft</Filter>
+    <ClInclude Include="Source\Gameplay\BonusItem\AddTimeItem.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
     </ClInclude>
-    <ClInclude Include="AircraftEngine.h">
-      <Filter>Aircraft</Filter>
+    <ClInclude Include="Source\Gameplay\BonusItem\ScoreBoostItem.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\BonusItem\ScoreBoostEffect.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Time\IGameTimeController.h">
+      <Filter>Source\Gameplay\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\SplineMath.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\BonusItem\ScoreBoostUIScreen.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\BonusItem\AddTimePopupUI.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemEffectContext.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemManager.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemMover.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemType.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemWaypointSet.h">
+      <Filter>Source\Gameplay\BonusItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Aircraft\Aircraft.h">
+      <Filter>Source\Gameplay\Aircraft</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Aircraft\LiftingSurface.h">
+      <Filter>Source\Gameplay\Aircraft</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Aircraft\AircraftEngine.h">
+      <Filter>Source\Gameplay\Aircraft</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

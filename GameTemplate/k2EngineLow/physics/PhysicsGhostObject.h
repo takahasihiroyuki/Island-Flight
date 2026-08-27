@@ -19,9 +19,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void Release()
 		{
-			if (m_isRegistPhysicsWorld == true) {
+			if (m_isRegisteredPhysicsWorld == true) {
 				PhysicsWorld::GetInstance()->RemoveCollisionObject(m_ghostObject);
-				m_isRegistPhysicsWorld = false;
+				m_isRegisteredPhysicsWorld = false;
 			}
 		}
 		/// <summary>
@@ -97,7 +97,7 @@ namespace nsK2EngineLow {
 		/// <param name="rot">回転。</param>
 		void CreateCommon(Vector3 pos, Quaternion rot);
 	private:
-		bool							m_isRegistPhysicsWorld = false;	//物理ワールドに登録しているかどうかのフラグ。
+		bool							m_isRegisteredPhysicsWorld = false;	//物理ワールドに登録しているかどうかのフラグ。
 		btGhostObject					m_ghostObject;					//ゴースト
 		std::unique_ptr<ICollider>		m_collider;						//コライダー。
 	};

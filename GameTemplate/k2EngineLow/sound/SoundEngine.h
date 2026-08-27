@@ -127,9 +127,9 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// ”gŒ`ƒf[ƒ^‚ğ“o˜^‚·‚éB
 		/// </summary>
-		void ResistWaveFileBank(int number, const char* filePath)
+		void RegisterWaveFileBank(int number, const char* filePath)
 		{
-			m_waveFileBank.Resist(number, filePath);
+			m_waveFileBank.Register(number, filePath);
 		}
 	private:
 		IXAudio2* m_xAudio2 = nullptr;

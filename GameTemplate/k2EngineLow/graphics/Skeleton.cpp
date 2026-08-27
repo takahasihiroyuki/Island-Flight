@@ -52,7 +52,7 @@ namespace nsK2EngineLow {
 			// 新規。
 			m_tksFile = new TksFile;
 			// バンクに登録する。
-			g_engine->RegistTksFileToBank(tksFilePath, m_tksFile);
+			g_engine->RegisterTksFileToBank(tksFilePath, m_tksFile);
 		}
 		if (m_tksFile->Load(tksFilePath)) {
 			//ボーン行列を構築する。

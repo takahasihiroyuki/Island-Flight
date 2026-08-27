@@ -307,15 +307,15 @@ namespace nsK2EngineLow {
 		switch (eventCode) {
 		case enEvent_SendInitDataForOtherPlayer:
 			if (m_state == WAIT_RECV_INIT_DATA_OTHER_PLAYER) {
-				K2_ASSERT(!m_isHoge, "二回呼ばれている");
-				m_isHoge = true;
+				K2_ASSERT(!m_hasReceivedGameStartData, "二回呼ばれている");
+				m_hasReceivedGameStartData = true;
 				ONLINE_LOG("enEvent_SendInitDataForOtherPlayer\n");
 				auto valuObj = (ExitGames::Common::ValueObject<std::uint8_t*>*)(eventContent.getValue(0));
-				m_recieveDataSize = valuObj->getSizes()[0];
-				m_recieveDataOnGameStart = std::make_unique<std::uint8_t[]>(m_recieveDataSize);
+				m_receiveDataSize = valuObj->getSizes()[0];
+				m_receiveDataOnGameStart = std::make_unique<std::uint8_t[]>(m_receiveDataSize);
 				auto pSrcData = valuObj->getDataCopy();
-				memcpy(m_recieveDataOnGameStart.get(), pSrcData, m_recieveDataSize);
-				m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
+				memcpy(m_receiveDataOnGameStart.get(), pSrcData, m_receiveDataSize);
+				m_allPlayerJoinedRoomFunc(m_receiveDataOnGameStart.get(), m_receiveDataSize);
 				m_state = WAIT_START_GAME;
 			}
 			break;
@@ -439,9 +439,6 @@ namespace nsK2EngineLow {
 	{
 		char text[256];
 		if (m_playerType == PlayerType_Host) {
-			if (m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLX == 0) {
-				printf("hoge");
-			}
 			// ホストは送信データを出力する。
 			sprintf(text, "frameNo = %d, %x, %x\n",
 				m_playFrameNo,

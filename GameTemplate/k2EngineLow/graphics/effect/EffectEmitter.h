@@ -23,7 +23,7 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// エフェクトを読み込む。
 		/// </summary>
-		/// <param name="number">EffectEngine::GetInstance()->ResistEffectで指定した番号。</param>
+		/// <param name="number">EffectEngine::GetInstance()->RegisterEffectで指定した番号。</param>
 		void Init(const int number);
 		/// <summary>
 		/// エフェクトを再生する。

@@ -31,7 +31,7 @@ namespace nsK2EngineLow {
 			/// SRVに登録。
 			/// </summary>
 			/// <param name="descriptorHandle"></param>
-			void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
+			void RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
 			/// <summary>
 			/// VRAM上の仮想アドレスを取得。
 			/// </summary>

@@ -128,6 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,8 +141,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>K2_DEBUG;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>Source/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -159,6 +162,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -175,6 +179,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -191,8 +196,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>Source/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -211,8 +218,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>K2_DEBUG;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>Source/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -224,133 +233,133 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AddTimeItem.cpp" />
-    <ClCompile Include="AddTimePopupUI.cpp" />
-    <ClCompile Include="Aircraft.cpp" />
-    <ClCompile Include="AircraftEngine.cpp" />
-    <ClCompile Include="BonusItemManager.cpp" />
-    <ClCompile Include="BonusItemMover.cpp" />
-    <ClCompile Include="BonusItemWaypointSet.cpp" />
-    <ClCompile Include="CameraManager.cpp" />
-    <ClCompile Include="Coin.cpp" />
-    <ClCompile Include="CoinCounterUI.cpp" />
-    <ClCompile Include="CoinDirectionArrowUI.cpp" />
-    <ClCompile Include="CoinGetUI.cpp" />
-    <ClCompile Include="CoinManager.cpp" />
-    <ClCompile Include="ComboCounterScreen.cpp" />
-    <ClCompile Include="ComboSystem.cpp" />
-    <ClCompile Include="DebugArrowUI.cpp" />
-    <ClCompile Include="FlightDebugScene.cpp" />
-    <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="GamePlayState.cpp" />
-    <ClCompile Include="GameTuningSettings.cpp" />
-    <ClCompile Include="ICameraController.cpp" />
-    <ClCompile Include="IGameTimeController.cpp" />
-    <ClCompile Include="IInGameState.cpp" />
-    <ClCompile Include="InGameScene.cpp" />
-    <ClCompile Include="InGameStateManager.cpp" />
-    <ClCompile Include="IScene.cpp" />
-    <ClCompile Include="LiftingSurface.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="PlacementObject.cpp" />
-    <ClCompile Include="PlayerAssistSystem.cpp" />
-    <ClCompile Include="PlayerAssistUI.cpp" />
-    <ClCompile Include="ResoltState.cpp" />
-    <ClCompile Include="ResultUI.cpp" />
+    <ClCompile Include="Source\Gameplay\BonusItem\AddTimeItem.cpp" />
+    <ClCompile Include="Source\Gameplay\BonusItem\AddTimePopupUI.cpp" />
+    <ClCompile Include="Source\Gameplay\Aircraft\Aircraft.cpp" />
+    <ClCompile Include="Source\Gameplay\Aircraft\AircraftEngine.cpp" />
+    <ClCompile Include="Source\Gameplay\BonusItem\BonusItemManager.cpp" />
+    <ClCompile Include="Source\Gameplay\BonusItem\BonusItemMover.cpp" />
+    <ClCompile Include="Source\Gameplay\BonusItem\BonusItemWaypointSet.cpp" />
+    <ClCompile Include="Source\Camera\CameraManager.cpp" />
+    <ClCompile Include="Source\Gameplay\Coin\Coin.cpp" />
+    <ClCompile Include="Source\Gameplay\Coin\CoinCounterUI.cpp" />
+    <ClCompile Include="Source\Gameplay\Coin\CoinDirectionArrowUI.cpp" />
+    <ClCompile Include="Source\Gameplay\Coin\CoinGetUI.cpp" />
+    <ClCompile Include="Source\Gameplay\Coin\CoinManager.cpp" />
+    <ClCompile Include="Source\Gameplay\Score\ComboCounterScreen.cpp" />
+    <ClCompile Include="Source\Gameplay\Score\ComboSystem.cpp" />
+    <ClCompile Include="Source\UI\DebugArrowUI.cpp" />
+    <ClCompile Include="Source\Scene\FlightDebugScene.cpp" />
+    <ClCompile Include="Source\Core\GameManager.cpp" />
+    <ClCompile Include="Source\Scene\InGame\State\GamePlayState.cpp" />
+    <ClCompile Include="Source\Core\GameTuningSettings.cpp" />
+    <ClCompile Include="Source\Camera\ICameraController.cpp" />
+    <ClCompile Include="Source\Gameplay\Time\IGameTimeController.cpp" />
+    <ClCompile Include="Source\Scene\InGame\State\IInGameState.cpp" />
+    <ClCompile Include="Source\Scene\InGame\InGameScene.cpp" />
+    <ClCompile Include="Source\Scene\InGame\State\InGameStateManager.cpp" />
+    <ClCompile Include="Source\Scene\IScene.cpp" />
+    <ClCompile Include="Source\Gameplay\Aircraft\LiftingSurface.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Gameplay\Stage\PlacementObject.cpp" />
+    <ClCompile Include="Source\Gameplay\Assist\PlayerAssistSystem.cpp" />
+    <ClCompile Include="Source\Gameplay\Assist\PlayerAssistUI.cpp" />
+    <ClCompile Include="Source\Scene\InGame\State\ResultState.cpp" />
+    <ClCompile Include="Source\Scene\InGame\State\ResultUI.cpp" />
     <ClCompile Include="SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="SceneLoader\TransformHelper.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="ScoreBoostEffect.cpp" />
-    <ClCompile Include="ScoreBoostItem.cpp" />
-    <ClCompile Include="ScoreBoostUIScreen.cpp" />
-    <ClCompile Include="ScoreManager.cpp" />
-    <ClCompile Include="ScorePopupScreen.cpp" />
-    <ClCompile Include="SoundManager.cpp" />
-    <ClCompile Include="SplineMath.cpp" />
-    <ClCompile Include="SpringFollowController.cpp" />
-    <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="StageOrbitCameraController.cpp" />
-    <ClCompile Include="StaticController.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="Source\Scene\SceneManager.cpp" />
+    <ClCompile Include="Source\Gameplay\BonusItem\ScoreBoostEffect.cpp" />
+    <ClCompile Include="Source\Gameplay\BonusItem\ScoreBoostItem.cpp" />
+    <ClCompile Include="Source\Gameplay\BonusItem\ScoreBoostUIScreen.cpp" />
+    <ClCompile Include="Source\Gameplay\Score\ScoreManager.cpp" />
+    <ClCompile Include="Source\Gameplay\Score\ScorePopupScreen.cpp" />
+    <ClCompile Include="Source\Audio\SoundManager.cpp" />
+    <ClCompile Include="Source\Math\SplineMath.cpp" />
+    <ClCompile Include="Source\Camera\Controller\SpringFollowController.cpp" />
+    <ClCompile Include="Source\Gameplay\Stage\Stage.cpp" />
+    <ClCompile Include="Source\Camera\Controller\StageOrbitCameraController.cpp" />
+    <ClCompile Include="Source\Camera\Controller\StaticController.cpp" />
+    <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="TimerUI.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="TitleUI.cpp" />
-    <ClCompile Include="UIManager.cpp" />
-    <ClCompile Include="UIManagerObject.cpp" />
-    <ClCompile Include="UIScreen.cpp" />
+    <ClCompile Include="Source\Gameplay\Time\Timer.cpp" />
+    <ClCompile Include="Source\Gameplay\Time\TimerUI.cpp" />
+    <ClCompile Include="Source\Scene\Title\TitleScene.cpp" />
+    <ClCompile Include="Source\Scene\Title\TitleUI.cpp" />
+    <ClCompile Include="Source\UI\UIManager.cpp" />
+    <ClCompile Include="Source\UI\UIManagerObject.cpp" />
+    <ClCompile Include="Source\UI\UIScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AddTimeItem.h" />
-    <ClInclude Include="AddTimePopupUI.h" />
-    <ClInclude Include="Aircraft.h" />
-    <ClInclude Include="AircraftEngine.h" />
-    <ClInclude Include="AircraftPhysicsState.h" />
-    <ClInclude Include="AssistWarpPoint.h" />
-    <ClInclude Include="BonusItemEffectContext.h" />
-    <ClInclude Include="BonusItemManager.h" />
-    <ClInclude Include="BonusItemMover.h" />
-    <ClInclude Include="BonusItemType.h" />
-    <ClInclude Include="BonusItemWaypointSet.h" />
-    <ClInclude Include="CameraManager.h" />
-    <ClInclude Include="CameraTypes.h" />
-    <ClInclude Include="Coin.h" />
-    <ClInclude Include="CoinCounterUI.h" />
-    <ClInclude Include="CoinDirectionArrowUI.h" />
-    <ClInclude Include="CoinGetUI.h" />
-    <ClInclude Include="CoinManager.h" />
-    <ClInclude Include="ComboCounterScreen.h" />
-    <ClInclude Include="ComboSystem.h" />
-    <ClInclude Include="DebugArrowUI.h" />
-    <ClInclude Include="EffectType.h" />
-    <ClInclude Include="FlightDebugScene.h" />
-    <ClInclude Include="GameManager.h" />
-    <ClInclude Include="GamePlayState.h" />
-    <ClInclude Include="GameTuningSettings.h" />
-    <ClInclude Include="ICameraController.h" />
-    <ClInclude Include="IGameTimeController.h" />
-    <ClInclude Include="IInGameState.h" />
-    <ClInclude Include="InGameScene.h" />
-    <ClInclude Include="InGameStateManager.h" />
-    <ClInclude Include="InGameStateType.h" />
-    <ClInclude Include="IScene.h" />
-    <ClInclude Include="LiftingSurface.h" />
-    <ClInclude Include="PlacementObject.h" />
-    <ClInclude Include="PlayerAssistSystem.h" />
-    <ClInclude Include="PlayerAssistUI.h" />
-    <ClInclude Include="ResoltState.h" />
-    <ClInclude Include="ResultUI.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\AddTimeItem.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\AddTimePopupUI.h" />
+    <ClInclude Include="Source\Gameplay\Aircraft\Aircraft.h" />
+    <ClInclude Include="Source\Gameplay\Aircraft\AircraftEngine.h" />
+    <ClInclude Include="Source\Gameplay\Aircraft\AircraftPhysicsState.h" />
+    <ClInclude Include="Source\Gameplay\Assist\AssistWarpPoint.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemEffectContext.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemManager.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemMover.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemType.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\BonusItemWaypointSet.h" />
+    <ClInclude Include="Source\Camera\CameraManager.h" />
+    <ClInclude Include="Source\Camera\CameraTypes.h" />
+    <ClInclude Include="Source\Gameplay\Coin\Coin.h" />
+    <ClInclude Include="Source\Gameplay\Coin\CoinCounterUI.h" />
+    <ClInclude Include="Source\Gameplay\Coin\CoinDirectionArrowUI.h" />
+    <ClInclude Include="Source\Gameplay\Coin\CoinGetUI.h" />
+    <ClInclude Include="Source\Gameplay\Coin\CoinManager.h" />
+    <ClInclude Include="Source\Gameplay\Score\ComboCounterScreen.h" />
+    <ClInclude Include="Source\Gameplay\Score\ComboSystem.h" />
+    <ClInclude Include="Source\UI\DebugArrowUI.h" />
+    <ClInclude Include="Source\Effect\EffectType.h" />
+    <ClInclude Include="Source\Scene\FlightDebugScene.h" />
+    <ClInclude Include="Source\Core\GameManager.h" />
+    <ClInclude Include="Source\Scene\InGame\State\GamePlayState.h" />
+    <ClInclude Include="Source\Core\GameTuningSettings.h" />
+    <ClInclude Include="Source\Camera\ICameraController.h" />
+    <ClInclude Include="Source\Gameplay\Time\IGameTimeController.h" />
+    <ClInclude Include="Source\Scene\InGame\State\IInGameState.h" />
+    <ClInclude Include="Source\Scene\InGame\InGameScene.h" />
+    <ClInclude Include="Source\Scene\InGame\State\InGameStateManager.h" />
+    <ClInclude Include="Source\Scene\InGame\State\InGameStateType.h" />
+    <ClInclude Include="Source\Scene\IScene.h" />
+    <ClInclude Include="Source\Gameplay\Aircraft\LiftingSurface.h" />
+    <ClInclude Include="Source\Gameplay\Stage\PlacementObject.h" />
+    <ClInclude Include="Source\Gameplay\Assist\PlayerAssistSystem.h" />
+    <ClInclude Include="Source\Gameplay\Assist\PlayerAssistUI.h" />
+    <ClInclude Include="Source\Scene\InGame\State\ResultState.h" />
+    <ClInclude Include="Source\Scene\InGame\State\ResultUI.h" />
     <ClInclude Include="SceneLoader\SceneLoader.h" />
     <ClInclude Include="SceneLoader\TransformHelper.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SceneStateContext.h" />
-    <ClInclude Include="SceneType.h" />
-    <ClInclude Include="ScoreBoostEffect.h" />
-    <ClInclude Include="ScoreBoostItem.h" />
-    <ClInclude Include="ScoreBoostUIScreen.h" />
-    <ClInclude Include="ScoreManager.h" />
-    <ClInclude Include="ScorePopupScreen.h" />
-    <ClInclude Include="SoundID.h" />
-    <ClInclude Include="SoundManager.h" />
-    <ClInclude Include="SplineMath.h" />
-    <ClInclude Include="SpringFollowController.h" />
-    <ClInclude Include="Stage.h" />
-    <ClInclude Include="StageOrbitCameraController.h" />
-    <ClInclude Include="StaticController.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Source\Scene\SceneManager.h" />
+    <ClInclude Include="Source\Scene\SceneStateContext.h" />
+    <ClInclude Include="Source\Scene\SceneType.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\ScoreBoostEffect.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\ScoreBoostItem.h" />
+    <ClInclude Include="Source\Gameplay\BonusItem\ScoreBoostUIScreen.h" />
+    <ClInclude Include="Source\Gameplay\Score\ScoreManager.h" />
+    <ClInclude Include="Source\Gameplay\Score\ScorePopupScreen.h" />
+    <ClInclude Include="Source\Audio\SoundID.h" />
+    <ClInclude Include="Source\Audio\SoundManager.h" />
+    <ClInclude Include="Source\Math\SplineMath.h" />
+    <ClInclude Include="Source\Camera\Controller\SpringFollowController.h" />
+    <ClInclude Include="Source\Gameplay\Stage\Stage.h" />
+    <ClInclude Include="Source\Camera\Controller\StageOrbitCameraController.h" />
+    <ClInclude Include="Source\Camera\Controller\StaticController.h" />
+    <ClInclude Include="Source\stdafx.h" />
     <ClInclude Include="system\system.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="TimerUI.h" />
-    <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="TitleUI.h" />
-    <ClInclude Include="UIManager.h" />
-    <ClInclude Include="UIManagerObject.h" />
-    <ClInclude Include="UIScreen.h" />
+    <ClInclude Include="Source\Gameplay\Time\Timer.h" />
+    <ClInclude Include="Source\Gameplay\Time\TimerUI.h" />
+    <ClInclude Include="Source\Scene\Title\TitleScene.h" />
+    <ClInclude Include="Source\Scene\Title\TitleUI.h" />
+    <ClInclude Include="Source\UI\UIManager.h" />
+    <ClInclude Include="Source\UI\UIManagerObject.h" />
+    <ClInclude Include="Source\UI\UIScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\k2EngineLow\k2EngineLow.vcxproj">

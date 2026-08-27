@@ -245,7 +245,7 @@ namespace nsK2EngineLow {
 				subobjects[index++] = hitGroupSOs[i].subObject; // 1 Hit Group
 			}
 
-			auto BuildAndRegistRootSignatureAndAssSubobjectFunc = [&](
+			auto BuildAndRegisterRootSignatureAndAddSubobjectFunc = [&](
 				LocalRootSignatureSubobject& rsSO, ExportAssociationSubobject& ass, ELocalRootSignature eRS, const WCHAR* exportNames[]
 				) {
 				if (eRS == eLocalRootSignature_Raygen) {
@@ -280,9 +280,9 @@ namespace nsK2EngineLow {
 			const WCHAR* modelExportName[eShader_Num];
 			const WCHAR* emptyExportName[eShader_Num];
 
-			BuildAndRegistRootSignatureAndAssSubobjectFunc(rayGenSignatureSO, rayGenAssSO, eLocalRootSignature_Raygen, rayGenExportName);
-			BuildAndRegistRootSignatureAndAssSubobjectFunc(modelSignatureSO, modelAssSO, eLocalRootSignature_PBRMaterialHit, modelExportName);
-			BuildAndRegistRootSignatureAndAssSubobjectFunc(emptySignatureSO, emptyAssSO, eLocalRootSignature_Empty, emptyExportName);
+			BuildAndRegisterRootSignatureAndAddSubobjectFunc(rayGenSignatureSO, rayGenAssSO, eLocalRootSignature_Raygen, rayGenExportName);
+			BuildAndRegisterRootSignatureAndAddSubobjectFunc(modelSignatureSO, modelAssSO, eLocalRootSignature_PBRMaterialHit, modelExportName);
+			BuildAndRegisterRootSignatureAndAddSubobjectFunc(emptySignatureSO, emptyAssSO, eLocalRootSignature_Empty, emptyExportName);
 
 
 			// Payloadのサイズと引数の数はとりあえず固定で・・・。後で検討。

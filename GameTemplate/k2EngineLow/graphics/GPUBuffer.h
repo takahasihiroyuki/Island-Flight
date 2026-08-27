@@ -8,7 +8,7 @@ namespace nsK2EngineLow {
 	/// 汎用的なGPUバッファクラスです。
 	/// テクスチャ、ストラクチャードバッファ、頂点バッファすべてのバッファを作成することができます。
 	/// </remarks>
-	class GPUBuffer : public IUnorderAccessResrouce {
+	class GPUBuffer : public IUnorderedAccessResource {
 	public:
 		/// <summary>
 		/// デストラクタ。
@@ -25,13 +25,13 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="cpuHandle">登録するディスクリプタヒープのCPUハンドル</param>
 		/// <param name="bufferNo">バッファ番号</param>
-		void RegistUnorderAccessView(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, int bufferNo) override;
+		void RegisterUnorderedAccessView(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, int bufferNo) override;
 		/// <summary>
 		/// SRVとしてディスクリプタヒープに登録。
 		/// </summary>
 		/// <param name="descriptorHandle">登録するディスクリプタヒープのCPUハンドル</param>
 		/// <param name="bufferNo">バッファ番号</param>
-		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
+		void RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
 
 		ID3D12Resource* Get()
 		{

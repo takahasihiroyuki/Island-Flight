@@ -5,12 +5,12 @@ namespace nsK2EngineLow {
 	DescriptorHeap::DescriptorHeap()
 	{
 		m_shaderResources.resize(MAX_SHADER_RESOURCE);
-		m_uavResoruces.resize(MAX_SHADER_RESOURCE);
+		m_uavResources.resize(MAX_SHADER_RESOURCE);
 		m_constantBuffers.resize(MAX_CONSTANT_BUFFER);
 		for (auto& srv : m_shaderResources) {
 			srv = nullptr;
 		}
-		for (auto& uav : m_uavResoruces) {
+		for (auto& uav : m_uavResources) {
 			uav = nullptr;
 		}
 		for (auto& cbv : m_constantBuffers) {
@@ -81,7 +81,7 @@ namespace nsK2EngineLow {
 			for (int i = 0; i < m_numConstantBuffer; i++) {
 				//@todo bug
 				if (m_constantBuffers[i] != nullptr) {
-					m_constantBuffers[i]->RegistConstantBufferView(cpuHandle, bufferNo);
+					m_constantBuffers[i]->RegisterConstantBufferView(cpuHandle, bufferNo);
 				}
 				//次に進める。
 				cpuHandle.ptr += g_graphicsEngine->GetCbrSrvDescriptorSize();
@@ -90,7 +90,7 @@ namespace nsK2EngineLow {
 			//続いてシェーダーリソース。
 			for (int i = 0; i < m_numShaderResource; i++) {
 				if (m_shaderResources[i] != nullptr) {
-					m_shaderResources[i]->RegistShaderResourceView(cpuHandle, bufferNo);
+					m_shaderResources[i]->RegisterShaderResourceView(cpuHandle, bufferNo);
 				}
 				//次に進める。
 				cpuHandle.ptr += g_graphicsEngine->GetCbrSrvDescriptorSize();
@@ -98,8 +98,8 @@ namespace nsK2EngineLow {
 
 			//続いてUAV。
 			for (int i = 0; i < m_numUavResource; i++) {
-				if (m_uavResoruces[i] != nullptr) {
-					m_uavResoruces[i]->RegistUnorderAccessView(cpuHandle, bufferNo);
+				if (m_uavResources[i] != nullptr) {
+					m_uavResources[i]->RegisterUnorderedAccessView(cpuHandle, bufferNo);
 				}
 				//次に進める。
 				cpuHandle.ptr += g_graphicsEngine->GetCbrSrvDescriptorSize();

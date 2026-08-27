@@ -57,12 +57,12 @@ namespace nsK2EngineLow {
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
 		memcpy(m_buffersOnCPU[backBufferIndex], data, m_numElement * m_sizeOfElement);
 	}
-	ID3D12Resource* StructuredBuffer::GetD3DResoruce()
+	ID3D12Resource* StructuredBuffer::GetD3DResource()
 	{
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
 		return m_buffersOnGPU[backBufferIndex];
 	}
-	void StructuredBuffer::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	void StructuredBuffer::RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
 	{
 		if (!m_isInited) {
 			return;

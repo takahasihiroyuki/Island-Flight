@@ -12,7 +12,7 @@ namespace nsK2EngineLow {
 
 		//•¨—ƒGƒ“ƒWƒ“‚É“o˜^B
 		PhysicsWorld::GetInstance()->AddCollisionObject(m_ghostObject);
-		m_isRegistPhysicsWorld = true;
+		m_isRegisteredPhysicsWorld = true;
 	}
 
 	void PhysicsGhostObject::CreateBox(Vector3 pos, Quaternion rot, Vector3 size)

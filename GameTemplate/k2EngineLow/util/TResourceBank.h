@@ -15,7 +15,7 @@ namespace nsK2EngineLow {
 			}
 			return nullptr;
 		}
-		void Regist(const char* filePath, TResource* resource)
+		void Register(const char* filePath, TResource* resource)
 		{
 			auto it = m_resourceMap.find(filePath);
 			if (it == m_resourceMap.end()) {

@@ -54,7 +54,7 @@ namespace nsK2EngineLow {
 		//利用可能にする。
 		m_isValid = true;
 	}
-	void ConstantBuffer::RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	void ConstantBuffer::RegisterConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
 	{
 		//D3Dデバイスを取得。
 		auto device = g_graphicsEngine->GetD3DDevice();
@@ -63,10 +63,10 @@ namespace nsK2EngineLow {
 		desc.SizeInBytes = m_allocSize;
 		device->CreateConstantBufferView(&desc, descriptorHandle);
 	}
-	void ConstantBuffer::RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle)
+	void ConstantBuffer::RegisterConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle)
 	{
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
-		RegistConstantBufferView(descriptorHandle, backBufferIndex);
+		RegisterConstantBufferView(descriptorHandle, backBufferIndex);
 	}
 	void ConstantBuffer::CopyToVRAM(void* data)
 	{

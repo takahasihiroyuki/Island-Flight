@@ -73,7 +73,7 @@ namespace nsK2EngineLow {
 	void MeshParts::ReInitMaterials(const MaterialReInitData& reInitData)
 	{
 		for (int i = 0; i < MAX_MODEL_EXPAND_SRV; i++) {
-			m_expandShaderResourceView[i] = reInitData.m_expandShaderResoruceView[i];
+			m_expandShaderResourceView[i] = reInitData.m_expandShaderResourceView[i];
 		}
 		//ディスクリプタヒープを作成。
 		CreateDescriptorHeaps();
@@ -93,7 +93,7 @@ namespace nsK2EngineLow {
 		m_descriptorHeap.ResizeShaderResource(srvNo);
 		m_descriptorHeap.ResizeConstantBuffer(cbNo);
 		// UAVいらない。
-		m_descriptorHeap.ResizeUnorderAccessResource(0);
+		m_descriptorHeap.ResizeUnorderedAccessResource(0);
 		//ディスクリプタヒープを構築していく。
 		srvNo = 0;
 		cbNo = 0;
@@ -101,19 +101,19 @@ namespace nsK2EngineLow {
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 
 				//ディスクリプタヒープにディスクリプタを登録していく。
-				m_descriptorHeap.RegistShaderResource(srvNo, mesh->m_materials[matNo]->GetAlbedoMap());		//アルベドマップ。
-				m_descriptorHeap.RegistShaderResource(srvNo + 1, mesh->m_materials[matNo]->GetNormalMap());		//法線マップ。
-				m_descriptorHeap.RegistShaderResource(srvNo + 2, mesh->m_materials[matNo]->GetSpecularMap());		//スペキュラマップ。
-				m_descriptorHeap.RegistShaderResource(srvNo + 3, m_boneMatricesStructureBuffer);							//ボーンのストラクチャードバッファ。
+				m_descriptorHeap.RegisterShaderResource(srvNo, mesh->m_materials[matNo]->GetAlbedoMap());		//アルベドマップ。
+				m_descriptorHeap.RegisterShaderResource(srvNo + 1, mesh->m_materials[matNo]->GetNormalMap());		//法線マップ。
+				m_descriptorHeap.RegisterShaderResource(srvNo + 2, mesh->m_materials[matNo]->GetSpecularMap());		//スペキュラマップ。
+				m_descriptorHeap.RegisterShaderResource(srvNo + 3, m_boneMatricesStructureBuffer);							//ボーンのストラクチャードバッファ。
 				for (int i = 0; i < MAX_MODEL_EXPAND_SRV; i++) {
 					if (m_expandShaderResourceView[i]) {
-						m_descriptorHeap.RegistShaderResource(srvNo + EXPAND_SRV_REG__START_NO + i, *m_expandShaderResourceView[i]);
+						m_descriptorHeap.RegisterShaderResource(srvNo + EXPAND_SRV_REG__START_NO + i, *m_expandShaderResourceView[i]);
 					}
 				}
 				srvNo += NUM_SRV_ONE_MATERIAL;
-				m_descriptorHeap.RegistConstantBuffer(cbNo, m_commonConstantBuffer);
+				m_descriptorHeap.RegisterConstantBuffer(cbNo, m_commonConstantBuffer);
 				if (m_expandConstantBuffer.IsValid()) {
-					m_descriptorHeap.RegistConstantBuffer(cbNo + 1, m_expandConstantBuffer);
+					m_descriptorHeap.RegisterConstantBuffer(cbNo + 1, m_expandConstantBuffer);
 				}
 				cbNo += NUM_CBV_ONE_MATERIAL;
 			}

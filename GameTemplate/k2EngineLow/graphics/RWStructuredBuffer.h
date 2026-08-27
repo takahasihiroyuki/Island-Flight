@@ -7,7 +7,7 @@ namespace nsK2EngineLow {
 	/// <summary>
 	/// 構造化バッファ
 	/// </summary>
-	class RWStructuredBuffer : public IUnorderAccessResrouce {
+	class RWStructuredBuffer : public IUnorderedAccessResource {
 	public:
 
 		/// <summary>
@@ -46,13 +46,13 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name=""></param>
 		/// <param name="bufferNo"></param>
-		void RegistUnorderAccessView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
+		void RegisterUnorderedAccessView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
 		/// <summary>
 		/// SRVに登録。
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
 		/// <param name="bufferNo"></param>
-		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
+		void RegisterShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override;
 		/// <summary>
 		/// 初期化されているか判定。
 		/// </summary>
@@ -67,7 +67,7 @@ namespace nsK2EngineLow {
 		/// <returns></returns>
 		void* GetResourceOnCPU();
 
-		ID3D12Resource* GetD3DResoruce();
+		ID3D12Resource* GetD3DResource();
 	private:
 		/// <summary>
 		/// 解放。

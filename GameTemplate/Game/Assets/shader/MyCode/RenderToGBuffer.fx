@@ -147,7 +147,7 @@ SPSIn VSSkinInstancingMain(SVSIn vsIn)
     return VSMainCore(vsIn, true, true);
 }
 //モデル用のピクセルシェーダーのエントリーポイント
-SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
+SPSOut PSMain(SPSIn psIn, bool isShadowReceiver)
 {
     //GBufferに出力
     SPSOut psOut;
@@ -167,7 +167,7 @@ SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
         
     // シャドウレシーバーかどうかを判定するフラグをw成分に格納する。
     //法線マップのｗは使わないので、ここに格納する。
-    if (isShadowReciever == true)
+    if (isShadowReceiver == true)
     {
         psOut.normal.w = 1.0f;
     }
@@ -180,7 +180,7 @@ SPSOut PSMain(SPSIn psIn, bool isShadowReciever)
 }
 
 
-SPSOut PSMainShadowReciever(SPSIn psIn) : SV_Target0
+SPSOut PSMainShadowReceiver(SPSIn psIn) : SV_Target0
 {
     return PSMain(psIn, true);
 }

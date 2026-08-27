@@ -48,7 +48,7 @@ namespace nsK2EngineLow {
 		}
 		else {
 			//ロードできない。
-			//ResistEffectでエフェクト読み込んでね！
+			//RegisterEffectでエフェクト読み込んでね！
 			std::abort();
 		}
 		return effect;
@@ -122,7 +122,7 @@ namespace nsK2EngineLow {
 		EffekseerRendererDX12::EndCommandList(m_commandList[backBufferNo]);
 	}
 
-	void EffectEngine::ResistEffect(const int number, const char16_t* filePath)
+	void EffectEngine::RegisterEffect(const int number, const char16_t* filePath)
 	{
 		Effekseer::EffectRef effect;
 		auto it = m_effectMap.find(number);

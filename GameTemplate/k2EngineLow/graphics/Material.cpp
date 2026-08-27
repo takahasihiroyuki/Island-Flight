@@ -38,7 +38,7 @@ namespace nsK2EngineLow {
 			{
 				albedoMap = new Texture();
 				albedoMap->InitFromMemory(map, mapSize);
-				g_engine->RegistTextureToBank(filePath, albedoMap);
+				g_engine->RegisterTextureToBank(filePath, albedoMap);
 			}
 			m_albedoMap = albedoMap;
 		}
@@ -64,7 +64,7 @@ namespace nsK2EngineLow {
 			{
 				normalMap = new Texture();
 				normalMap->InitFromMemory(map, mapSize);
-				g_engine->RegistTextureToBank(filePath, normalMap);
+				g_engine->RegisterTextureToBank(filePath, normalMap);
 			}
 			m_normalMap = normalMap;
 		}
@@ -91,7 +91,7 @@ namespace nsK2EngineLow {
 			{
 				specularMap = new Texture();
 				specularMap->InitFromMemory(map, mapSize);
-				g_engine->RegistTextureToBank(filePath, specularMap);
+				g_engine->RegisterTextureToBank(filePath, specularMap);
 			}
 			m_specularMap = specularMap;
 		}
@@ -116,7 +116,7 @@ namespace nsK2EngineLow {
 			{
 				reflectionMap = new Texture();
 				reflectionMap->InitFromMemory(map, mapSize);
-				g_engine->RegistTextureToBank(filePath, reflectionMap);
+				g_engine->RegisterTextureToBank(filePath, reflectionMap);
 			}
 			m_reflectionMap = reflectionMap;
 		}
@@ -141,7 +141,7 @@ namespace nsK2EngineLow {
 			{
 				refractionMap = new Texture();
 				refractionMap->InitFromMemory(map, mapSize);
-				g_engine->RegistTextureToBank(filePath, refractionMap);
+				g_engine->RegisterTextureToBank(filePath, refractionMap);
 			}
 			m_refractionMap = refractionMap;
 		}
@@ -338,21 +338,21 @@ namespace nsK2EngineLow {
 		if (m_vsNonSkinModel == nullptr) {
 			m_vsNonSkinModel = new Shader;
 			m_vsNonSkinModel->LoadVS(fxFilePath, vsEntryPointFunc);
-			g_engine->RegistShaderToBank(fxFilePath, vsEntryPointFunc, m_vsNonSkinModel);
+			g_engine->RegisterShaderToBank(fxFilePath, vsEntryPointFunc, m_vsNonSkinModel);
 		}
 		//スキンありモデル用のシェーダーをロードする。
 		m_vsSkinModel = g_engine->GetShaderFromBank(fxFilePath, vsSkinEntriyPointFunc);
 		if (m_vsSkinModel == nullptr) {
 			m_vsSkinModel = new Shader;
 			m_vsSkinModel->LoadVS(fxFilePath, vsSkinEntriyPointFunc);
-			g_engine->RegistShaderToBank(fxFilePath, vsSkinEntriyPointFunc, m_vsSkinModel);
+			g_engine->RegisterShaderToBank(fxFilePath, vsSkinEntriyPointFunc, m_vsSkinModel);
 		}
 
 		m_psModel = g_engine->GetShaderFromBank(fxFilePath, psEntryPointFunc);
 		if (m_psModel == nullptr) {
 			m_psModel = new Shader;
 			m_psModel->LoadPS(fxFilePath, psEntryPointFunc);
-			g_engine->RegistShaderToBank(fxFilePath, psEntryPointFunc, m_psModel);
+			g_engine->RegisterShaderToBank(fxFilePath, psEntryPointFunc, m_psModel);
 		}
 	}
 	void Material::BeginRender(RenderContext& rc, int hasSkin)
